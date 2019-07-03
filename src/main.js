@@ -1,10 +1,38 @@
-function component() {
-    const element = document.createElement('div');
-  
-    // Lodash, currently included via a script, is required for this line to work
-    element.innerHTML = _.join(['Hello', 'webpack'], ' ');
-  
-    return element;
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+
+Vue.config.productionTip = false
+//Check were we are
+const info = window.sessionStorage['hostInfoValue']
+switch (info == undefined){
+  case true: //outside office client
+      console.log("I'm an outsider");
+      new Vue({
+        router,
+        store,
+        render: function (h) { return h(App) }
+      }).$mount('#app');
+    break;
+  default: //we are in office client
+    console.log("I'm an office man");
+    //const Office = window.Office
+    (function(){
+      Office.onReady(function(info){
+        new Vue({
+          el: '#app',
+          //components: {App},
+          //template: '<App/>',
+          router,
+          store,
+          created: function () {
+            var node = document.createTextNode("hellow world")
+            document.getElementById('app').appendChild(node);
+          },
+          render: function (h) { return h(App) }
+        }).$mount('#app');
+      });
+    })()
+  break;
 }
-  
-document.body.appendChild(component());
