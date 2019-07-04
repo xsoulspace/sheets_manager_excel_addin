@@ -27,8 +27,6 @@ switch (info == undefined){
           router,
           store,
           created: function () {
-            var node = document.createTextNode("hellow world")
-            document.getElementById('app').appendChild(node);
           },
           render: function (h) { return h(App) }
         }).$mount('#app');
