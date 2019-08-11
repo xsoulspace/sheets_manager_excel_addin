@@ -1,55 +1,52 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+<div id="app">
+  {{log}}
+<router-view></router-view>
+</div>
 </template>
 
 <script>
-/*  
-  export default {
-    router,
-    store
 
-  //(function (){
-  //  Office.onReady();
-    //Office.onReady(function(info) {
-      /*if (info.host === Office.HostType.Excel) {
-          // Do Excel-specific initialization (for example, make add-in task pane's
-          // appearance compatible with Excel "green").
+export default {
+  name: 'App',
+  data(){
+    return {
+      StoreAppSettings: "appSettings",
+      log: "",
+    }        
+  },
+  computed: {
+    isLocalStorageExists: function(){
+      return typeof localStorage !=  "undefined"
+    },
+    appSettings: {
+      set: function(value){
+        this.$store.commit(this.StoreAppSettings, value)
+      },
+      get: function(){
+        return this.$store.getters[this.StoreAppSettings]
       }
-      if (info.platform === Office.PlatformType.PC) {
-          // Make minor layout changes in the task pane.
-      }*/
-      //console.log(`Office.js is now ready in ${info.host} on ${info.platform}`);
-    //});
-  //})();
-//  }
-//
+    }
+  },
+  watch:{
+    appSettings: function(){
+      if (this.isLocalStorageExists){
+        localStorage.setItem(this.StoreAppSettings,JSON.stringify(this.appSettings))
+      }
+    }
+  },
+  methods: {
+
+  },
+  mounted: function(){
+    if (this.isLocalStorageExists){
+      // getting data from local storage
+      //console.log(wStorage)
+      if (localStorage.getItem(this.StoreAppSettings)){
+        this.appSettings = JSON.parse(localStorage.getItem(this.StoreAppSettings))
+      }
+    }
+    
+  },
+}
 </script>
-
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>

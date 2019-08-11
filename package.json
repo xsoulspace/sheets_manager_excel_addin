@@ -1,28 +1,44 @@
 {
   "name": "sheet_manager",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "dev": "parcel index.html --port 8080 --https",
+    "start": "npm run dev"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arenukvern/sheet_manager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Arenukvern/sheet_manager/issues"
+  },
+  "homepage": "https://github.com/Arenukvern/sheet_manager#readme",
   "dependencies": {
-    "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/polyfill": "^7.4.4",
-    "@babel/runtime": "^7.4.5",
+    "@babel/runtime-corejs3": "^7.5.5",
+    "bulma": "^0.7.5",
+    "core-js": "^3.2.0",
+    "regenerator-runtime": "^0.13.3",
     "vue": "^2.6.10",
+    "vue-hot-reload-api": "^2.3.3",
     "vue-router": "^3.0.7",
-    "vuex": "^3.0.1"
+    "vuedraggable": "^2.23.0",
+    "vuex": "^3.1.1"
+  },
+  "alias": {
+    "vue": "./node_modules/vue/dist/vue.common.js"
   },
   "devDependencies": {
-    "@types/office-js": "^1.0.17",
-    "@vue/cli-service": "^3.8.0",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@vue/component-compiler-utils": "^3.0.0",
+    "sass": "^1.22.9",
     "vue-template-compiler": "^2.6.10"
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
   },
   "browserslist": [
     "> 1%",

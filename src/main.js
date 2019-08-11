@@ -1,9 +1,11 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import './bulma.scss'
 
-Vue.config.productionTip = false
 //Check were we are
 const info = window.sessionStorage['hostInfoValue']
 switch (info == undefined){
@@ -26,10 +28,8 @@ switch (info == undefined){
           //template: '<App/>',
           router,
           store,
-          created: function () {
-          },
-          render: function (h) { return h(App) }
-        }).$mount('#app');
+          render: h => h(App)
+        })
       });
     })()
   break;
