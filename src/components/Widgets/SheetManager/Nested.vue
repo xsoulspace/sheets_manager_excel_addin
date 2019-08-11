@@ -6,7 +6,10 @@
       'is-child':!isParent,
       'with-children':childrenExists, 
       'no-children':!childrenExists}"
+    @start="dragging = true"
+    @end="dragging = false"
     class="box"
+  
     :list="list"
     :value="value"
     @input="emitter"
@@ -17,6 +20,7 @@
     :value="el.elements"
     :isParent="isParent"
     :name="el.name"
+    :dragging="dragging"
     ></nested-item>
   <slot name="drag-content"/>
 </draggable>
@@ -61,7 +65,8 @@ export default {
   },
   data(){
     return{
-      frag: true
+      frag: true,
+      dragging: false
     }
   },  
   methods: {
@@ -70,7 +75,7 @@ export default {
     },
     handleHover(){
       //console.log("hey")
-      this.isHovered = !this.isHovered
+      //this.isHovered = !this.isHovered
     }
   },
   components: {

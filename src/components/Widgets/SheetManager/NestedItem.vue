@@ -1,5 +1,5 @@
 <template>
-  <div class="media is-tiny-margin" @mouseover="isHovered=true" @mouseout="isHovered=false">
+  <div class="media is-tiny-margin">
     <div class="media-content">
       <div class="level is-mobile">
         <div class="level-left">
@@ -12,13 +12,16 @@
         </div>
         <div class="level-right">
           <div class="level-item">
-            
             <transition name="fade">              
               <nested 
-                v-if="isParent" :isHovered="isHovered" :class="{'has-padding':true}" :isParent="false" :childrenExists="childrenExists" :list="realValue">
+                v-show="isParent" 
+                :class="{'has-padding':true}" 
+                :isParent="false" 
+                :childrenExists="childrenExists" 
+                :list="realValue">
                 <template v-slot:drag-content>
                   <transition name="fade"> 
-                  <i v-if="!childrenExists && isParent">место для листов</i>                    
+                  <i v-if="!childrenExists && isParent && !dragging">место для листов</i>                    
                   </transition>
                 </template>
               </nested>
@@ -35,6 +38,9 @@
 export default {
   name: 'nested-item',
   props: {
+    dragging: {
+      default: false
+    },
     value: {
       default: {}
     },
@@ -43,11 +49,13 @@ export default {
     },
     name: {
       default:""
+    },
+    isHovered: {
+      default: false
     }
   },
   data(){
     return{
-      isHovered: false
     }
   },
   components: {
