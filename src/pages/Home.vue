@@ -49,6 +49,9 @@ export default {
       isSettingsActive: false
     }
   },
+  mounted: function(){
+    this.$store.dispatch('loadWorksheets')
+  },
   methods: {
     modalApplyHandler: function(){
       this.isSettingsActive = false;

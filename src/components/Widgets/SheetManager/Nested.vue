@@ -18,6 +18,7 @@
     :key="el.id" 
     v-for="el in realValue" 
     :value="el.elements"
+    :id = "el.id"
     :isParent="isParent"
     :name="el.name"
     :dragging="dragging"

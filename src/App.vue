@@ -12,10 +12,12 @@ export default {
   data(){
     return {
       StoreAppSettings: "appSettings",
-      log: "",
     }        
   },
   computed: {
+    log: function(){
+      return this.$store.getters['getLog']
+    },
     isLocalStorageExists: function(){
       return typeof localStorage !=  "undefined"
     },

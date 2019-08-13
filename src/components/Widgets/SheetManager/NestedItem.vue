@@ -4,13 +4,16 @@
       <div class="level is-mobile">
         <div class="level-left">
             <div class="content has-text-left">
-          <!-- <div class="level-item"> -->
-            <span class="is-child" v-show="!isParent">&#8226;</span>
-            {{name}}
-          <!-- </div> -->
+              <span class="is-child" v-show="!isParent">&#8226;</span>
+              <div class="level-item">
+                <editable-text 
+                  @editable-text-readonly="handleReadonly"
+                  @editable-text-readonly-off="handleReadonly" 
+                  :content.sync="sheetName"/>
+              </div>
             </div>
         </div>
-        <div class="level-right">
+        <div v-show="!isReadonlyModeActive" class="level-right">
           <div class="level-item">
             <transition name="fade">              
               <nested 
@@ -21,7 +24,7 @@
                 :list="realValue">
                 <template v-slot:drag-content>
                   <transition name="fade"> 
-                  <i v-if="!childrenExists && isParent && !dragging">место для листов</i>                    
+                  <i v-if="!childrenExists && isParent && dragging">место для листов</i>                    
                   </transition>
                 </template>
               </nested>
@@ -34,12 +37,15 @@
 </template>
 <script>
 //import EventBus from "../../../EventBus.js";
-
+import EditableText from "./EditableText";
 export default {
   name: 'nested-item',
   props: {
     dragging: {
       default: false
+    },
+    id: {
+
     },
     value: {
       default: {}
@@ -52,16 +58,32 @@ export default {
     },
     isHovered: {
       default: false
-    }
+    },
   },
   data(){
     return{
+      sheetName:  "",
+      isReadonlyModeActive: false
+    }
+  },
+  watch: {
+    sheetName: function(name){
+      const id = this.id
+      this.$store.dispatch('renameWorksheet',{id, name}) 
     }
   },
   components: {
+    EditableText,
     Nested: ()=> import('./Nested.vue')
   },
+  mounted: function(){
+    this.sheetName = this.name
+  },
   methods: {
+    handleReadonly: function(){
+      const lastValue = this.isReadonlyModeActive
+      this.isReadonlyModeActive = !lastValue 
+    }
   },
   computed: {
     childrenExists: function(){
@@ -85,7 +107,7 @@ export default {
   padding-top: 0rem;
 }
 .media .box.has-padding {
-  padding: 0.8rem;
+  padding: 0.6rem;
 }
 span.is-child {
   content: "\2022";
