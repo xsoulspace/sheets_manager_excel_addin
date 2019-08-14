@@ -70,19 +70,66 @@ const mutations = {
     state.log=payload
   }
 }
-
+var loadWorksheetsItems = function(){}
+loadWorksheetsItems.prototype.load= async function(){
+  var self = this;
+  await Excel.run(async context=>{
+    var sheets = context.workbook.worksheets;
+    sheets.load("items");
+    await context.sync()
+    self.sheets = sheets.items
+    return context.sync();
+  })
+}
+loadWorksheetsItems.prototype.getItems = async function(){
+  await this.load()
+  return this.sheets;
+}
+loadWorksheetsItems.prototype.changePositions = async function(changedValues){
+  await this.getItems()
+  var changedItem;
+  var fisrtChange = false;
+  changedValues.forEach((item, index)=>{
+    const changedItems = this.sheets.filter((oldItem)=>{
+      return (item.id ==oldItem.id && oldItem.position != index)
+    })
+    if (changedItems.length>0 && fisrtChange==false){
+      changedItem = {
+        id: item.id,
+        position: index
+      }
+      fisrtChange= true
+    }
+  })
+  return changedItem;  
+}
 
 const actions = {
-  updateElements: ({ commit }, payload) => {
-    commit("updateElements", payload);
+  async updateElements ({dispatch, commit }, payload) {   
+    const newSheetOrder = []
+    await payload.forEach(async (sheet)=>{
+      if(sheet.elements.length>0){
+        await sheet.elements.forEach(async (sheetChild) => {
+          newSheetOrder.push(sheetChild)
+        });
+      }else{
+        newSheetOrder.push(sheet)        
+      }
+    });
+    try {
+      // check which sheet changed
+    const itemLoader = new loadWorksheetsItems();
+    const changedItem = await itemLoader.changePositions(newSheetOrder);
+    dispatch('reorderWorksheet', changedItem)
+    commit('updateElements',payload);      
+    } catch (error) {
+      commit('log',error)
+    }
+
   },
   async loadWorksheets ({commit},payload){
-    await Excel.run(async context=>{
-      var sheets = context.workbook.worksheets;
-      sheets.load("items");
-      return await context.sync().then(()=>{
-        return sheets.items}) 
-    }).then(value => commit("loadWorksheets", value))
+    const items = new loadWorksheetsItems() 
+    commit("loadWorksheets", await items.getItems())
   },
   async renameWorksheet ({dispatch, commit}, {id, name}){
     await Excel.run(async context => {
@@ -91,6 +138,21 @@ const actions = {
       return await context.sync()
     })
     dispatch('loadWorksheets')
+  },
+  async reorderWorksheet ({dispatch, commit}, {id, position}){
+    await Excel.run(async context => {
+      var sheet;
+      switch (typeof id) {
+        case "undefined":
+          sheet = context.workbook.worksheets.getActiveWorksheet();        
+          break;
+        default:
+          sheet = context.workbook.worksheets.getItem(id)
+          break;
+      }
+      sheet.position = position
+      return await context.sync()
+    })
   }
 }
 
