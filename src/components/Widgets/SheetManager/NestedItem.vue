@@ -3,12 +3,13 @@
     <div class="media-content">
       <div class="level is-mobile">
         <div class="level-left">
-            <div class="content has-text-left">
-              <span class="is-child" v-show="!isParent">&#8226;</span>
+            <div class="content has-text-left">             
               <div class="level-item">
+                <span class="is-child" v-show="!isParent">&#8226;</span>
                 <editable-text 
                   @editable-text-readonly="handleReadonly"
-                  @editable-text-readonly-off="handleReadonly" 
+                  @editable-text-readonly-off="handleReadonly"
+                  :isModalActive="isReadonlyModeActive"
                   :content.sync="sheetName"/>
               </div>
             </div>
@@ -31,6 +32,23 @@
             </transition>
           </div>
         </div>
+      </div>
+    </div>
+    <div v-if="!justCoupleWords && isReadonlyModeActive"
+      :class="{'is-active':!justCoupleWords && isReadonlyModeActive}" 
+      class="modal"> 
+      <div @click="isReadonlyModeActive = false" class="modal-background"></div>
+      <div @click.stop class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title is-small">Редактирование названия листа..</p>
+        </header>
+        <section class="modal-card-body">
+          <textarea class="textarea has-fullsize" rows="1" 
+          v-model="sheetName"/>
+        </section>
+        <footer class="modal-card-foot">
+          <button @click="isReadonlyModeActive = false" class="button is-success">Сохранить</button>
+        </footer>
       </div>
     </div>
   </div>
@@ -86,6 +104,9 @@ export default {
     }
   },
   computed: {
+    justCoupleWords: function(){
+      return this.sheetName.split(" ").length<=3
+    },
     childrenExists: function(){
       return Object.keys(this.value).length > 0
     },
@@ -95,7 +116,19 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+.modal-card-title.is-small {
+  font-size: 1em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.has-fullsize{
+  height: 65vh !important;
+}
+.media-content {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
 .media.is-tiny-margin + .media.is-tiny-margin {
     margin-top: 0.3rem;
     padding-top: 0.1rem;

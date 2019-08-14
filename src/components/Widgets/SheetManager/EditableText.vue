@@ -1,23 +1,22 @@
 <template>
-  <input 
+<input  
     @dblclick="readonly=false"
     :readonly="readonly"
     :class="{'on-edit': !readonly}"
-    @mouseout="readonly=true"
+    @mouseout="handleMouseOut()"
+    @keydown.enter="readonly=true"
     type="text"
     class="input has-simple-look"
     v-model="content"
-    @input="$emit(
-        'update:content', 
-        $event.target.innerHTML
-    )">
+    @input="updateContent"
+    >  
 </template>
 
 
 <script>
 export default {
   name: "editable-text",
-  props: ['content'],
+  props: ['content', 'isModalActive'],
   data(){
     return {
         readonly: true
@@ -27,6 +26,9 @@ export default {
       this.$el.innerHTML = this.content;
   },
   watch: {
+    isModalActive: function(value){
+      if(value==false) {this.readonly = true}
+    },
     readonly: function(value){
       switch (value) {
         case true:
@@ -40,6 +42,24 @@ export default {
     },
     content: function () {
         this.$el.innerHTML = this.content;
+    }
+  },
+  methods: {
+    updateContent: function(){
+      this.$emit(
+        'update:content', 
+        this.content
+      )
+    },
+    handleMouseOut: function(){
+      if (!this.readonly && this.justCoupleWords){
+        this.readonly = true
+      }
+    }
+  },
+  computed: {
+    justCoupleWords: function(){
+      return this.content.split(" ").length<=3
     }
   }
 }

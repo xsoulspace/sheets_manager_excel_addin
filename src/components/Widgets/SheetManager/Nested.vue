@@ -101,10 +101,9 @@ export default {
 };
 </script>
 <style lang="scss">
-
 .box.is-child {
   box-shadow: none;
-  min-width: 10rem;
+  min-width: 9rem;
   width: 100%;
   border-width: 1px;
   border-color: #dbdbdb;

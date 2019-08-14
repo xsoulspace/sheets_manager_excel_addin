@@ -85,10 +85,7 @@ const actions = {
     }).then(value => commit("loadWorksheets", value))
   },
   async renameWorksheet ({dispatch, commit}, {id, name}){
-    var comm = commit;
-    
     await Excel.run(async context => {
-      
       var sheet = context.workbook.worksheets.getItem(id)
       sheet.name = name;
       return await context.sync()
