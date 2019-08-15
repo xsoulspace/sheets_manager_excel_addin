@@ -88,6 +88,7 @@ loadWorksheetsItems.prototype.getItems = async function(){
 loadWorksheetsItems.prototype.changePositions = async function(changedValues){
   await this.getItems()
   var changedItem;
+  var newChangedItems=[];
   var fisrtChange = false;
   changedValues.forEach((item, index)=>{
     const changedItems = this.sheets.filter((oldItem)=>{
@@ -98,10 +99,11 @@ loadWorksheetsItems.prototype.changePositions = async function(changedValues){
         id: item.id,
         position: index
       }
-      fisrtChange= true
+      newChangedItems.push(changedItem)
+      // fisrtChange= true
     }
   })
-  return changedItem;  
+  return newChangedItems;  
 }
 
 const actions = {
@@ -119,8 +121,11 @@ const actions = {
     try {
       // check which sheet changed
     const itemLoader = new loadWorksheetsItems();
-    const changedItem = await itemLoader.changePositions(newSheetOrder);
-    dispatch('reorderWorksheet', changedItem)
+    const changedItems = await itemLoader.changePositions(newSheetOrder);
+    changedItems.forEach((item)=>{
+      dispatch('reorderWorksheet', item)
+    })
+
     commit('updateElements',payload);      
     } catch (error) {
       commit('log',error)
