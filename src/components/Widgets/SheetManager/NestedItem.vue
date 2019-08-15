@@ -6,11 +6,15 @@
             <div class="content has-text-left">             
               <div class="level-item">
                 <span class="is-child" v-show="!isParent">&#8226;</span>
+                <selector :id="id"></selector>
                 <editable-text 
                   @editable-text-readonly="handleReadonly"
                   @editable-text-readonly-off="handleReadonly"
                   :isModalActive="isReadonlyModeActive"
-                  :content.sync="sheetName"/>
+                  :content.sync="sheetName"></editable-text>
+                <span class="icon right-floated">
+                  <i class="fas fa-ellipsis-v"></i>
+                </span>
               </div>
             </div>
         </div>
@@ -55,6 +59,7 @@
 </template>
 <script>
 //import EventBus from "../../../EventBus.js";
+import Selector from "./Selector";
 import EditableText from "./EditableText";
 export default {
   name: 'nested-item',
@@ -92,6 +97,7 @@ export default {
   },
   components: {
     EditableText,
+    Selector,
     Nested: ()=> import('./Nested.vue')
   },
   mounted: function(){
@@ -101,7 +107,7 @@ export default {
     handleReadonly: function(){
       const lastValue = this.isReadonlyModeActive
       this.isReadonlyModeActive = !lastValue 
-    }
+    },
   },
   computed: {
     justCoupleWords: function(){

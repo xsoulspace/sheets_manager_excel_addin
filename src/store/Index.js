@@ -125,7 +125,6 @@ const actions = {
     changedItems.forEach((item)=>{
       dispatch('reorderWorksheet', item)
     })
-
     commit('updateElements',payload);      
     } catch (error) {
       commit('log',error)
@@ -143,6 +142,51 @@ const actions = {
       return await context.sync()
     })
     dispatch('loadWorksheets')
+  },
+  async addNewWorksheet({dispatch, commit}, {name,position, color}){
+    var id;
+    await Excel.run(async context => {
+      var sheets = context.workbook.worksheets
+      var sheet = sheets.add(name)
+      id = sheet.load("id")
+      return context.sync()
+    })
+    dispatch('reorderWorksheet', {id, position});
+    dispatch("changeColorWorksheet",{id,color});    
+  },
+  async deleteWorksheet({dispatch, commit}, {id}){
+    await Excel.run(async context => {
+      var sheets = context.workbook.worksheets
+      sheets.load("items");
+      return context.sync()
+        .then(function () {
+            if (sheets.items.length === 1) {
+              commit('log',"Unable to delete the only worksheet in the workbook")
+            } else {
+                var sheet = sheets.getItem(id);
+                sheet.delete();
+                return context.sync();
+            };
+        });
+    })
+    dispatch("loadWorksheets")
+  },
+  async toogleVisbilyWorksheet({dispatch, commit}, {id,visible}){
+
+  },
+  async changeColorWorksheet({dispatch, commit}, {id, color}){
+    await Excel.run(async context => {
+      var sheet = context.workbook.worksheets.getItem(id)
+      sheet.tabColor = color;
+      return context.sync()
+    })
+  },
+  async selectWorksheet({dispatch, commit}, {id}){
+    await Excel.run(async context => {
+      var sheet = context.workbook.worksheets.getItem(id)
+      sheet.activate();
+      return await context.sync()
+    })
   },
   async reorderWorksheet ({dispatch, commit}, {id, position}){
     await Excel.run(async context => {
