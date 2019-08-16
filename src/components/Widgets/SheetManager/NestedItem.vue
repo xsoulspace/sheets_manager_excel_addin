@@ -1,20 +1,22 @@
 <template>
   <div class="media is-tiny-margin">
     <div class="media-content">
-      <div class="level is-mobile">
+      <div class="level is-mobile is-relative">
         <div class="level-left">
-            <div class="content has-text-left">             
+          <span class="is-child handler" v-show="!isParent">&#8226;</span>
+            <color-mark :id="id"></color-mark>
+            <div class="color-mark-divider"></div>        
+            <div class="content has-text-left">
               <div class="level-item">
-                <span class="is-child" v-show="!isParent">&#8226;</span>
+
                 <selector :id="id"></selector>
                 <editable-text 
                   @editable-text-readonly="handleReadonly"
                   @editable-text-readonly-off="handleReadonly"
                   :isModalActive="isReadonlyModeActive"
-                  :content.sync="sheetName"></editable-text>
-                <span class="icon right-floated">
-                  <i class="fas fa-ellipsis-v"></i>
-                </span>
+                  :content.sync="sheetName"
+                ></editable-text>
+                <!-- <dropdown-menu :id="id"></!-->
               </div>
             </div>
         </div>
@@ -58,6 +60,8 @@
   </div>
 </template>
 <script>
+import DropdownMenu from "./DropdownMenu";
+import ColorMark from "./ColorMark";
 //import EventBus from "../../../EventBus.js";
 import Selector from "./Selector";
 import EditableText from "./EditableText";
@@ -98,6 +102,8 @@ export default {
   components: {
     EditableText,
     Selector,
+    ColorMark,
+    DropdownMenu,
     Nested: ()=> import('./Nested.vue')
   },
   mounted: function(){
@@ -108,6 +114,11 @@ export default {
       const lastValue = this.isReadonlyModeActive
       this.isReadonlyModeActive = !lastValue 
     },
+    selectWorksheet: function(){
+      // dispatch('selectWorksheet',{id:this.id})
+      console.log("hey")
+      //commit("log", 'event')
+    }
   },
   computed: {
     justCoupleWords: function(){
@@ -123,6 +134,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.color-mark-divider{
+  width: 8px;
+  position: relative;
+}
+.is-relative{
+  position: relative;
+}
 .modal-card-title.is-small {
   font-size: 1em;
   word-wrap: break-word;
@@ -146,7 +164,7 @@ export default {
   padding-top: 0rem;
 }
 .media .box.has-padding {
-  padding: 0.6rem;
+  padding: 0.6rem 0.6rem 0.6rem 0.4rem;
 }
 span.is-child {
   content: "\2022";

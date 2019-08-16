@@ -1,12 +1,12 @@
 <template>
-<input  
+<input 
     @dblclick="readonly=false"
     :readonly="readonly"
     :class="{'on-edit': !readonly}"
     @mouseout="handleMouseOut()"
     @keydown.enter="readonly=true"
     type="text"
-    class="input has-simple-look"
+    class="input has-simple-look handle"
     v-model="content"
     @input="updateContent"
     >  

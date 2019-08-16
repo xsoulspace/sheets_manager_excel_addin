@@ -1,5 +1,6 @@
 <template>
 <draggable
+  handle=".handle"
     v-bind="dragOptions"
     tag="div"
     :class="{
@@ -8,12 +9,12 @@
       'no-children':!childrenExists}"
     @start="dragging = true"
     @end="dragging = false"
-    class="box"
-  
+    class="box has-paddings"
     :list="list"
     :value="value"
     @input="emitter"
 >
+    <!--  -->
   <nested-item
     :key="el.id" 
     v-for="el in realValue" 
@@ -74,8 +75,8 @@ export default {
     emitter(value) {
       this.$emit("input", value);
     },
-    handleHover(){
-      //console.log("hey")
+    handleHover(e){
+      console.log(e)
       //this.isHovered = !this.isHovered
     }
   },
@@ -107,6 +108,9 @@ export default {
   width: 100%;
   border-width: 1px;
   border-color: #dbdbdb;
+}
+.box.has-paddings {
+  padding: 0.8rem 0.8rem 0.8rem 0.4rem;
 }
 .is-child.with-children {
   border-style: solid;
