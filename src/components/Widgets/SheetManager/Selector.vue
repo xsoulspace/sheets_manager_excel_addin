@@ -1,12 +1,12 @@
 <template>
-<div class="icon is-small" @click="selectWorksheet">
+<div class="icon is-small">
     <i 
-      @click="selectWorksheet" 
+      @click="toogleVisibility" 
       :class="{
         'is-active':isSelected,
         'is-passive':!isSelected
       }" 
-      class="fas fa-circle"></i>
+      class="far fa-eye-slash"></i>
 </div>
   
 </template>
@@ -20,11 +20,19 @@ export default {
       isSelected: false
     }
   },
-  methods: {
-    selectWorksheet: function(){
-      this.$store.dispatch('selectWorksheet',{id:this.id})
-      this.isSelected=true;
+  computed:{
+    isVisbile:{
+      set: function(){
+        this.$store.dispatch('toogleIsVisbile',{id:this.id})
+      },
+      get: function(){
+        this.$$store.getters['getIsVisible']
+      }
     }
+
+  },
+  methods: {
+
   }
 }
 </script>

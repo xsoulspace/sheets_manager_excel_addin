@@ -9,6 +9,14 @@
         </span>
       </a>
     </li>
+    <li>
+      <a>
+        <label class="checkbox">
+          <input v-model="isEditModeActive" type="checkbox">
+          Edit Mode
+        </label>
+      </a>
+    </li>
   </ul>
 </nav>
 <div :class="{'is-active':isSettingsActive}" class="modal">
@@ -55,12 +63,20 @@ export default {
   methods: {
     modalApplyHandler: function(){
       this.isSettingsActive = false;
-    },
+    }
   },
   components: {
     Nested
   },
   computed:{
+      isEditModeActive: {
+      set: function(){
+        this.$store.commit('toogleEditMode')
+      },
+      get: function(){
+        return this.$store.getters['getEditMode']
+      }
+    },
     elements: {
       get() {
         return this.$store.getters['getNested'];

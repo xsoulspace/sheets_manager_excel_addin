@@ -16,7 +16,7 @@
 <script>
 export default {
   name: "editable-text",
-  props: ['content', 'isModalActive'],
+  props: ['content', 'isModalActive', 'id'],
   data(){
     return {
         readonly: true
@@ -45,6 +45,10 @@ export default {
     }
   },
   methods: {
+    selectWorksheet: function(){
+      this.dispatch('selectWorksheet',{id:this.id})
+
+    },
     updateContent: function(){
       this.$emit(
         'update:content', 

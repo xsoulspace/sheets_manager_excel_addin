@@ -9,15 +9,18 @@ const state = {
     {
       id: 2,
       name: "Fiona",
+      isVisbile: true,
       elements: [
         {
           id: 4,
           name: "Lord Farquad",
+          isVisbile: true,
           elements: []
         },
         {
           id: 5,
           name: "Prince Charming",
+          isVisbile: true,
           elements: []
         }
       ]
@@ -25,6 +28,7 @@ const state = {
     {
       id: 3,
       name: "Donkey",
+      isVisbile: true,
       elements: []
     }
   ],
@@ -32,7 +36,8 @@ const state = {
 //    enableChildren: true,
     
   },
-  log: ""
+  log: "",
+  editMode: false
 }
 
 const getters = {
@@ -44,10 +49,32 @@ const getters = {
   },
   getLog: state=> {
     return state.log;
+  },
+  getEditMode: state => {
+    return state.editMode;
+  },
+  getIsVisible: state=>id=>{
+    state.elements.forEach(element => {
+      if(element.elements.length> 0){
+        element.elements.forEach(elementChild => {
+          if(elementChild.id == id) {
+            return elementChild.isVisbile;
+          }
+        })
+      } else {
+        if(element.id == id) {
+          return element.isVisbile;
+        }
+      }
+    })
   }
 }
 
 const mutations = {
+  toogleEditMode: (state, payload) =>{
+    const current = state.editMode
+    state.editMode = !current;
+  },
   updateElements: (state, payload) => {
     state.elements = payload;
   },
@@ -171,7 +198,7 @@ const actions = {
     })
     dispatch("loadWorksheets")
   },
-  async toogleVisbilyWorksheet({dispatch, commit}, {id,visible}){
+  async toogleVisbilyWorksheet({dispatch, commit}, {id,isVisible}){
 
   },
   async changeColorWorksheet({dispatch, commit}, {id, color}){

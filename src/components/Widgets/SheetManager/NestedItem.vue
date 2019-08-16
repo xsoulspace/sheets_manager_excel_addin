@@ -3,19 +3,26 @@
     <div class="media-content">
       <div class="level is-mobile is-relative">
         <div class="level-left">
-          <span class="is-child handler" v-show="!isParent">&#8226;</span>
-            <color-mark :id="id"></color-mark>
+          <span class="is-child" v-show="!isParent">&#8226;</span>
+            <color-mark :class="{'handle':!isEditModeActive}" :id="id"></color-mark>
             <div class="color-mark-divider"></div>        
             <div class="content has-text-left">
               <div class="level-item">
-
                 <selector :id="id"></selector>
-                <editable-text 
+                <div class="color-mark-divider"></div> 
+                <editable-text
+                  v-if="isEditModeActive" 
+                  :id="id"
                   @editable-text-readonly="handleReadonly"
                   @editable-text-readonly-off="handleReadonly"
                   :isModalActive="isReadonlyModeActive"
                   :content.sync="sheetName"
                 ></editable-text>
+                <div 
+                  @click="selectWorksheet" 
+                  class="has-simple-look" 
+                  v-if="!isEditModeActive">
+                  {{sheetName}}</div>
                 <!-- <dropdown-menu :id="id"></!-->
               </div>
             </div>
@@ -115,12 +122,19 @@ export default {
       this.isReadonlyModeActive = !lastValue 
     },
     selectWorksheet: function(){
-      // dispatch('selectWorksheet',{id:this.id})
-      console.log("hey")
-      //commit("log", 'event')
+      this.$store.dispatch('selectWorksheet',{id:this.id})
+
     }
   },
   computed: {
+    isEditModeActive: {
+      set: function(){
+        this.$store.commit('toogleEditMode')
+      },
+      get: function(){
+        return this.$store.getters['getEditMode']
+      }
+    },
     justCoupleWords: function(){
       return this.sheetName.split(" ").length<=3
     },
@@ -135,7 +149,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .color-mark-divider{
-  width: 8px;
+  width: 10px;
   position: relative;
 }
 .is-relative{
@@ -169,5 +183,17 @@ export default {
 span.is-child {
   content: "\2022";
   color: #949494;
+}
+.has-simple-look,
+.has-simple-look:focus, 
+.has-simple-look:active,
+.has-simple-look:hover{
+    border-color: white;
+    border-radius: unset;
+    box-shadow: none;
+    box-sizing: border-box;
+    max-width: 130px;
+    padding-left: 0px;
+    padding-right: 0px; 
 }
 </style>
