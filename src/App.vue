@@ -38,17 +38,56 @@ export default {
     }
   },
   methods: {
-
+    eventHandler: async function(event){
+      var self = this;
+      self.$store.commit('joinlog', JSON.stringify(event))
+      switch (event.type) {
+        case "WorksheetAdded":
+          
+          break;
+      
+        case "WorksheetActivated":
+          self.$store.dispatch('worksheetActivated',event.worksheetId)   
+          break;
+        case "WorksheetDeleted":
+          self.$store.dispatch('worksheetDeleted',event.worksheetId)   
+          break;
+      }
+      // 
+       
+    },
   },
   mounted: function(){
+    // Catch all events from Excel
+      var self = this;
+      Excel.run(async context=> {
+        let sheets = context.workbook.worksheets
+        sheets.onActivated.add(self.eventHandler) 
+        sheets.onAdded.add(self.eventHandler)
+        sheets.onDeleted.add(self.eventHandler)
+                
+        return await context.sync()
+      })
+    
+
+    // ****************
+    // Excel Events end
+    // ****************
+    // const elements = localStorage.getItem("elements")
+    // if(typeof elements != "undefined"){
+    //   this.$store.dispatch('specialUpdateElements',elements)
+    // }
     if (this.isLocalStorageExists){
       // getting data from local storage
       //console.log(wStorage)
       if (localStorage.getItem(this.StoreAppSettings)){
         this.appSettings = JSON.parse(localStorage.getItem(this.StoreAppSettings))
       }
-    }
-    
+    }    
   },
+  beforeDestroy: function(){
+    // const elements = this.$store.getters['getNested']
+    // localStorage.setItem("elements",elements)
+  }
 }
 </script>

@@ -1,9 +1,9 @@
 <template>
   <div class="media is-tiny-margin">
+    <span class="is-child" v-show="!isParent">~~ </span>
     <div class="media-content">
       <div class="level is-mobile is-relative" :style="{'background-color':backgroundColor}">
         <div class="level-left">
-          <span class="is-child" v-show="!isParent">&#8226;</span>
             <color-mark 
               @color-mark-clicked="handleColorMarkClick"
               :tabColor="tabColor"
@@ -161,8 +161,16 @@ export default {
     }
   },
   computed: {
+    isActive: function(){
+      return this.$store.getters['getIsActive'](this.id)
+    },
     backgroundColor: function(){
-      return hexToRgba(this.tabColor, 0.1)
+      let opacity;
+      this.isActive ?
+        opacity = "0.3" :
+        opacity = "0.05"
+      // this.store.commit('log', opacity)
+      return hexToRgba(this.tabColor, opacity)
     },
     tabColor: {
       get: function(){

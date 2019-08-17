@@ -86,7 +86,9 @@ export default {
     },
     elements: {
       get() {
+        
         return this.$store.getters['getNested'];
+        
       },
       set(value) {
         this.$store.dispatch("updateElements", value);

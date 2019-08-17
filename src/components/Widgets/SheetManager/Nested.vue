@@ -61,6 +61,7 @@ export default {
     }
   },
   mounted: function(){
+    
     //EventBus.$on('nested-item-hover',this.handleHover)
   },
   beforeDestroy: function(){
@@ -97,6 +98,7 @@ export default {
     // this.value when input = v-model
     // this.list  when input != v-model
     realValue() {
+      
       return this.value ? this.value : this.list;
     }
   },
