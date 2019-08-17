@@ -5,6 +5,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './bulma.scss'
+// Import the styles too, globally
+import "vue-swatches/dist/vue-swatches.min.css"
+
 
 //Check were we are
 const info = window.sessionStorage['hostInfoValue']

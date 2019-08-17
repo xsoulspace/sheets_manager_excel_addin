@@ -2,10 +2,17 @@
 <div class="home">
 <nav class="tabs">
   <ul>
-    <li @click="isSettingsActive = true">
+    <!-- <li @click="isSettingsActive = true">
       <a>
         <span class="icon">
           <i class="fas fa-sliders-h"></i>
+        </span>
+      </a>
+    </li> -->
+    <li>
+      <a>
+        <span class="icon">
+          <i class="fas fa-info"></i>
         </span>
       </a>
     </li>

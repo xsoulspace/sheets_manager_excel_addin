@@ -5,6 +5,7 @@
     tag="div"
     :class="{
       'is-child':!isParent,
+      'is-dragging':dragging && !isParent,
       'with-children':childrenExists, 
       'no-children':!childrenExists}"
     @start="dragging = true"
@@ -17,9 +18,9 @@
     <!--  -->
   <nested-item
     :key="el.id" 
-    v-for="el in realValue" 
+    v-for="el in realValue"
     :value="el.elements"
-    :id = "el.id"
+    :id="el.id"
     :isParent="isParent"
     :name="el.name"
     :dragging="dragging"
@@ -104,10 +105,14 @@ export default {
 <style lang="scss">
 .box.is-child {
   box-shadow: none;
-  min-width: 9rem;
+  min-width: 1rem;
   width: 100%;
   border-width: 1px;
   border-color: #dbdbdb;
+}
+.box.is-child.is-dragging {
+  box-shadow: none;
+  min-width: 10rem;
 }
 .box.has-paddings {
   padding: 0.8rem 0.8rem 0.8rem 0.4rem;

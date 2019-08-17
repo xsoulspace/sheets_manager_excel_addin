@@ -73,7 +73,7 @@ export default {
 .input.has-simple-look:focus, 
 .input.has-simple-look:active,
 .input.has-simple-look:hover{
-    border-color: white;
+    border-color: rgba(255, 255, 255, 0.5);
     border-radius: unset;
     box-shadow: none;
     box-sizing: border-box;
@@ -86,6 +86,6 @@ export default {
     word-wrap: break-word;
     max-height: 100%;
     color: rgb(5, 5, 5);
-    background-color: rgb(248, 248, 248); 
+    background-color: rgba(248, 248, 248, 0.9); 
 }
 </style>

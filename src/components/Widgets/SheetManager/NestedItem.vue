@@ -1,10 +1,14 @@
 <template>
   <div class="media is-tiny-margin">
     <div class="media-content">
-      <div class="level is-mobile is-relative">
+      <div class="level is-mobile is-relative" :style="{'background-color':backgroundColor}">
         <div class="level-left">
           <span class="is-child" v-show="!isParent">&#8226;</span>
-            <color-mark :class="{'handle':!isEditModeActive}" :id="id"></color-mark>
+            <color-mark 
+              @color-mark-clicked="handleColorMarkClick"
+              :tabColor="tabColor"
+              :class="{'handle':!isEditModeActive}" 
+              :id="id"></color-mark>
             <div class="color-mark-divider"></div>        
             <div class="content has-text-left">
               <div class="level-item">
@@ -64,6 +68,27 @@
         </footer>
       </div>
     </div>
+    <div v-show="isColorSwitchesActive"
+      :class="{'is-active':isColorSwitchesActive}" 
+      class="modal"> 
+      <div @click="isColorSwitchesActive = false" class="modal-background"></div>
+      <div @click.stop class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title is-small">Редактирование цвета листа..</p>
+        </header>
+        <section class="modal-card-body">
+          <swatches v-model="tabColor" 
+            colors="material-basic"
+            inline
+            show-fallback
+            popover-to="left">
+          </swatches>
+        </section>
+        <footer class="modal-card-foot">
+          <button @click="isColorSwitchesActive = false" class="button is-success">Сохранить</button>
+        </footer>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -72,6 +97,11 @@ import ColorMark from "./ColorMark";
 //import EventBus from "../../../EventBus.js";
 import Selector from "./Selector";
 import EditableText from "./EditableText";
+//https://saintplay.github.io/vue-swatches/#sub-using-a-custom-trigger
+import Swatches from 'vue-swatches'
+import hexToRgba from 'hex-to-rgba';
+// https://www.npmjs.com/package/hex-to-rgba
+
 export default {
   name: 'nested-item',
   props: {
@@ -97,7 +127,8 @@ export default {
   data(){
     return{
       sheetName:  "",
-      isReadonlyModeActive: false
+      isReadonlyModeActive: false,
+      isColorSwitchesActive: false,
     }
   },
   watch: {
@@ -111,22 +142,37 @@ export default {
     Selector,
     ColorMark,
     DropdownMenu,
+    Swatches,
     Nested: ()=> import('./Nested.vue')
   },
   mounted: function(){
     this.sheetName = this.name
   },
   methods: {
+    handleColorMarkClick:function(){
+      this.isColorSwitchesActive=true
+    },
     handleReadonly: function(){
       const lastValue = this.isReadonlyModeActive
       this.isReadonlyModeActive = !lastValue 
     },
     selectWorksheet: function(){
       this.$store.dispatch('selectWorksheet',{id:this.id})
-
     }
   },
   computed: {
+    backgroundColor: function(){
+      return hexToRgba(this.tabColor, 0.1)
+    },
+    tabColor: {
+      get: function(){
+        return this.$store.getters['getColor'](this.id)
+      },
+      set: function(color){
+        const id = this.id
+        this.$store.dispatch('changeColorWorksheet',{id,color})
+      }
+    },
     isEditModeActive: {
       set: function(){
         this.$store.commit('toogleEditMode')
@@ -154,6 +200,7 @@ export default {
 }
 .is-relative{
   position: relative;
+  border-radius: 4px;
 }
 .modal-card-title.is-small {
   font-size: 1em;
@@ -178,7 +225,7 @@ export default {
   padding-top: 0rem;
 }
 .media .box.has-padding {
-  padding: 0.6rem 0.6rem 0.6rem 0.4rem;
+  padding: 1rem 0.6rem 1rem 0.4rem;
 }
 span.is-child {
   content: "\2022";
@@ -188,7 +235,7 @@ span.is-child {
 .has-simple-look:focus, 
 .has-simple-look:active,
 .has-simple-look:hover{
-    border-color: white;
+    border-color: rgba(255, 255, 255,0.5);
     border-radius: unset;
     box-shadow: none;
     box-sizing: border-box;

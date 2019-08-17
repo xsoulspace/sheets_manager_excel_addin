@@ -1,12 +1,31 @@
 <template>
-  <div class="rectangular grey">
+  <div 
+    @click="clicked" class="rectangular" 
+    :style="{
+      'background-color': tabColor,
+      'border-color': tabColor
+    }">
   </div>
 </template>
 
 <script>
+
 export default {
   name: "color-mark",
-  props: ['id']
+  props: ['id','tabColor'],
+  data () {
+    return {
+    }
+  },
+  mounted: function(){
+    
+  },
+  methods: {
+    clicked:function(){
+      console.log(this.tabColor)
+      this.$emit("color-mark-clicked")
+    }
+  }
 }
 </script>
 
@@ -21,13 +40,11 @@ export default {
   border-top-left-radius: 4px;  
   border-width: 0 0 0 1px;
   border-style: solid;
+  background-color: rgba(54, 54, 54, 0.9);
+  border-color: rgba(54, 54, 54, 0.9);
 }
 .rectangular:hover{
   width: 35px;
 }
-.grey {
-  background-color: rgba(54, 54, 54, 0.9);
-  border-color: rgba(54, 54, 54, 0.9);
 
-}
 </style>

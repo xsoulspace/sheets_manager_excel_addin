@@ -1,12 +1,11 @@
 <template>
-<div class="icon is-small">
-    <i 
-      @click="toogleVisibility" 
-      :class="{
-        'is-active':isSelected,
-        'is-passive':!isSelected
-      }" 
-      class="far fa-eye-slash"></i>
+<div 
+  @click="toogleVisibility" 
+  class="icon is-small" :class="{
+    'is-active':!isVisible,
+    'is-passive':isVisible
+  }" >
+    <i class="far fa-eye-slash"></i>
 </div>
   
 </template>
@@ -17,22 +16,36 @@ export default {
   props: ['id'],
   data(){
     return {
-      isSelected: false
+      isVisible: true
     }
   },
   computed:{
-    isVisbile:{
-      set: function(){
-        this.$store.dispatch('toogleIsVisbile',{id:this.id})
+    visibility:{
+      set: function(value){
+        this.$store.dispatch('toogleWorksheetVisibility',{id:this.id, isVisible: value})
       },
       get: function(){
-        this.$$store.getters['getIsVisible']
+        if(this.$store.getters['getIsVisible'](this.id) == "Visible"){
+          this.isVisible= true
+        } else {
+          this.isVisible= false
+        }
+        return this.$store.getters['getIsVisible'](this.id);
       }
     }
 
   },
   methods: {
+    toogleVisibility: function(){
+      if(this.visibility == "Visible") {
+        this.visibility = "Hidden"
+        this.isVisible = false
+      }else{
+        this.visibility = "Visible"
+        this.isVisible = true
+      }
 
+    }
   }
 }
 </script>

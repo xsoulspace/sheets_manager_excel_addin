@@ -1,26 +1,30 @@
-import vue from "vue";
 const state = {
   elements: [
     {
       id: 1,
       name: "Shrek",
+      isVisible: "Visible",
+      color: "#FFFBBB",
       elements: []
     },
     {
       id: 2,
       name: "Fiona",
-      isVisbile: true,
+      isVisible: "Visible",
+      color: "",
       elements: [
         {
           id: 4,
           name: "Lord Farquad",
-          isVisbile: true,
+          isVisible: "Visible",
+          color: "",
           elements: []
         },
         {
           id: 5,
           name: "Prince Charming",
-          isVisbile: true,
+          isVisible: "Visible",
+          color: "",
           elements: []
         }
       ]
@@ -28,7 +32,8 @@ const state = {
     {
       id: 3,
       name: "Donkey",
-      isVisbile: true,
+      isVisible: "Visible",
+      color: "",
       elements: []
     }
   ],
@@ -41,6 +46,9 @@ const state = {
 }
 
 const getters = {
+  getVisibleSheetsCounter: state=>{
+    return state;
+  },
   getNested: state=>{
     return  state.elements;
   },
@@ -53,22 +61,59 @@ const getters = {
   getEditMode: state => {
     return state.editMode;
   },
+  getColor: state=>id=>{
+    return getValueInElements(id,state.elements,"color")
+  },
   getIsVisible: state=>id=>{
-    state.elements.forEach(element => {
-      if(element.elements.length> 0){
-        element.elements.forEach(elementChild => {
-          if(elementChild.id == id) {
-            return elementChild.isVisbile;
-          }
-        })
-      } else {
-        if(element.id == id) {
-          return element.isVisbile;
-        }
-      }
-    })
+    return getValueInElements(id,state.elements,"isVisible")
   }
 }
+
+function getValueInElements(id,elements, propertyName){
+  var founded;
+  elements.forEach(element => {
+    if(element.elements.length> 0){
+      element.elements.forEach(elementChild => {
+        getValue(elementChild)  
+      })
+    }
+    getValue(element)
+  })
+  function getValue(parent){
+    if(parent.id == id) {
+      founded = parent[propertyName];
+    }  
+  }
+  return founded;
+}
+
+
+function changeValueInElements(id,elements, propertyName, value){
+  const newItems = elements.map(element => {
+    var newChildren =[];
+    if(element.elements.length> 0){
+      newChildren = element.elements.map(elementChild => {
+        return changeValue(elementChild)
+      })
+    }
+    var newElement = changeValue(element)
+    newElement.elements=newChildren
+    return newElement;
+  })
+  
+  function changeValue(parent){
+    const newParent =parent;
+    if(newParent.id == id) {
+      newParent[propertyName]=value;
+    }
+    return newParent;
+  }
+
+  return newItems;
+}
+
+
+// Mutations
 
 const mutations = {
   toogleEditMode: (state, payload) =>{
@@ -81,12 +126,20 @@ const mutations = {
   appSettings: (state, payload)=>{
     state.appSettings = payload
   },
+  toogleWorksheetVisibility: (state, {id, isVisible})=>{
+    state.elements = changeValueInElements(id,state.elements,"isVisible",isVisible)
+  },
+  changeColorWorksheet: (state, {id,color})=>{
+    state.elements = changeValueInElements(id,state.elements,"color",color)
+  },
   loadWorksheets: (state, sheets)=>{
     const elements =[]
     sheets.forEach(sheet => {
       const element = {
         id: sheet.id,
         name: sheet.name,
+        color: sheet.tabColor,
+        isVisible: sheet.visibility,
         elements: []
       }
       elements.push(element)
@@ -97,6 +150,10 @@ const mutations = {
     state.log=payload
   }
 }
+
+
+// Object loader
+
 var loadWorksheetsItems = function(){}
 loadWorksheetsItems.prototype.load= async function(){
   var self = this;
@@ -198,15 +255,21 @@ const actions = {
     })
     dispatch("loadWorksheets")
   },
-  async toogleVisbilyWorksheet({dispatch, commit}, {id,isVisible}){
-
+  async toogleWorksheetVisibility({dispatch, commit}, {id,isVisible}){
+    await Excel.run(async context => {
+      var sheet = context.workbook.worksheets.getItem(id)
+      sheet.visibility = isVisible;
+      return await context.sync()
+    });
+    commit('toogleWorksheetVisibility', {id,isVisible})
   },
   async changeColorWorksheet({dispatch, commit}, {id, color}){
     await Excel.run(async context => {
       var sheet = context.workbook.worksheets.getItem(id)
       sheet.tabColor = color;
-      return context.sync()
-    })
+      return await context.sync()
+    });
+    commit('changeColorWorksheet', {id,color})
   },
   async selectWorksheet({dispatch, commit}, {id}){
     await Excel.run(async context => {
