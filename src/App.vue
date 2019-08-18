@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-  {{log}}
+  <div class="notification" v-show="log.length>0">{{log}}</div>
 <router-view></router-view>
 </div>
 </template>

@@ -7,32 +7,36 @@
             <color-mark 
               @color-mark-clicked="handleColorMarkClick"
               :tabColor="tabColor"
-              :class="{'handle':!isEditModeActive}" 
+              :class="{'handle':true}" 
               :id="id"></color-mark>
-            <div class="color-mark-divider"></div>        
+            <div class="color-mark-divider"></div>  
+
             <div class="content has-text-left">
               <div class="level-item">
-                <selector :id="id"></selector>
-                <div class="color-mark-divider"></div> 
+                
+                <selector 
+                  v-if="isVisibilitySwitchesActive"
+                  :id="id"></selector>
+                
+                <div class="color-mark-divider"></div>
+
                 <editable-text
                   v-if="isEditModeActive" 
                   :id="id"
-                  @editable-text-readonly="handleReadonly"
-                  @editable-text-readonly-off="handleReadonly"
-                  :isModalActive="isReadonlyModeActive"
-                  :content.sync="sheetName"
+                  @editable-text-on-edit="handleEdit($event)"
                 ></editable-text>
                 <div 
+                  v-if="!isEditModeActive"
                   @dblclick="isEditModeActive = true"
                   @click="selectWorksheet" 
-                  class="has-simple-look" 
-                  v-if="!isEditModeActive">
+                  class="has-simple-look handle"
+                  >
                   {{sheetName}}</div>
                 <!-- <dropdown-menu :id="id"></!-->
               </div>
             </div>
         </div>
-        <div v-show="!isReadonlyModeActive" class="level-right">
+        <div v-show="!isEditModeActive" class="level-right">
           <div class="level-item">
             <transition name="fade">              
               <nested 
@@ -52,10 +56,12 @@
         </div>
       </div>
     </div>
-    <div v-if="!justCoupleWords && isReadonlyModeActive"
-      :class="{'is-active':!justCoupleWords && isReadonlyModeActive}" 
+    <!-- modals -->
+
+    <div v-if="!justCoupleWords && isTextEditorActive"
+      :class="{'is-active':!justCoupleWords && isTextEditorActive}" 
       class="modal"> 
-      <div @click="isReadonlyModeActive = false" class="modal-background"></div>
+      <div @click="isTextEditorActive = false" class="modal-background"></div>
       <div @click.stop class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title is-small">Редактирование названия листа..</p>
@@ -65,7 +71,7 @@
           v-model="sheetName"/>
         </section>
         <footer class="modal-card-foot">
-          <button @click="isReadonlyModeActive = false" class="button is-success">Сохранить</button>
+          <button @click="isTextEditorActive = false" class="button is-success">Сохранить</button>
         </footer>
       </div>
     </div>
@@ -127,15 +133,9 @@ export default {
   },
   data(){
     return{
-      sheetName:  "",
-      isReadonlyModeActive: false,
+      isEditModeActive: false,
+      isTextEditorActive: false,
       isColorSwitchesActive: false,
-    }
-  },
-  watch: {
-    sheetName: function(name){
-      const id = this.id
-      this.$store.dispatch('renameWorksheet',{id, name}) 
     }
   },
   components: {
@@ -153,25 +153,43 @@ export default {
     handleColorMarkClick:function(){
       this.isColorSwitchesActive=true
     },
-    handleReadonly: function(){
-      const lastValue = this.isReadonlyModeActive
-      this.isReadonlyModeActive = !lastValue 
+    handleEdit: function($event){
+      this.isEditModeActive = $event
     },
     selectWorksheet: function(){
-      this.$store.dispatch('selectWorksheet',{id:this.id})
+      this.$store.dispatch('selectWorksheet',this.id)
     }
   },
+  watch:{
+
+  },
   computed: {
+    isVisibilitySwitchesActive: function(){
+      return this.$store.getters['getVisibilitySwitchesState']
+    },
+    sheetName:{ 
+      get: function(){
+        const id = this.id
+        return this.$store.getters['getWorksheetName'](id) 
+      },
+      set: function(name){
+        const id = this.id
+        this.$store.dispatch('renameWorksheet',{id, name}) 
+      }
+    },
     isActive: function(){
       return this.$store.getters['getIsActive'](this.id)
     },
     backgroundColor: function(){
-      let opacity;
+      var color;
+      this.tabColor == "" ?
+        color = "#ebebeb" :
+        color = this.tabColor 
+      var opacity;
       this.isActive ?
         opacity = "0.3" :
         opacity = "0.05"
-      // this.store.commit('log', opacity)
-      return hexToRgba(this.tabColor, opacity)
+      return hexToRgba(color, opacity)
     },
     tabColor: {
       get: function(){
@@ -180,14 +198,6 @@ export default {
       set: function(color){
         const id = this.id
         this.$store.dispatch('changeColorWorksheet',{id,color})
-      }
-    },
-    isEditModeActive: {
-      set: function(){
-        this.$store.commit('toogleEditMode')
-      },
-      get: function(){
-        return this.$store.getters['getEditMode']
       }
     },
     justCoupleWords: function(){

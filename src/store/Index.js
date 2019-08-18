@@ -5,7 +5,6 @@ const state = {
       name: "Shrek",
       isVisible: "Hidden",
       color: "#FFFBBB",
-      isActive: false,
       elements: []
     },
     {
@@ -13,14 +12,12 @@ const state = {
       name: "Fiona",
       isVisible: "Visible",
       color: "",
-      isActive: false,
       elements: [
         {
           id: 4,
           name: "Lord Farquad",
           isVisible: "Visible",
           color: "",
-          isActive: false,
           elements: []
         },
         {
@@ -28,7 +25,6 @@ const state = {
           name: "Prince Charming",
           isVisible: "Visible",
           color: "",
-          isActive: false,
           elements: []
         }
       ]
@@ -38,21 +34,24 @@ const state = {
       name: "Donkey",
       isVisible: "Visible",
       color: "",
-      isActive: false,
       elements: []
     }
   ],
   appSettings: {
 //    enableChildren: true,
-    
+    visibilitySwitchesActive: false
   },
   log: "",
-  editMode: false
+  activeSheetId: "",
+  
 }
 
 const getters = {
   getNested: state=>{
     return  state.elements;
+  },
+  getVisibilitySwitchesState: state=>{
+    return state.appSettings.visibilitySwitchesActive;
   },
   appSettings: state=>{
     return state.appSettings;
@@ -70,7 +69,10 @@ const getters = {
     return getValueInElements(id,state.elements,"isVisible")
   },
   getIsActive: state=>id=>{
-    return getValueInElements(id,state.elements,"isActive")
+    return state.activeSheetId == id;
+  },
+  getWorksheetName:state=>id=>{
+    return getValueInElements(id,state.elements, "name")
   }
 }
 
@@ -174,6 +176,13 @@ const mutations = {
     const current = state.editMode
     state.editMode = !current;
   },
+  toogleVisibilitySwitchesState: (state,payload)=>{
+    let active;
+    state.appSettings.visibilitySwitchesActive ?
+      active = false :
+      active = true
+    state.appSettings.visibilitySwitchesActive = active;
+  },
   updateElements: (state, payload) => {
     state.elements = payload;
   },
@@ -189,44 +198,32 @@ const mutations = {
   changeColorWorksheet: (state, {id,color})=>{
     state.elements = changeValueInElements(id,state.elements,"color",color)
   },
-  changeActiveWorksheet: (state, {id,oldId})=>{
-    state.elements = changeValueInElements(
-        id,
-        state.elements,
-        "isActive",
-        true
-    )
-    state.elements = changeValueInElements(
-      oldId,
-      state.elements,
-      "isActive",
-      false
-    )
+  renameWorksheet: (state, {id, name})=>{
+    state.elements = changeValueInElements(id,state.elements,"name",name)
+  },
+  changeActiveWorksheet: (state, {id})=>{
+    state.activeSheetId = id;
   },
   loadWorksheets: (state, {allItems,activeItemId})=>{
     const allElements =[]
     allItems.forEach(sheet => {
-      let isActive;
-      activeItemId == sheet.id ?
-        isActive = true :
-        isActive = false
       const element = {
         id: sheet.id,
         name: sheet.name,
         color: sheet.tabColor,
         isVisible: sheet.visibility,
-        isActive: isActive,
         elements: []
       }
       allElements.push(element)
     });
     state.elements = allElements;
+    state.activeSheetId = activeItemId;
   },
   log: (state, payload)=>{
     state.log=payload
   },
   joinlog: (state, payload)=>{
-    state.log=state.log+ payload
+    state.log=state.log+ " " + payload
   }
 }
 
@@ -316,7 +313,7 @@ const actions = {
       sheet.name = name;
       return await context.sync()
     })
-    dispatch('loadWorksheets')
+    commit('renameWorksheet',{id, name})
   },
   async addNewWorksheet({dispatch, commit}, {name,position, color}){
     var id;
@@ -368,24 +365,19 @@ const actions = {
     });
     commit('changeColorWorksheet', {id,color})
   },
-  async selectWorksheet({dispatch, commit}, {id}){
-    let oldId;
-    await Excel.run(async context => {
-      var sheet = context.workbook.worksheets.getItem(id)
-      var activeSheet = context.workbook.worksheets.getActiveWorksheet();
-      activeSheet.load('id')
-      await context.sync()
-      oldId = activeSheet.id;
-      sheet.activate();
-      return await context.sync()
-    })
-    if (oldId != id) {
-      commit('changeActiveWorksheet', {id, oldId})
+  async selectWorksheet({dispatch, commit, state}, id){
+    const oldId = state.activeSheetId; 
+    if (id != oldId) {
+      await Excel.run(async context => {
+        const sheet = context.workbook.worksheets.getItem(id)
+        sheet.activate();        
+        return await context.sync()
+      })
+    commit('changeActiveWorksheet', {id})
     }
   },
   async worksheetActivated({commit,state},id){
-    const oldId = getIdInElements(state.elements, "isActive",true)
-    commit('changeActiveWorksheet', {id, oldId})
+    commit('changeActiveWorksheet', {id})
   },
   async reorderWorksheet ({dispatch, commit}, {id, position}){
     await Excel.run(async context => {

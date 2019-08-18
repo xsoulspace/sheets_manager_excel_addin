@@ -2,26 +2,18 @@
 <div class="home">
 <nav class="tabs">
   <ul>
-    <!-- <li @click="isSettingsActive = true">
+    <li @click="isSettingsActive = true">
       <a>
         <span class="icon">
           <i class="fas fa-sliders-h"></i>
         </span>
       </a>
-    </li> -->
+    </li>
     <li>
       <a>
         <span class="icon">
           <i class="fas fa-info"></i>
         </span>
-      </a>
-    </li>
-    <li>
-      <a>
-        <label class="checkbox">
-          <input v-model="isEditModeActive" type="checkbox">
-          Edit Mode
-        </label>
       </a>
     </li>
   </ul>
@@ -34,12 +26,20 @@
       <button @click="isSettingsActive = false" class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
-      <label class="checkbox">
-        <input type="checkbox">
-        Листы-дети 
-        (Внимание! Для работы с листами детьми каждому 
-        названию листа будет проставляться суффикс через __ )
-      </label>
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox">
+          Листы-дети 
+          (Внимание! Для работы с листами детьми каждому 
+          названию листа будет проставляться суффикс через __ )
+        </label>
+      </div>
+      <div class="field">
+        <label  class="checkbox">
+          <input v-model="visibilitySwitches" type="checkbox">
+          Visibility Switches
+        </label>        
+      </div>            
     </section>
     <footer class="modal-card-foot">
       <button @click="modalApplyHandler" class="button is-success">Применить</button>
@@ -76,21 +76,19 @@ export default {
     Nested
   },
   computed:{
-      isEditModeActive: {
+    visibilitySwitches: {
       set: function(){
-        this.$store.commit('toogleEditMode')
+        this.$store.commit('toogleVisibilitySwitchesState')
       },
       get: function(){
-        return this.$store.getters['getEditMode']
+        return this.$store.getters['getVisibilitySwitchesState']
       }
     },
     elements: {
-      get() {
-        
+      get: function() {
         return this.$store.getters['getNested'];
-        
       },
-      set(value) {
+      set: function (value) {
         this.$store.dispatch("updateElements", value);
       }
     }

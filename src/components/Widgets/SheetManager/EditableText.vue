@@ -1,70 +1,44 @@
 <template>
 <input 
-    @dblclick="readonly=false"
-    :readonly="readonly"
-    :class="{'on-edit': !readonly}"
-    @mouseout="handleMouseOut()"
-    @keydown.enter="readonly=true"
+    @mouseout="onEdit=false"
+    @mouseleave="onEdit=false"
+    @keydown.enter="onEdit=false"
     type="text"
-    class="input has-simple-look handle"
-    v-model="content"
-    @input="updateContent"
-    >  
+    class="input has-simple-look handle on-edit"
+    v-model="sheetName"
+    >
 </template>
 
 
 <script>
 export default {
   name: "editable-text",
-  props: ['content', 'isModalActive', 'id'],
+  props: ['id'],
   data(){
     return {
-        readonly: true
+        onEdit: true
     }
   },
   mounted: function () {
-      this.$el.innerHTML = this.content;
   },
   watch: {
-    isModalActive: function(value){
-      if(value==false) {this.readonly = true}
-    },
-    readonly: function(value){
-      switch (value) {
-        case true:
-          this.$emit("editable-text-readonly", value)          
-          break;
-      
-        case false:
-          this.$emit("editable-text-readonly-off", value)
-          break;
-      }
-    },
-    content: function () {
-        this.$el.innerHTML = this.content;
+    onEdit: function(value){
+      this.$emit("editable-text-on-edit", value)
     }
   },
   methods: {
-    selectWorksheet: function(){
-      this.dispatch('selectWorksheet',{id:this.id})
-
-    },
-    updateContent: function(){
-      this.$emit(
-        'update:content', 
-        this.content
-      )
-    },
-    handleMouseOut: function(){
-      if (!this.readonly && this.justCoupleWords){
-        this.readonly = true
-      }
-    }
   },
   computed: {
-    justCoupleWords: function(){
-      return this.content.split(" ").length<=3
-    }
+    sheetName:{ 
+      get: function(){
+        const id = this.id
+        return this.$store.getters['getWorksheetName'](id) 
+      },
+      set: function(name){
+        const id = this.id
+        this.$store.dispatch('renameWorksheet',{id, name}) 
+      }
+    },
   }
 }
 </script>
@@ -86,6 +60,6 @@ export default {
     word-wrap: break-word;
     max-height: 100%;
     color: rgb(5, 5, 5);
-    background-color: rgba(248, 248, 248, 0.9); 
+    background-color: rgba(255, 255, 255, 0.267); 
 }
 </style>
