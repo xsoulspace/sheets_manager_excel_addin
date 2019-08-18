@@ -1,6 +1,6 @@
 <template>
 <div class="home">
-<nav class="tabs">
+<nav class="tabs has-tiny-margin">
   <ul>
     <li @click="isSettingsActive = true">
       <a>
@@ -29,13 +29,11 @@
       <div class="field">
         <label class="checkbox">
           <input type="checkbox">
-          Листы-дети 
-          (Внимание! Для работы с листами детьми каждому 
-          названию листа будет проставляться суффикс через __ )
+          Группировка листов (все листы будут пронумерованы)
         </label>
       </div>
       <div class="field">
-        <label  class="checkbox">
+        <label class="checkbox">
           <input v-model="visibilitySwitches" type="checkbox">
           Visibility Switches
         </label>        
@@ -47,6 +45,19 @@
     </footer>
   </div>
   <!-- <button @click="isSettingsActive = false" class="modal-close is-large" aria-label="close"></button> -->
+</div>
+<div class="level has-tiny-margin">
+  <div class="level-item">
+    <input 
+      v-model="sheetFilter" 
+      class="input"
+      type="text" 
+      placeholder="start type worksheet name here..">
+  </div>
+  <div class="level-item">
+
+  </div>
+ 
 </div>
 <nested :isParent="true" class="is-no-margin-bottom" v-model="elements"></nested>
 
@@ -76,6 +87,14 @@ export default {
     Nested
   },
   computed:{
+    sheetFilter:{
+      set: function(value){
+        this.$store.commit('setSheetFilter', value)
+      },
+      get: function(){
+        return this.$store.getters['getSheetFilter']
+      }
+    },
     visibilitySwitches: {
       set: function(){
         this.$store.commit('toogleVisibilitySwitchesState')
@@ -107,5 +126,8 @@ export default {
 }
 .is-no-margin-bottom {
   margin-bottom: 0 !important;
+}
+.has-tiny-margin{
+  margin-bottom: 0.4rem !important;
 }
 </style>

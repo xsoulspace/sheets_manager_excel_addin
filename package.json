@@ -39,6 +39,7 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@vue/component-compiler-utils": "^3.0.0",
+    "cssnano": "^4.1.10",
     "sass": "^1.22.9",
     "vue-template-compiler": "^2.6.10"
   },

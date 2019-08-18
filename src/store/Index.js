@@ -38,17 +38,25 @@ const state = {
     }
   ],
   appSettings: {
-//    enableChildren: true,
-    visibilitySwitchesActive: false
+    childrenEnabled: true,
+    visibilitySwitchesActive: true,
   },
   log: "",
   activeSheetId: "",
-  
+  sheetFilter: ""
 }
 
 const getters = {
   getNested: state=>{
-    return  state.elements;
+    const filteredWord = state.sheetFilter
+    if (filteredWord.length>0){
+      return filterElements(state.elements,filteredWord)
+    } else {
+      return state.elements;
+    }
+  },
+  getSheetFilter: state=>{
+    return state.sheetFilter;
   },
   getVisibilitySwitchesState: state=>{
     return state.appSettings.visibilitySwitchesActive;
@@ -74,6 +82,27 @@ const getters = {
   getWorksheetName:state=>id=>{
     return getValueInElements(id,state.elements, "name")
   }
+}
+
+function filterElements(elements, filteredWord){
+  let filteredElements= []
+  elements.forEach((element)=>{ 
+    if(element.elements.length>0){
+      element.elements.forEach((elementChild)=>{
+        checkCharacter(elementChild)
+      })
+    }
+    checkCharacter(element)
+  }) 
+  function checkCharacter(el){
+    const name = el.name
+    const checkedName = name.toLowerCase()
+    const condition = filteredWord.toLowerCase()
+    if (checkedName.indexOf(condition)>=0) {
+     filteredElements.push(el) 
+    }
+  }
+  return filteredElements;
 }
 
 function getValueInElements(id,elements, propertyName){
@@ -172,6 +201,9 @@ function deleteIdInElements(id,elements, state){
 // Mutations
 
 const mutations = {
+  setSheetFilter: (state,value) =>{
+    state.sheetFilter =value
+  },
   toogleEditMode: (state, payload) =>{
     const current = state.editMode
     state.editMode = !current;

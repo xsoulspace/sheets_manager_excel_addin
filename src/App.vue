@@ -1,6 +1,9 @@
 <template>
 <div id="app">
-  <div class="notification" v-show="log.length>0">{{log}}</div>
+  <div class="notification" v-show="log.length>0">
+    <button class="delete"></button>
+    {{log}}
+  </div>
 <router-view></router-view>
 </div>
 </template>
