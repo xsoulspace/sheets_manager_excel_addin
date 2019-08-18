@@ -1,15 +1,25 @@
 <template>
 <div class="home">
-<nav class="tabs has-tiny-margin">
+<nav class="tabs has-tiny-margin is-right is-small">
   <ul>
-    <li @click="isSettingsActive = true">
+    <li 
+      v-show="!isSearchActive"
+      @click="isSettingsActive = true">
       <a>
         <span class="icon">
           <i class="fas fa-sliders-h"></i>
         </span>
       </a>
     </li>
-    <li>
+    <li 
+      v-show="!isSearchActive">
+      <a>
+        <span class="icon">
+          <i class="fas fa-question"></i>
+        </span>
+      </a>
+    </li>
+    <li v-show="!isSearchActive">
       <a>
         <span class="icon">
           <i class="fas fa-info"></i>
@@ -17,11 +27,15 @@
       </a>
     </li>
     <li>
-      <a>
-        <span class="icon">
-          <i class="fas fa-question"></i>
-        </span>
-      </a>
+        <input 
+          v-model="sheetFilter"
+          @mouseover="isSearchActive=true"
+          @mouseleave="isSearchActive=false"
+          class="input"
+          type="text" 
+          placeholder="sheet search.."
+          :style="{'width':'8rem'}"
+          :class="{'fluid':isSearchActive}">
     </li>
   </ul>
 </nav>
@@ -61,11 +75,7 @@
 </div>
 <div class="level has-tiny-margin">
   <div class="level-item">
-    <input 
-      v-model="sheetFilter" 
-      class="input"
-      type="text" 
-      placeholder="start type worksheet name here..">
+
   </div>
   <div class="level-item">
 
@@ -85,7 +95,8 @@ export default {
   name: 'home',
   data(){
     return{
-      isSettingsActive: false
+      isSettingsActive: false,
+      isSearchActive: false
     }
   },
   mounted: function(){
@@ -143,4 +154,7 @@ export default {
 .has-tiny-margin{
   margin-bottom: 0.4rem !important;
 }
+.tabs input.fluid{
+  min-width:100%; 
+} 
 </style>
