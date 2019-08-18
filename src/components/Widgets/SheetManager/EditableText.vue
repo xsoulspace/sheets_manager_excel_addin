@@ -47,11 +47,11 @@ export default {
 .input.has-simple-look:focus, 
 .input.has-simple-look:active,
 .input.has-simple-look:hover{
-    border-color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(67, 245, 221, 0.664);
     border-radius: unset;
     box-shadow: none;
     box-sizing: border-box;
-    max-width: 130px;
+    max-width: auto;
     padding-left: 0px;
     padding-right: 0px; 
 }

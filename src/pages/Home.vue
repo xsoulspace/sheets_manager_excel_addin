@@ -16,6 +16,13 @@
         </span>
       </a>
     </li>
+    <li>
+      <a>
+        <span class="icon">
+          <i class="fas fa-question"></i>
+        </span>
+      </a>
+    </li>
   </ul>
 </nav>
 <div :class="{'is-active':isSettingsActive}" class="modal">
@@ -26,12 +33,18 @@
       <button @click="isSettingsActive = false" class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
-      <div class="field">
+      <!-- <div class="field">
         <label class="checkbox">
           <input type="checkbox">
           Группировка листов (все листы будут пронумерованы)
         </label>
-      </div>
+      </div> -->
+      <div class="field">
+        <label class="checkbox">
+          <input v-model="visibilitySwitches" type="checkbox">
+          Make sheets bigger
+        </label>        
+      </div>        
       <div class="field">
         <label class="checkbox">
           <input v-model="visibilitySwitches" type="checkbox">

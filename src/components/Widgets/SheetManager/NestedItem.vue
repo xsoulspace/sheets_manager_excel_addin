@@ -1,6 +1,6 @@
 <template>
   <div class="media is-tiny-margin">
-    <span class="is-child" v-show="!isParent">~~ </span>
+    <span class="is-child" v-show="!isParent">*</span>
     <div class="media-content">
       <div class="level is-mobile is-relative" :style="{'background-color':backgroundColor}">
         <div class="level-left">
@@ -29,14 +29,14 @@
                   v-if="!isEditModeActive"
                   @dblclick="isEditModeActive = true"
                   @click="selectWorksheet" 
-                  class="has-simple-look handle"
+                  class="has-simple-look handle pointer"
                   >
                   {{sheetName}}</div>
                 <!-- <dropdown-menu :id="id"></!-->
               </div>
             </div>
         </div>
-        <div v-show="!isEditModeActive" class="level-right">
+        <div v-if="!isEditModeActive && childrenEnabled" class="level-right">
           <div class="level-item">
             <transition name="fade">              
               <nested 
@@ -136,6 +136,8 @@ export default {
       isEditModeActive: false,
       isTextEditorActive: false,
       isColorSwitchesActive: false,
+      childrenEnabled: false,
+      tinyMarginEnabled: false
     }
   },
   components: {
@@ -201,7 +203,11 @@ export default {
       }
     },
     justCoupleWords: function(){
-      return this.sheetName.split(" ").length<=3
+      const state = this.sheetName.split(" ").length<=3
+      // if (this.isEditModeActive == true && state != true){
+      //   this.isTextEditorActive =true
+      // }
+      return state
     },
     childrenExists: function(){
       return Object.keys(this.value).length > 0
@@ -220,6 +226,7 @@ export default {
 .is-relative{
   position: relative;
   border-radius: 4px;
+  height: 2.4rem;
 }
 .modal-card-title.is-small {
   font-size: 1em;
@@ -258,8 +265,11 @@ span.is-child {
     border-radius: unset;
     box-shadow: none;
     box-sizing: border-box;
-    max-width: 130px;
+    max-width: auto;
     padding-left: 0px;
     padding-right: 0px; 
+}
+.pointer{
+  cursor: pointer;
 }
 </style>

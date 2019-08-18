@@ -1,7 +1,7 @@
 <template>
 <div 
   @click="toogleVisibility" 
-  class="icon is-small" :class="{
+  class="icon is-small pointer" :class="{
     'is-active':!isVisible,
     'is-passive':isVisible
   }" >

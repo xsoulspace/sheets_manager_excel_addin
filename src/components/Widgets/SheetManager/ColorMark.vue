@@ -42,9 +42,12 @@ export default {
   border-style: solid;
   background-color: rgba(54, 54, 54, 0.9);
   border-color: rgba(54, 54, 54, 0.9);
+  cursor: all-scroll;
 }
 .rectangular:hover{
-  width: 35px;
+  width: 2rem;
+  border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
 }
 
 </style>
