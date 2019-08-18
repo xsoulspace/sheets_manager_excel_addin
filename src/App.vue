@@ -40,10 +40,10 @@ export default {
   methods: {
     eventHandler: async function(event){
       var self = this;
-      self.$store.commit('joinlog', JSON.stringify(event))
+      // self.$store.commit('joinlog', JSON.stringify(event))
       switch (event.type) {
         case "WorksheetAdded":
-          
+          self.$store.dispatch('worksheetAdded',event.worksheetId)   
           break;
       
         case "WorksheetActivated":
@@ -65,7 +65,7 @@ export default {
         sheets.onActivated.add(self.eventHandler) 
         sheets.onAdded.add(self.eventHandler)
         sheets.onDeleted.add(self.eventHandler)
-                
+        sheets.onChanged.add(self.eventHandler)    
         return await context.sync()
       })
     

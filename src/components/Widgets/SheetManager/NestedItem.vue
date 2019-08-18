@@ -23,6 +23,7 @@
                   :content.sync="sheetName"
                 ></editable-text>
                 <div 
+                  @dblclick="isEditModeActive = true"
                   @click="selectWorksheet" 
                   class="has-simple-look" 
                   v-if="!isEditModeActive">

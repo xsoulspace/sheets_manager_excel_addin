@@ -134,7 +134,7 @@ function changeValueInElements(id,elements, propertyName, value){
   return newItems;
 }
 
-function deleteIdInElements(id,elements){
+function deleteIdInElements(id,elements, state){
   const newItems =[]
   elements.forEach(element => {
     var newChildren =[];
@@ -144,6 +144,7 @@ function deleteIdInElements(id,elements){
       })
     }
     if(changeValue(element) == true){
+      const newElement = element;
       newElement.elements=newChildren
       newItems.push(newElement)
     } else {
@@ -155,10 +156,11 @@ function deleteIdInElements(id,elements){
     }
   })
   function changeValue(parent){
-    if(parent.id == id) {
+    if(parent.id == id) { 
       return false;
+    } else {
+      return true;
     }
-    return true;
   }
   return newItems;
 }
@@ -179,8 +181,7 @@ const mutations = {
     state.appSettings = payload
   },
   deleteWorksheet: (state, id)=>{
-    // state.elements = deleteIdInElements(id,state.elements)
-    // state.log = state.log + JSON.stringify(deleteIdInElements(id,state.elements))
+    state.elements=deleteIdInElements(id,state.elements, state)
   },
   toogleWorksheetVisibility: (state, {id, isVisible})=>{
     state.elements = changeValueInElements(id,state.elements,"isVisible",isVisible)
@@ -328,6 +329,9 @@ const actions = {
     dispatch('reorderWorksheet', {id, position});
     dispatch("changeColorWorksheet",{id,color});    
   },
+  async worksheetAdded ({dispatch,commit},id){
+    dispatch('loadWorksheets')
+  },
   async deleteWorksheet({dispatch, commit}, {id}){
     await Excel.run(async context => {
       var sheets = context.workbook.worksheets
@@ -375,7 +379,9 @@ const actions = {
       sheet.activate();
       return await context.sync()
     })
-    commit('changeActiveWorksheet', {id, oldId})
+    if (oldId != id) {
+      commit('changeActiveWorksheet', {id, oldId})
+    }
   },
   async worksheetActivated({commit,state},id){
     const oldId = getIdInElements(state.elements, "isActive",true)
