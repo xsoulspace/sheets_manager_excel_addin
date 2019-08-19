@@ -1,13 +1,12 @@
 <template>
   <div class="media is-tiny-margin">
     <span class="is-child" v-show="!isParent">*</span>
-    <div class="media-content">
+    <div class="media-content handle drag">
       <div class="level is-mobile is-relative" :style="{'background-color':backgroundColor}">
         <div class="level-left">
             <color-mark 
               @color-mark-clicked="handleColorMarkClick"
               :tabColor="tabColor"
-              :class="{'handle':true}" 
               :id="id"></color-mark>
             <div class="color-mark-divider"></div>  
 
@@ -29,13 +28,14 @@
                   v-if="!isEditModeActive"
                   @dblclick="isEditModeActive = true"
                   @click="selectWorksheet" 
-                  class="has-simple-look handle pointer"
+                  class="has-simple-look pointer"
                   >
                   {{sheetName}}</div>
-                <!-- <dropdown-menu :id="id"></!-->
+                
               </div>
             </div>
         </div>
+
         <div v-if="!isEditModeActive && childrenEnabled" class="level-right">
           <div class="level-item">
             <transition name="fade">              
@@ -56,6 +56,7 @@
         </div>
       </div>
     </div>
+    <dropdown-menu :id="id"></dropdown-menu>
     <!-- modals -->
 
     <div v-if="!justCoupleWords && isTextEditorActive"
@@ -75,6 +76,8 @@
         </footer>
       </div>
     </div>
+
+
     <div v-show="isColorSwitchesActive"
       :class="{'is-active':isColorSwitchesActive}" 
       class="modal"> 
@@ -271,5 +274,11 @@ span.is-child {
 }
 .pointer{
   cursor: pointer;
+}
+.crosshair{
+  cursor: crosshair;
+}
+.drag{
+  cursor: move;
 }
 </style>

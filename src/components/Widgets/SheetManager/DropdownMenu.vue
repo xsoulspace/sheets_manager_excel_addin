@@ -1,16 +1,22 @@
 <template>
-<div @click="isActive=true" :class="{'is-active':isActive}" class="dropdown">
+<div
+  @mouseover="isActive=true"
+  @click="isActive=true" 
+  :class="{'is-active':isActive}" class="dropdown is-right">
   <div class="dropdown-trigger">
-    <div class="button">
-      <span class="icon right-floated">
-        <i class="fas fa-ellipsis-v"></i>
-      </span>
-    </div>
+    <span class="icon right-floated">
+      <i class="fas fa-ellipsis-v"></i>
+    </span>
   </div>
-  <div class="dropdown-menu" role="menu">
+  <div 
+  @mouseleave="isActive=false"
+  class="dropdown-menu" role="menu">
     <div class="dropdown-content">
       <div class="dropdown-item">
-        <p>You can insert <strong>any type of content</strong> within the dropdown menu.</p>
+        <button class="button">Добавить лист</button>
+      </div>
+      <div class="dropdown-item">
+        <button class="button">Удалить лист</button>
       </div>
     </div>
   </div>
@@ -28,3 +34,16 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.dropdown-menu.is-compact {
+  min-width: max-content;
+}
+.dropdown-menu.is-compact .dropdown-content{
+  padding: 0px; 
+}
+.dropdown-menu.is-compact .dropdown-content .dropdown-item{
+  padding: 0px; 
+}
+
+</style>
