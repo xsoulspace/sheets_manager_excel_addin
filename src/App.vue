@@ -71,7 +71,7 @@ export default {
         sheets.onChanged.add(self.eventHandler)    
         return await context.sync()
       })
-    this.log(JSON.stringify(window.Office))
+    
 
     // ****************
     // Excel Events end
