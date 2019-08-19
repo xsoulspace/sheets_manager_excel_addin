@@ -1,21 +1,17 @@
 <template>
   <div class="media is-tiny-margin">
-    <span class="is-child" v-show="!isParent">*</span>
-    <div class="media-content handle drag">
+    <div class="media-content handle">
       <div class="level is-mobile is-relative" :style="{'background-color':backgroundColor}">
         <div class="level-left">
             <color-mark 
               @color-mark-clicked="handleColorMarkClick"
               :tabColor="tabColor"
               :id="id"></color-mark>
+            
             <div class="color-mark-divider"></div>  
-
-            <div class="content has-text-left">
+            <dropdown-menu :id="id"></dropdown-menu>
+            <div class="content has-text-left drag">
               <div class="level-item">
-                
-                <selector 
-                  v-if="isVisibilitySwitchesActive"
-                  :id="id"></selector>
                 
                 <div class="color-mark-divider"></div>
 
@@ -56,8 +52,25 @@
         </div>
       </div>
     </div>
-    <dropdown-menu :id="id"></dropdown-menu>
     <!-- modals -->
+
+    <div v-if="!isContextMenuActive && isTextEditorActive"
+      :class="{'is-active':!justCoupleWords && isTextEditorActive}" 
+      class="modal"> 
+      <div @click="isTextEditorActive = false" class="modal-background"></div>
+      <div @click.stop class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title is-small">Редактирование названия листа..</p>
+        </header>
+        <section class="modal-card-body">
+          <textarea class="textarea has-fullsize" rows="1" 
+          v-model="sheetName"/>
+        </section>
+        <footer class="modal-card-foot">
+          <button @click="isTextEditorActive = false" class="button is-success">Сохранить</button>
+        </footer>
+      </div>
+    </div>
 
     <div v-if="!justCoupleWords && isTextEditorActive"
       :class="{'is-active':!justCoupleWords && isTextEditorActive}" 
@@ -76,7 +89,6 @@
         </footer>
       </div>
     </div>
-
 
     <div v-show="isColorSwitchesActive"
       :class="{'is-active':isColorSwitchesActive}" 
@@ -105,7 +117,6 @@
 import DropdownMenu from "./DropdownMenu";
 import ColorMark from "./ColorMark";
 //import EventBus from "../../../EventBus.js";
-import Selector from "./Selector";
 import EditableText from "./EditableText";
 //https://saintplay.github.io/vue-swatches/#sub-using-a-custom-trigger
 import Swatches from 'vue-swatches'
@@ -139,13 +150,12 @@ export default {
       isEditModeActive: false,
       isTextEditorActive: false,
       isColorSwitchesActive: false,
-      childrenEnabled: false,
+      childrenEnabled: true,
       tinyMarginEnabled: false
     }
   },
   components: {
     EditableText,
-    Selector,
     ColorMark,
     DropdownMenu,
     Swatches,
@@ -260,6 +270,13 @@ span.is-child {
   content: "\2022";
   color: #949494;
 }
+
+.fill-height {
+  display: -ms-flexbox;
+  display: flex;
+  flex-direction: row;
+}
+
 .has-simple-look,
 .has-simple-look:focus, 
 .has-simple-look:active,

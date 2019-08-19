@@ -5,7 +5,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './bulma.scss'
-// Import the styles too, globally
+// Import styles for color picker
 import "vue-swatches/dist/vue-swatches.min.css"
 
 
@@ -22,13 +22,10 @@ switch (info == undefined){
     break;
   default: //we are in office client
     console.log("I'm an office man");
-    //const Office = window.Office
     (function(){
       Office.onReady(function(info){
         new Vue({
           el: '#app',
-          //components: {App},
-          //template: '<App/>',
           router,
           store,
           render: h => h(App)

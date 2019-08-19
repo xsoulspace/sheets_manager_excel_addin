@@ -19,10 +19,9 @@
   <nested-item
     :key="el.id" 
     v-for="el in realValue"
-    :value="el.elements"
+    :elements="el.elements"
     :id="el.id"
     :isParent="isParent"
-    :name="el.name"
     :dragging="dragging"
     ></nested-item>
   <slot name="drag-content"/>

@@ -46,52 +46,20 @@
     </li>
     </transition>
   </ul>
-   
 </nav>
-<div :class="{'is-active':isSettingsActive}" class="modal">
-  <div @click="isSettingsActive = false" class="modal-background"></div>
-  <div @click.stop class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Настройки</p>
-      <button @click="isSettingsActive = false" class="delete" aria-label="close"></button>
-    </header>
-    <section class="modal-card-body">
-      <!-- <div class="field">
-        <label class="checkbox">
-          <input type="checkbox">
-          Группировка листов (все листы будут пронумерованы)
-        </label>
-      </div> -->
-      <div class="field">
-        <label class="checkbox">
-          <input v-model="visibilitySwitches" type="checkbox">
-          Make sheets bigger
-        </label>        
-      </div>        
-      <div class="field">
-        <label class="checkbox">
-          <input v-model="visibilitySwitches" type="checkbox">
-          Visibility Switches
-        </label>        
-      </div>            
-    </section>
-    <footer class="modal-card-foot">
-      <button @click="modalApplyHandler" class="button is-success">Применить</button>
-      <button @click="isSettingsActive = false" class="button">Отменить</button>
-    </footer>
-  </div>
-  <!-- <button @click="isSettingsActive = false" class="modal-close is-large" aria-label="close"></button> -->
-</div>
+
 <div class="level has-tiny-margin">
   <div class="level-item">
-
   </div>
   <div class="level-item">
-
   </div>
- 
 </div>
 <nested :isParent="true" class="is-no-margin-bottom" v-model="elements"></nested>
+
+<settings-modal 
+  :settingsState="isSettingsActive"
+  @settings-modal-state-changed="isSettingsActive=$event">
+</settings-modal>
 
 </div>
 </template>
@@ -99,6 +67,7 @@
 <script>
 // @ is an alias to /src
 import Nested from ".././components/Widgets/SheetManager/Nested";
+import SettingsModal from "../components/Widgets/SettingsModal";
 
 export default {
   name: 'home',
@@ -112,11 +81,9 @@ export default {
     this.$store.dispatch('loadWorksheets')
   },
   methods: {
-    modalApplyHandler: function(){
-      this.isSettingsActive = false;
-    }
   },
   components: {
+    SettingsModal,
     Nested
   },
   computed:{

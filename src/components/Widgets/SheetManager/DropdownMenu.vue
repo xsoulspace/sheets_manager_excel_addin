@@ -9,14 +9,20 @@
     </span>
   </div>
   <div 
-  @mouseleave="isActive=false"
-  class="dropdown-menu" role="menu">
+    @mouseleave="isActive=false"
+    class="dropdown-menu is-compact" role="menu">
     <div class="dropdown-content">
-      <div class="dropdown-item">
-        <button class="button">Добавить лист</button>
-      </div>
-      <div class="dropdown-item">
-        <button class="button">Удалить лист</button>
+      <div class="level is-mobile">
+        <div class="level-item">
+          <button class="button">+</button>
+        </div>
+        <div class="level-item">
+          <visibility-switcher
+            :id="id"></visibility-switcher>
+        </div>
+        <div class="level-item">
+          <button class="button">-</button>
+        </div>
       </div>
     </div>
   </div>
@@ -24,6 +30,7 @@
 </template>
 
 <script>
+import VisibilitySwitcher from "./VisibilitySwitcher";
 export default {
   name: "dropdown-menu",
   props: ['id'],
@@ -31,6 +38,9 @@ export default {
     return{
       isActive: false
     }
+  },
+  components: {
+    VisibilitySwitcher
   }
 }
 </script>

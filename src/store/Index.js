@@ -43,7 +43,8 @@ const state = {
   },
   log: "",
   activeSheetId: "",
-  sheetFilter: ""
+  sheetFilter: "",
+  isExcelActive: ""
 }
 
 const getters = {
