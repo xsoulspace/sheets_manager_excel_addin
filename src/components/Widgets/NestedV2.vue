@@ -1,21 +1,15 @@
 <template>
 <draggable
-  handle=".handle"
+  handle=".is-draggable"
     v-bind="dragOptions"
     tag="div"
-    :class="{
-      'is-child':!isParent,
-      'is-dragging':dragging && !isParent,
-      'with-children':childrenExists, 
-      'no-children':!childrenExists}"
     @start="dragging = true"
     @end="dragging = false"
-    class="box has-paddings"
+    class="container"
     :list="list"
     :value="value"
     @input="emitter"
 >
-    <!--  -->
   <nested-item
     :key="el.id" 
     v-for="el in realValue"
@@ -24,25 +18,17 @@
     :isParent="isParent"
     :dragging="dragging"
     ></nested-item>
-  <slot name="drag-content"/>
 </draggable>
 </template>
 
 <script>
 //import EventBus from "../../../EventBus.js";
 import draggable from "vuedraggable";
-import NestedItem from "./NestedItem.vue";
+import NestedItem from "./NestedItemV2.vue";
+
 export default {
   name: "nested",
   props: {
-    isHovered: {
-      default: false
-    },
-    childrenExists:{
-      required: false,
-      type: Boolean,
-      default: false
-    },
     isParent:{
       required: true,
       type: Boolean,

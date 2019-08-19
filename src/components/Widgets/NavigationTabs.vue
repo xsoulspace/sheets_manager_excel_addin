@@ -1,51 +1,58 @@
 <template>
-<nav class="tabs no-overflow has-tiny-margin is-small">
-  <ul>
-    <li  
-      :class="{
-        'is-tiny':!isSearchActive,
-        'is-full-width':isSearchActive
-        }">
-      <input 
-          v-model="sheetFilter"
-          @mouseover="isSearchActive=true"
-          @mouseleave="isSearchActive=false"
-          class="input"
-          type="text" 
-          placeholder="sheet search.."
-        >
-    </li>
-    <transition name="fade">  
-      <li 
-        v-show="!isSearchActive"
-        @click="isSettingsActive = true">
-        <a>
-          <span class="icon">
-            <i class="fas fa-sliders-h"></i>
-          </span>
-        </a>
-      </li>
-    </transition>
-    <transition name="fade">  
-      <li 
-        v-show="!isSearchActive">
-        <a>
-          <span class="icon">
-            <i class="fas fa-question"></i>
-          </span>
-        </a>
-      </li>
-    </transition>
-    <transition name="fade">  
-      <li v-show="!isSearchActive">
-        <a>
-          <span class="icon">
-            <i class="fas fa-info"></i>
-          </span>
-        </a>
-      </li>
-    </transition>
-  </ul>
+<nav class="section is-paddingless">
+  <div class="container">
+    <div class="tabs
+      is-overflowless-horizontal 
+      has-tiny-paddings
+      is-small">
+      <ul>
+        <li  
+          :class="{
+            'is-tinywidth':!isSearchActive,
+            'is-fullwidth':isSearchActive
+            }">
+          <input 
+              v-model="sheetFilter"
+              @mouseover="isSearchActive=true"
+              @mouseleave="isSearchActive=false"
+              class="input"
+              type="text" 
+              placeholder="sheet search.."
+            >
+        </li>
+        <transition name="fade">  
+          <li 
+            v-show="!isSearchActive"
+            @click="isSettingsActive = true">
+            <a>
+              <span class="icon">
+                <i class="fas fa-sliders-h"></i>
+              </span>
+            </a>
+          </li>
+        </transition>
+        <transition name="fade">  
+          <li 
+            v-show="!isSearchActive">
+            <a>
+              <span class="icon">
+                <i class="fas fa-question"></i>
+              </span>
+            </a>
+          </li>
+        </transition>
+        <transition name="fade">  
+          <li v-show="!isSearchActive">
+            <a>
+              <span class="icon">
+                <i class="fas fa-info"></i>
+              </span>
+            </a>
+          </li>
+        </transition>
+      </ul>
+    </div>
+  </div>
 </nav>
 </template>
 <script>
@@ -75,10 +82,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tabs {
-  &.has-tiny-margin{
-    margin-bottom: 0.4rem !important;
+  &.has-tiny-paddings{
+    padding-bottom: 0.4rem;
+    padding-top: 0.2rem;
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
   }
-  &.no-overflow{
+  &.is-overflowless-horizontal{
     overflow-x: hidden;
   }
 
@@ -86,10 +96,10 @@ export default {
     transition-property: width;
     transition-duration: 0.6s;
     transition-timing-function: ease-in-out;
-    &.is-full-width{
+    &.is-fullwidth{
       width: 100%;
     }
-    &.is-tiny{
+    &.is-tinywidth{
       width: 8rem;
     }
     &.fade-enter-active{
