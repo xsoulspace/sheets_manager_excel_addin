@@ -1,7 +1,21 @@
 <template>
 <div class="home">
-<nav class="tabs has-tiny-margin is-right is-small">
+<nav class="tabs has-tiny-margin is-small no-overflow">
   <ul>
+    <li class="is-tiny" 
+      :class="{
+        'is-full-width':isSearchActive
+        }">
+        <input 
+          v-model="sheetFilter"
+          @mouseover="isSearchActive=true"
+          @mouseleave="isSearchActive=false"
+          class="input"
+          type="text" 
+          placeholder="sheet search.."
+          >
+    </li>
+<transition name="fade">  
     <li 
       v-show="!isSearchActive"
       @click="isSettingsActive = true">
@@ -11,6 +25,8 @@
         </span>
       </a>
     </li>
+    </transition>
+<transition name="fade">  
     <li 
       v-show="!isSearchActive">
       <a>
@@ -19,6 +35,8 @@
         </span>
       </a>
     </li>
+    </transition>
+<transition name="fade">  
     <li v-show="!isSearchActive">
       <a>
         <span class="icon">
@@ -26,18 +44,9 @@
         </span>
       </a>
     </li>
-    <li>
-        <input 
-          v-model="sheetFilter"
-          @mouseover="isSearchActive=true"
-          @mouseleave="isSearchActive=false"
-          class="input"
-          type="text" 
-          placeholder="sheet search.."
-          :style="{'width':'8rem'}"
-          :class="{'fluid':isSearchActive}">
-    </li>
+    </transition>
   </ul>
+   
 </nav>
 <div :class="{'is-active':isSettingsActive}" class="modal">
   <div @click="isSettingsActive = false" class="modal-background"></div>
@@ -154,7 +163,28 @@ export default {
 .has-tiny-margin{
   margin-bottom: 0.4rem !important;
 }
-.tabs input.fluid{
-  min-width:100%; 
+.is-tiny{
+  width: 8rem;
 } 
+.is-full-width{
+  width: 100%;
+}
+.no-overflow{
+  overflow-x: hidden !important;
+}
+li {
+  transition-property: width;
+  transition-duration: 0.6s;
+  transition-timing-function: ease-in-out;
+}
+.fade-enter-active{
+  transition: opacity 1s;
+  transition-delay: 0.5s;
+}
+.fade-leave-active {
+  transition: opacity .1s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>
