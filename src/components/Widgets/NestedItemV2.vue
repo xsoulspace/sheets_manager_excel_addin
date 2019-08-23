@@ -1,21 +1,23 @@
 <template>
 <div class="media">
-  <figure class="media-left has-tiny-margin">
+  <figure class="media-left has-tiny-margin is-fullheight">
+    <figure class="box is-leftrounded is-tinywidth is-fullheight"></figure>
+  </figure>
+  <div class="media-content is-paddingfull">
     <div class="level is-mobile">
-      <div class="level-item">
-        <figure class="box is-leftrounded is-tinywidth"></figure>
-      </div>
-      <div class="level-item">
+      <figure class="level-item">
         <span class="icon">
           <i class="fas fa-ellipsis-v"></i>
         </span>
+      </figure>
+      <div class="level-item is-clearfix">
+        <div class="content is-pulled-left">
+          <p>{{sheetName}}</p>
+        </div>
+
       </div>
-    </div>
-  </figure>
-  <div class="media-content">
-    <div class="content">
-      <p>{{sheetName}}</p>
-    </div>
+    </div>  
+
   </div>
   <div class="media-right">
 
@@ -63,33 +65,35 @@ export default {
 </script>
 <style lang="scss" scoped>
 $margin-right: 0.5rem;
+
 .media-left{
+  &.is-fullheight{
+    min-height: 100%
+  }
   &.has-tiny-margin{
     margin-right: $margin-right;
-    .level {
-      &.is-mobile{
-        &:not(:last-child){  
-          margin-right: $margin-right;
-        }
-        .level-item {
-          &:not(:last-child){
-            margin-right: $margin-right;
-          }
-          .box {
-            &.is-tinywidth{
-              width: 1px;
-              padding-left: 0.025rem;
-            }
-            &.is-leftrounded{
-              border-bottom-left-radius: 4px;
-              border-top-left-radius: 4px;
-              border-bottom-right-radius: 0px;
-              border-top-right-radius: 0px;
-            }
-          }
-        }
+    .box {
+      &.is-tinywidth{
+        width: 1px;
+        padding-left: 0.025rem;
+      }
+      &.is-fullheight{
+        min-height: 100%
+      }
+      &.is-leftrounded{
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+        border-bottom-right-radius: 0px;
+        border-top-right-radius: 0px;
       }
     }
   }
 }
+.media-content{
+  &.is-paddingfull{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
 </style>

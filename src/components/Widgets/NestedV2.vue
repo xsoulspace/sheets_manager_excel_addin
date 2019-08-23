@@ -5,7 +5,7 @@
     tag="div"
     @start="dragging = true"
     @end="dragging = false"
-    class="container"
+    class="container has-marginless-media"
     :list="list"
     :value="value"
     @input="emitter"
@@ -82,25 +82,33 @@ export default {
 };
 </script>
 <style lang="scss">
-.box.is-child {
-  box-shadow: none;
-  min-width: 1rem;
-  width: 100%;
-  border-width: 1px;
-  border-color: #dbdbdb;
+.container {
+  &.is-child {
+    box-shadow: none;
+    min-width: 1rem;
+    width: 100%;
+    border-width: 1px;
+    border-color: #dbdbdb;
+    &.with-children {
+      border-style: solid;
+    }
+    &.no-children {
+    border-style: dashed;
+    }
+    &.is-dragging {
+      min-width: 10rem;
+    }
+  }
+  &.has-paddings {
+    padding: 0.8rem 0.8rem 0.8rem 0.4rem;
+  }
+  &.has-marginless-media{
+    .media + .media{
+      margin-top: 0;
+      padding-top: 0;
+    }
+  }
 }
-.box.is-child.is-dragging {
-  box-shadow: none;
-  min-width: 10rem;
-}
-.box.has-paddings {
-  padding: 0.8rem 0.8rem 0.8rem 0.4rem;
-}
-.is-child.with-children {
-  border-style: solid;
-}
-.is-child.no-children {
-  border-style: dashed;
-}
+
 
 </style>
