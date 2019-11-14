@@ -6,12 +6,16 @@
 >
   {{sheetName}}
 </p>
-<input 
+<input
+  ref="input"
+  :maxlength="maxLength" 
   v-else-if="onEdit"
   @click.native="onEdit=true"
   @keydown.enter="onEdit=false"
-  @mouseout="onEdit=false"
-  @mouseleave="onEdit=false"
+  v-closable="{
+    exclude: ['input'],
+    handler: 'editOff'
+  }"
   type="text"
   class="input has-simple-look on-edit"
   v-model="sheetName"
@@ -25,7 +29,8 @@ export default {
   props: ['id'],
   data(){
     return {
-        onEdit: false
+      onEdit: false,
+      maxLength: 31
     }
   },
   mounted: function () {
@@ -39,6 +44,9 @@ export default {
     selectWorksheet: async function(){
       await this.$store.dispatch('selectWorksheet',this.id)
     },
+    editOff: function(){
+      this.onEdit=false
+    }
   },
   computed: {
     sheetName:{ 

@@ -312,15 +312,16 @@ const actions = {
   // },
   async updateElements ({dispatch, commit }, payload) {   
     let newSheetOrder = []
-    await payload.forEach(async (sheet)=>{
+    for(let sheet of Object.values(payload)){
       if(sheet.elements.length>0){
+        newSheetOrder.push(sheet)
         for(let sheetChild of Object.values(sheet.elements)){
           newSheetOrder.push(sheetChild)
         }
       }else{
         newSheetOrder.push(sheet)        
       }
-    });
+    }
     try {
       // check which sheet changed
     const itemLoader = new loadWorksheetsItems();

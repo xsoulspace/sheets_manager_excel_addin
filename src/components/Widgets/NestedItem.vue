@@ -137,6 +137,7 @@ $margin-right: 0.5rem;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
+    margin-right: 0.3em;
     .item-name{
       &:hover{
         color: #6f6f6f;
@@ -153,7 +154,6 @@ $margin-right: 0.5rem;
     border-color: #dbdbdb;
     border-radius: 4px;
     margin-right: 1.5em;
-    margin-left: 0.3em;
     &.filled{
       border-style: solid;
     }

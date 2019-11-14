@@ -7,6 +7,9 @@ import store from './store'
 import './bulma.scss'
 // Import styles for color picker
 import "vue-swatches/dist/vue-swatches.min.css"
+//https://stackoverflow.com/questions/36170425/detect-click-outside-element
+import "./directives/outside-click";
+
 
 
 //Check were we are
