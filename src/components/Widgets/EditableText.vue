@@ -30,7 +30,7 @@ export default {
   data(){
     return {
       onEdit: false,
-      maxLength: 31
+      maxLength: 26
     }
   },
   mounted: function () {
