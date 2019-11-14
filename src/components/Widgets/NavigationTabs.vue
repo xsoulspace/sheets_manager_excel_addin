@@ -58,6 +58,13 @@
 <script>
 export default {
   name: 'navigation-tabs',
+  props: {
+    pIsSettingsActive:{
+      required: true,
+      type: Boolean,
+      default: false
+    }
+  },
   data: function(){
     return{
       isSearchActive: false
@@ -75,6 +82,9 @@ export default {
     isSettingsActive: {
       set: function(value){
         this.$emit('tab-settings-clicked',value)
+      },
+      get: function(){
+        return this.pIsSettingsActive
       }
     }
   }

@@ -5,10 +5,10 @@
     tag="div"
     @start="dragging = true"
     @end="dragging = false"
-    class="container has-marginless-media"
     :list="list"
     :value="value"
     @input="emitter"
+    class="draganddrop-container"
 >
   <nested-item
     :key="el.id" 
@@ -24,10 +24,10 @@
 <script>
 //import EventBus from "../../../EventBus.js";
 import draggable from "vuedraggable";
-import NestedItem from "./NestedItemV2.vue";
+import NestedItem from "./NestedItem.vue";
 
 export default {
-  name: "nested",
+  name: "nested-items",
   props: {
     isParent:{
       required: true,
@@ -72,7 +72,6 @@ export default {
         ghostClass: "ghost"
       };
     },
-
     realValue() {
     // this.value when input = v-model
     // this.list  when input != v-model
@@ -82,6 +81,11 @@ export default {
 };
 </script>
 <style lang="scss">
+.draganddrop-container {
+  display: flex;
+  flex-flow: column nowrap;
+  min-width: 1em;
+}
 .container {
   &.is-child {
     box-shadow: none;

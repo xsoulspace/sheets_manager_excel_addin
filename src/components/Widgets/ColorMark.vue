@@ -5,7 +5,7 @@
       'background-color': tabColor,
       'border-color': tabColor
     }">
-      &nbsp;
+      <!-- &nbsp; -->
   </figure>
 </template>
 
@@ -13,7 +13,7 @@
 
 export default {
   name: "color-mark",
-  props: ['id','tabColor'],
+  props: ['id'],
   data () {
     return {
     }
@@ -23,9 +23,19 @@ export default {
   },
   methods: {
     clicked:function(){
-      console.log(this.tabColor)
       this.$emit("color-mark-clicked")
     }
+  },
+  computed: {
+    tabColor: {
+      get: function(){
+        return this.$store.getters['getColor'](this.id)
+      },
+      set: function(color){
+        const id = this.id
+        this.$store.dispatch('changeColorWorksheet',{id,color})
+      }
+    },
   }
 }
 </script>

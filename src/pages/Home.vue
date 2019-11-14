@@ -2,15 +2,12 @@
 <div class="home">
 <navigation-tabs
   @tab-settings-clicked="isSettingsActive=$event"
-></navigation-tabs>
-<section class="section is-paddingless">
-  <nested-v2 
-    :isParent="true" v-model="elements">
-  </nested-v2>
-</section>
-<section class="section is-paddingless">
-  <nested :isParent="true" class="is-no-margin-bottom" v-model="elements"></nested>
-</section>
+  :pIsSettingsActive = "isSettingsActive"
+>
+</navigation-tabs>
+  <root-nested-items 
+    :isParent="true" v-model="elements" 
+  />
 
 
 <settings-modal 
@@ -24,7 +21,7 @@
 <script>
 // @ is an alias to /src
 import Nested from ".././components/Widgets/SheetManager/Nested";
-import NestedV2 from ".././components/Widgets/NestedV2";
+import NestedItems from ".././components/Widgets/NestedItems";
 
 import SettingsModal from "../components/Widgets/SettingsModal";
 import NavigationTabs from "../components/Widgets/NavigationTabs";
@@ -43,27 +40,24 @@ export default {
   components: {
     NavigationTabs,
     SettingsModal,
-    Nested,
-    NestedV2
+    'root-nested-items':NestedItems
   },
   computed:{
     elements: {
       get: function() {
         return this.$store.getters['getNested'];
       },
-      set: function (value) {
-        this.$store.dispatch("updateElements", value);
+      set: async function (value) {
+        await this.$store.dispatch("updateElements", value);
       }
     }
   }
 }
 </script>
 <style lang="scss">
-.section {
-  &.is-paddingless{
-    padding-left: 0;
-    padding-right: 0;
-  }
+.draganddrop-parent-container {
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 </style>
