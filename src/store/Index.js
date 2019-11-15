@@ -244,19 +244,90 @@ const mutations = {
     state.activeSheetId = id;
   },
   loadWorksheets: (state, {allItems,activeItemId})=>{
-    const allElements =[]
-    allItems.forEach(sheet => {
-      const element = {
-        id: sheet.id,
-        name: sheet.name,
-        color: sheet.tabColor,
-        isVisible: sheet.visibility,
-        elements: []
+    try {
+
+      const positioningType = state.appSettings.positioningType
+      let allElements = []
+      switch (positioningType) {
+        case enumPositioningOptions.default:
+          allItems.forEach(sheet => {
+            const element = {
+              id: sheet.id,
+              name: sheet.name,
+              color: sheet.tabColor,
+              isVisible: sheet.visibility,
+              elements: {}
+            }
+            allElements.push(element)
+          })
+          break;
+      
+        case enumPositioningOptions.numeratedGroups:
+          const elementProto = {
+            id: "",
+            name: "",
+            color: "",
+            isVisible: "",
+            elements: {}
+          }      
+          const DEL = "DEL"
+          let allTempElements ={}
+          allItems.forEach(sheet => {
+            const element = {
+              id: sheet.id,
+              name: sheet.name,
+              color: sheet.tabColor,
+              isVisible: sheet.visibility,
+              elements: {}
+            }
+            let sheetPositionEncoder = new numerationEncoder()
+            let positions = sheetPositionEncoder.decode(element.name)
+            /** Check is it in a group or not */
+            let [firstPosition, secondPosition] = positions
+            if(secondPosition> 0){
+              let el = elementProto
+              if([DEL+firstPosition] in allTempElements){
+                el = allTempElements[DEL+firstPosition]
+              }
+              el.elements[DEL+secondPosition] = element
+              allTempElements[DEL+firstPosition] = el
+            } else {
+              /** check is element exists */
+              if([DEL+firstPosition] in allTempElements){
+                const oldEl = allTempElements[DEL+firstPosition] 
+                const childElements = oldEl.elements
+                element.elements = childElements
+              }
+              allTempElements[DEL+firstPosition] = element
+            }
+          });
+          console.log(allTempElements)
+          /** let's reorder all items */
+          function reordering(groupElements){
+            let groupValues = []
+            let groupKeys = Object.keys(groupElements)
+            groupKeys.sort()
+            
+            for(let key of groupKeys){
+              const el = groupElements[key]
+              
+              /** if child elements >0 then we need to reorder them too*/
+              let childElements = Object.keys(el.elements).length>0 ? reordering(el.elements) : []
+              el.elements = childElements
+              groupValues.push(el)
+            }
+            return groupValues
+          }
+    
+          allElements = reordering(allTempElements)
+          break;
       }
-      allElements.push(element)
-    });
-    state.elements = allElements;
-    state.activeSheetId = activeItemId;
+      
+      state.elements = allElements;
+      state.activeSheetId = activeItemId;      
+    } catch (error) {
+      console.log("loadWorksheets",error)
+    }
   },
   log: (state, payload)=>{
     state.log=payload
@@ -281,7 +352,7 @@ loadWorksheetsItems.prototype.load= async function(){
     this.activeItemId = activeItem.id; 
     self.sheets = sheets.items
     return context.sync();
-  })
+  }).catch(error=>console.log('loadWorksheetsItems.load',error))
 }
 loadWorksheetsItems.prototype.getAll = async function(){
   await this.load()
@@ -292,82 +363,125 @@ loadWorksheetsItems.prototype.getItems = async function(){
   return this.sheets;
 }
 loadWorksheetsItems.prototype.changePositions = async function(changedValues){
-  await this.getItems()
-  var changedItem;
-  var newChangedItems=[];
-  var fisrtChange = false;
-  changedValues.forEach((item, index)=>{
-    const changedItems = this.sheets.filter((oldItem)=>{
-      return (item.id ==oldItem.id && oldItem.position != index)
-    })
-    if (changedItems.length>0 && fisrtChange==false){
-      changedItem = {
-        id: item.id,
-        position: index
+  try {
+    await this.getItems()
+    console.log("changedValues",changedValues)
+    var changedItem;
+    var newChangedItems=[];
+    var fisrtChange = false;
+    changedValues.forEach((item, index)=>{
+      const changedItems = this.sheets.filter((oldItem)=>{
+        return (item.id ==oldItem.id && oldItem.position != index)
+      })
+      if (changedItems.length>0 && fisrtChange==false){
+        changedItem = {
+          id: item.id,
+          position: index
+        }
+        newChangedItems.push(changedItem)
+        // fisrtChange= true
       }
-      newChangedItems.push(changedItem)
-      // fisrtChange= true
-    }
-  })
-  return newChangedItems;  
+    })
+    return newChangedItems;    
+  } catch (error) {
+    console.log('loadWorksheetsItems.changePositions',error)
+  }
 }
 
+let numerationEncoder= function(){
+  this.delimiter = "_"
+}
+numerationEncoder.prototype.encode = function(sentence="", firstNumber=0, secondNumber=0){
+  /** 1. extract possible pattern -> 00_00 but it can be e0_0uio,
+   * so it is necessary to clean up after match and separate to two numbers
+   * 2. to clean up pattern 0_0 and all numbers in name
+   * 3. create new name 
+   */
+  const cleanSentence = sentence.replace(/(.\d_\d.)/g, "")
+  const firstPart = returnPart(firstNumber)
+  const secondPart = returnPart(secondNumber)
+  const readyPattern = firstPart + this.delimiter + secondPart
+  return cleanSentence + readyPattern
 
+  function returnPart(draftValue){
+    return draftValue > 9 ? draftValue.toString() : "0" + draftValue.toString()
+  }
+}
+numerationEncoder.prototype.decode = function(sentence=""){
+  const cleanPattern = sentence.match(/(.\d_\d.)/g)[0]
+  const positionsArray = cleanPattern.split(this.delimiter)
+  const newArr = positionsArray.map(el=>Number(el))
+  return newArr
+}
+
+numerationEncoder.prototype.renameAllSheets = async function(newlyNamedSheets){
+  await Excel.run(async context=>{
+    let sheets = context.workbook.worksheets;
+    for(let newSheet of Object.values(newlyNamedSheets)){
+      let sheet = sheets.getItem(newSheet.id)
+      sheet.name = newSheet.name
+    }
+    return await context.sync()
+  }).catch(error=>console.log('numerationEncoder.renameAllSheets',error))
+}
 
 const actions = {
   // async specialUpdateElements ({dispatch, commit},payload){
   //   commit('updateElements',payload);
   // },
-  async updateElements ({dispatch, commit, state}, payload) {   
-    const positioningType = state.appSettings.positioningType
-    let newSheetOrder = []
-    switch (positioningType) {
-      case enumPositioningOptions.default:
-        for(let sheet of Object.values(payload)){
-          if(sheet.elements.length>0){
-            newSheetOrder.push(sheet)
-            for(let sheetChild of Object.values(sheet.elements)){
-              newSheetOrder.push(sheetChild)
-            }
-          }else{
-            newSheetOrder.push(sheet)        
-          }
-        }
-        break;
-      case enumPositioningOptions.numeratedGroups:
-        // changing names - adding numeration
-        let outerCounter = 00
-        let innerCounter = 00
-        for(let sheet of Object.values(payload)){
-          if(sheet.elements.length>0){
-            const newSheet = sheet
-            /** 1. extract possible pattern -> 00_00 but it can be e0_0uio,
-             * so it is necessary to clean up after match and separate to two numbers
-             * 2. to clean up pattern 0_0 and all numbers in name
-             * 3. create new name 
-             */
-            const cleanName = sheet.name.replace(/(\d\d_\d\d)/g,"")
-            newSheet.name = cleanName
-            newSheetOrder.push(sheet)
-            for(let sheetChild of Object.values(sheet.elements)){
-              
-              newSheetOrder.push(sheetChild)
-            }
-          }else{
-            newSheetOrder.push(sheet)        
-          }
-        }
-        break;
-    }
-    console.log(newSheetOrder)
+  async updateElements ({dispatch, commit, state}, payload) {
     try {
+      const positioningType = state.appSettings.positioningType
+      let newSheetOrder = []
+      switch (positioningType) {
+        case enumPositioningOptions.default:
+          for(let sheet of Object.values(payload)){
+            newSheetOrder.push(sheet)
+            if(sheet.elements.length>0){
+              for(let sheetChild of Object.values(sheet.elements)){
+                newSheetOrder.push(sheetChild)
+              }        
+            }
+          }
+          break;
+        case enumPositioningOptions.numeratedGroups:
+          // changing names - adding numeration
+          let outerCounter = 0
+          let innerCounter = 0
+          function encodeSheetName(sheet){
+            const newSheet = sheet
+            let nameEncoder = new numerationEncoder()
+            newSheet.name = nameEncoder.encode(
+              newSheet.name,outerCounter,innerCounter
+            )
+            return newSheet
+          }
+          for(let sheet of Object.values(payload)){
+            const newSheet = encodeSheetName(sheet)
+            newSheetOrder.push(newSheet)
+            if(sheet.elements.length>0){
+              for(let childSheet of Object.values(sheet.elements)){
+                innerCounter++
+                const newChildSheet = encodeSheetName(childSheet)
+                newSheetOrder.push(newChildSheet)
+              }
+            }
+            outerCounter++
+            innerCounter = 0
+          }
+          let nameEncoder = new numerationEncoder()
+          await nameEncoder.renameAllSheets(newSheetOrder)
+          break;
+      }
+      console.log(newSheetOrder)
+
       // check which sheet changed
-    const itemLoader = new loadWorksheetsItems();
-    const changedItems = await itemLoader.changePositions(newSheetOrder);
-    for(let item of Object.values(changedItems)){
-      await dispatch('reorderWorksheet', item)
-    }
-    commit('updateElements',payload);      
+      const itemLoader = new loadWorksheetsItems();
+      const changedItems = await itemLoader.changePositions(newSheetOrder);
+      for(let item of Object.values(changedItems)){
+        await dispatch('reorderWorksheet', item)
+      }
+      commit('updateElements',payload);      
     } catch (error) {
       commit('log',error)
     }
