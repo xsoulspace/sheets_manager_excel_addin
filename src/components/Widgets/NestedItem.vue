@@ -112,8 +112,13 @@ export default {
         opacity = "0.05"
       return hexToRgba(color, opacity)
     },
-    realValue(){
-      return this.elements
+    realValue:{
+      get: function(){
+        return this.elements
+      },
+      set: function(value){
+        this.$emit("child-real-value-changed",value)
+      }
     }
   }
 }

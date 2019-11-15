@@ -448,27 +448,30 @@ const actions = {
           // changing names - adding numeration
           let outerCounter = 0
           let innerCounter = 0
-          function encodeSheetName(sheet){
-            const newSheet = sheet
+          function encodeSheetName(innerSheet){
+            const newSheet = innerSheet
             let nameEncoder = new numerationEncoder()
             newSheet.name = nameEncoder.encode(
-              newSheet.name,outerCounter,innerCounter
+              innerSheet.name,outerCounter,innerCounter
             )
             return newSheet
           }
+          
           for(let sheet of Object.values(payload)){
             const newSheet = encodeSheetName(sheet)
             newSheetOrder.push(newSheet)
-            if(sheet.elements.length>0){
-              for(let childSheet of Object.values(sheet.elements)){
+            if(newSheet.elements.length>0){
+              for(let childSheet of Object.values(newSheet.elements)){
                 innerCounter++
                 const newChildSheet = encodeSheetName(childSheet)
                 newSheetOrder.push(newChildSheet)
               }
             }
+            
             outerCounter++
             innerCounter = 0
           }
+          console.log(newSheetOrder)
           let nameEncoder = new numerationEncoder()
           await nameEncoder.renameAllSheets(newSheetOrder)
           break;

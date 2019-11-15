@@ -57,6 +57,9 @@ export default {
   methods: {
     emitter(value) {
       this.$emit("input", value);
+    },
+    changeElementsOfElement: function(elements,elIndex){
+      this.$emit("new-child-real-value",{elements,elIndex})
     }
   },
   components: {
