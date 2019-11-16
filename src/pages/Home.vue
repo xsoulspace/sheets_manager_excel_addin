@@ -5,20 +5,20 @@
   :pIsSettingsActive = "isSettingsActive"
 >
 </navigation-tabs>
-  <root-nested-items 
-    :isParent="true" v-model="elements" 
-  />
 <settings-modal 
   :settingsState="isSettingsActive"
   @settings-modal-state-changed="isSettingsActive=$event">
 </settings-modal>
+  <root-nested-items 
+    :isParent="true" v-model="elements" 
+  ></root-nested-items>
+
 
 </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Nested from ".././components/Widgets/SheetManager/Nested";
 import NestedItems from ".././components/Widgets/NestedItems";
 
 import SettingsModal from "../components/Widgets/SettingsModal";

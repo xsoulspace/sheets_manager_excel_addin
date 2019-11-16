@@ -1,7 +1,4 @@
-const enumPositioningOptions = {
-  default: "default",
-  numeratedGroups: "numeratedGroups"
-}
+import enumPositioningOptions from "./EnumPositioningOptions";
 const state = {
 
   elements: [
@@ -88,6 +85,9 @@ const getters = {
   },
   getWorksheetName:state=>id=>{
     return getValueInElements(id,state.elements, "name")
+  },
+  getPositioningType:state=>{
+    return state.appSettings.positioningType
   }
 }
 
@@ -262,6 +262,9 @@ const mutations = {
   },
   joinlog: (state, payload)=>{
     state.log=state.log+ " " + payload
+  },
+  changePositioningType(state, newType){
+    state.appSettings.positioningType = newType
   }
 }
 
@@ -326,6 +329,7 @@ numerationEncoder.prototype.encode = function(sentence="", firstNumber=0, second
    * 3. create new name 
    */
   const cleanSentence = sentence.replace(/(.\d_\d.)/g, "")
+  
   const firstPart = returnPart(firstNumber)
   const secondPart = returnPart(secondNumber)
   const readyPattern = firstPart + this.delimiter + secondPart
@@ -350,6 +354,15 @@ numerationEncoder.prototype.decode = function(sentence=""){
     console.log('numerationEncoder.decode',error)
   }
 }
+numerationEncoder.prototype.decodeAndClean = function(sentence=""){
+  try {
+    const sentenceWithoutNumeration = sentence.replace(/(.\d_\d.)/g,"")
+    // const sentenceWithoutNumbers = sentenceWithoutNumeration.replace(/(\d)/g,"")
+    return sentenceWithoutNumeration
+  } catch (error) {
+    console.log('numerationEncoder.decode',error)
+  }
+}
 
 numerationEncoder.prototype.renameAllSheets = async function(newlyNamedSheets){
   await Excel.run(async context=>{
@@ -360,6 +373,31 @@ numerationEncoder.prototype.renameAllSheets = async function(newlyNamedSheets){
     }
     return await context.sync()
   }).catch(error=>console.log('numerationEncoder.renameAllSheets',error))
+}
+numerationEncoder.prototype.decodeAllSheets = function(sheets){
+  try {
+    let newSheetOrder = []
+    function decodeSheetName(innerSheet){
+      const newSheet = innerSheet
+      let nameEncoder = new numerationEncoder()
+      newSheet.name = nameEncoder.decodeAndClean(innerSheet.name)
+      return newSheet
+    }
+    
+    for(let sheet of Object.values(sheets)){
+      const newSheet = decodeSheetName(sheet)
+      newSheetOrder.push(newSheet)
+      if(newSheet.elements.length>0){
+        for(let childSheet of Object.values(newSheet.elements)){
+          const newChildSheet = decodeSheetName(childSheet)
+          newSheetOrder.push(newChildSheet)
+        }
+      }
+    }
+    return newSheetOrder
+  } catch (error) {
+    console.log('numerationEncoder.encodeAllSheets',error)
+  }
 }
 numerationEncoder.prototype.encodeAllSheets = function(sheets){
   try {
@@ -481,7 +519,6 @@ const actions = {
         return {items: reordering(allTempElements), status: true}
       }
 
-
       const positioningType = state.appSettings.positioningType
       let allElements = []
       let localStatus = true
@@ -499,17 +536,35 @@ const actions = {
       }
       commit('loadWorksheets',{allElements,activeItemId})
       if(localStatus == false){
-        await dispatch('renameAllSheets', allElements)
+        await dispatch('encodeAllSheets', allElements)
       }
     } catch (error) {
       console.log("loadWorksheetsDetailed",error)
     }
   },
-  async renameAllSheets({dispatch, commit, state}, sheets){
+  async encodeAllSheets({dispatch, commit, state}, sheets){
     let nameEncoder = new numerationEncoder()
     let newlyNamedSheets = nameEncoder.encodeAllSheets(sheets)
-    console.log('newlyNamedSheets',newlyNamedSheets)
     await nameEncoder.renameAllSheets(newlyNamedSheets)
+  },
+  async decodeAllSheets({dispatch, commit, state}, sheets){
+    let nameEncoder = new numerationEncoder()
+    let newlyNamedSheets = nameEncoder.decodeAllSheets(sheets)
+    await nameEncoder.renameAllSheets(newlyNamedSheets)
+  },
+  async clearSheetsNumeration({dispatch, commit, state}){
+    await dispatch('decodeAllSheets',state.elements)
+  },
+  async changePositioningType({dispatch, commit, state}, newType){
+    switch (newType) {
+      case enumPositioningOptions.default:
+        await dispatch('decodeAllSheets', state.elements)
+        break;
+      case enumPositioninchangePositioningTypegOptions.numeratedGroups:
+        await dispatch('encodeAllSheets', state.elements)
+        break;
+    }
+    commit('',newType)
   },
   async updateElements ({dispatch, commit, state}, payload) {
     try {
