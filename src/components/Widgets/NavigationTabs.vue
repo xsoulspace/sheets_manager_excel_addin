@@ -50,6 +50,15 @@
             </a>
           </li>
         </transition>
+        <transition name="fade">  
+          <li v-show="!isSearchActive">
+            <a @click="refreshSheets">
+              <span class="icon">
+                <i class="fa fa-refresh"></i>
+              </span>
+            </a>
+          </li>
+        </transition>
       </ul>
     </div>
   </div>
@@ -68,6 +77,11 @@ export default {
   data: function(){
     return{
       isSearchActive: false
+    }
+  },
+  methods:{
+    refreshSheets: async function(){
+      await this.$store.dispatch("loadWorksheets")
     }
   },
   computed: {
@@ -106,6 +120,12 @@ export default {
     transition-property: width;
     transition-duration: 0.6s;
     transition-timing-function: ease-in-out;
+    &>a{
+      padding-top: 0.5em;
+      padding-right: 0.1em;
+      padding-bottom: 0.5em;
+      padding-left: 0.1em;
+    }
     &.is-fullwidth{
       width: 100%;
     }
