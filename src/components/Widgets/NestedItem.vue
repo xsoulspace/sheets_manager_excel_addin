@@ -1,13 +1,12 @@
 <template>
-<div class="draggable-item" :style="{'background-color':backgroundColor}">
-  <div class="actions"
-    :class="{'is-draggable': !onEdit}"
-  >
-    <div class="action">
-      <div class="is-relative">
-        <color-mark :id="id"/>
-      </div>
-    </div>
+<div class="draggable-item" 
+  :class="{'is-draggable': !onEdit}" 
+  :style="{'background-color':backgroundColor}">
+  <div class="actions-grid">
+    <color-mark 
+      :id="id"
+      @color-mark-clicked="changeColorSwitchState(true)"
+    ></color-mark>
     <div class="action">
       <span class="icon">
         <i class="fas fa-ellipsis-v"></i>
@@ -22,12 +21,27 @@
       </div>
     </div>
   </div>
+
   <div v-show="isParent" class="children-box">
     <child-nested-items 
       :isParent="false"
       :list="realValue"
     />
   </div>
+  <modal 
+    :title="'Редактирование цвета листа.'"
+    :modalState="isColorSwitchesActive"
+    @modal-state-changed="changeColorSwitchState($event)"
+  >
+    <template v-slot:modal-body>
+      <swatches v-model="tabColor" 
+        colors="material-basic"
+        inline
+        show-fallback
+        popover-to="left">
+      </swatches>
+    </template>
+  </modal>
 </div>
 </template>
 <script>
@@ -35,6 +49,8 @@ import EditableText from "./EditableText";
 import ColorMark from "./ColorMark";
 import hexToRgba from 'hex-to-rgba';
 import ChildNestedItems from "./NestedItems";
+import Swatches from 'vue-swatches'
+import Modal from "./Modal";
 export default {
   name:'nested-item',
   props: {
@@ -60,17 +76,23 @@ export default {
   },
   data(){
     return {
-      onEdit: false
+      onEdit: false,
+      isColorSwitchesActive: false
     }
   },
   components: {
     EditableText,
     ColorMark,
-    'child-nested-items': ()=> import('./NestedItems.vue')
+    'child-nested-items': ()=> import('./NestedItems.vue'),
+    Swatches,
+    Modal
   },
   methods: {
     onEditChanged: function(event){
       this.onEdit = event
+    },
+    changeColorSwitchState: function(newState){
+      this.isColorSwitchesActive = newState
     }
   },
   computed: {
@@ -103,13 +125,15 @@ export default {
     }, 
     backgroundColor: function(){
       let color;
-      this.tabColor == "" ?
-        color = "#ebebeb" :
-        color = this.tabColor 
+      /** need to create switch to expirement with background colors */
+      // this.tabColor == "" ?
+      //   color = "#ebebeb" :
+      //   color = this.tabColor 
+      color = "#ebebeb"
       let opacity;
       this.isActive ?
-        opacity = "0.3" :
-        opacity = "0.05"
+        opacity = "0.4" :
+        opacity = "0.02"
       return hexToRgba(color, opacity)
     },
     realValue:{
@@ -124,34 +148,64 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-$margin-right: 0.5rem;
+$padding-top: 0.3em;
+$padding-bottom: 0.3em;
+$color-mark-width: 6px;
 .draggable-item{
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
   margin-left: 0.2em;
-  padding-left: 0.4em;
   align-items: center;
-  padding-top: 1em;
-  padding-bottom: 1em;
   border-bottom-left-radius: 0.4em;
   border-bottom-right-radius: 0.4em;
-  // border-bottom: 0.4px solid #dbdbdb;
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 0px rgba(10, 10, 10, 0.1);
+  &+&{
+    margin-bottom: 0.2em;
+  }
+  &:first-of-type{
+    margin-bottom: 0.2em;
+  }
+  .actions-grid{
+    display: grid;
+    align-self: stretch;
+    grid-template-columns: $color-mark-width 1fr auto;
+    grid-template-rows: 1fr;
+    .action{
+      padding-top: $padding-top;
+      padding-bottom: $padding-bottom;
+      align-content: center;
+      &.has-corner{
+        border-style: solid;
+        border-left-width: $color-mark-width;
+        border-top-left-radius: 0.4em;
+        border-bottom-left-radius: 0.4em;
+        cursor: crosshair;
+        &:hover{
+          border-left-width: 20px;
+        }
+      }
+      .item-name{
+        cursor: pointer;
+        &:hover{
+          color: #6f6f6f;
+        }
+      }
+    }
+  }
   .actions{
     display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
+    flex-flow: column nowrap;
+    align-items: start;
     margin-right: 0.3em;
-    .item-name{
-      &:hover{
-        color: #6f6f6f;
-      }
-      cursor: pointer;
-    }
+    align-self: stretch;
+    justify-content: space-between;
+
   }
 
   .children-box{
+    padding-top: $padding-top;
+    padding-bottom: $padding-bottom;
     min-width: 2em;
     min-height: 1.6em;
     border-style: dashed;
@@ -164,47 +218,4 @@ $margin-right: 0.5rem;
     }
   }
 }
-.media-left{
-  &.is-fullheight{
-    min-height: 100%
-  }
-  &.has-tiny-margin{
-    margin-right: $margin-right;
-    .is-relative{
-      position: relative;
-      .box {
-        cursor: crosshair;
-        &.is-tinywidth{
-          width: 1px;
-          padding-left: 0.025rem;
-        }
-        &.is-fullheight{
-          min-height: 100%
-        }
-        &.is-leftrounded{
-          border-bottom-left-radius: 4px;
-          border-top-left-radius: 4px;
-          border-bottom-right-radius: 0px;
-          border-top-right-radius: 0px;
-        }
-        &.has-position-absolute{
-          position: absolute;
-          left: 0; 
-          top: 0; 
-          bottom: 0;
-        }
-        &:hover{
-          width: 4px;
-        }
-      }    
-    }
-  }
-}
-.media-content{
-  &.is-paddingfull{
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-}
-
 </style>

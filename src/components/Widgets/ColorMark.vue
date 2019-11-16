@@ -1,12 +1,11 @@
 <template>
   <figure 
-    @click="clicked" class="box is-leftrounded is-tinywidth is-fullheight" 
+    @click="clicked" class="action has-corner" 
     :style="{
-      'background-color': tabColor,
       'border-color': tabColor
     }">
-      <!-- &nbsp; -->
   </figure>
+  
 </template>
 
 <script>
@@ -41,38 +40,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.media-left{
-  &.has-tiny-margin{
-    .box {
-      cursor: crosshair;
-      &.is-tinywidth{
-        width: 1px;
-        padding-left: 0.025rem;
-      }
-      &.is-fullheight{
-        min-height: 100%
-      }
-      &.is-leftrounded{
-        border-bottom-left-radius: 4px;
-        border-top-left-radius: 4px;
-        border-bottom-right-radius: 0px;
-        border-top-right-radius: 0px;
-      }
-      &.has-position-absolute{
-        position: absolute;
-        left: 0; 
-        top: 0; 
-        bottom: 0;
-      }
-    }
-  }
-  &.has-tiny-margin:hover{
-    width: 8px;
-    .box:hover{
-      width: 4px;
-    }
-  }
+.left-arrow {
+	border-top-color: transparent;
+  border-bottom-color: transparent;
+	border-style: solid;
+	border-width: 0px 0px 20px 20px;
+	height: 0px;
+	width: 0px;
+  cursor: crosshair;
 }
-
+.left-corner {
+	border-style: solid;
+	border-width: 0px 0px 0px 2px;
+	height: auto;
+	width: 0px;
+  cursor: crosshair;
+}
 </style>
