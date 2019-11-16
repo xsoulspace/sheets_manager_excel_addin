@@ -13,7 +13,7 @@
   <nested-item
     :key="el.id" 
     v-for="el in realValue"
-    :elements="el.elements"
+    :el="el"
     :id="el.id"
     :isParent="isParent"
     :dragging="dragging"
@@ -43,6 +43,10 @@ export default {
       required: false,
       type: Array,
       default: null
+    },
+    parentId:{
+      required: false,
+      default: null
     }
   },
   mounted: function(){
@@ -57,9 +61,6 @@ export default {
   methods: {
     emitter(value) {
       this.$emit("input", value);
-    },
-    changeElementsOfElement: function(elements,elIndex){
-      this.$emit("new-child-real-value",{elements,elIndex})
     }
   },
   components: {
@@ -75,9 +76,7 @@ export default {
         ghostClass: "ghost"
       };
     },
-    realValue() {
-    // this.value when input = v-model
-    // this.list  when input != v-model
+    realValue:function(){
       return this.value ? this.value : this.list;
     }
   },

@@ -225,6 +225,12 @@ const mutations = {
   updateElements: (state, payload) => {
     state.elements = payload;
   },
+  updateSpecificElement: (state,{id, elements})=>{
+    const elementIndex = state.elements.findIndex(el=>el.id == id)
+    const element = state.elements[elementIndex]
+    element.elements = elements
+    state.elements[elementIndex] = element
+  },
   appSettings: (state, payload)=>{
     state.appSettings = payload
   },
@@ -243,86 +249,8 @@ const mutations = {
   changeActiveWorksheet: (state, {id})=>{
     state.activeSheetId = id;
   },
-  loadWorksheets: (state, {allItems,activeItemId})=>{
+  loadWorksheets: (state, {allElements,activeItemId})=>{
     try {
-
-      const positioningType = state.appSettings.positioningType
-      let allElements = []
-      switch (positioningType) {
-        case enumPositioningOptions.default:
-          allItems.forEach(sheet => {
-            const element = {
-              id: sheet.id,
-              name: sheet.name,
-              color: sheet.tabColor,
-              isVisible: sheet.visibility,
-              elements: {}
-            }
-            allElements.push(element)
-          })
-          break;
-      
-        case enumPositioningOptions.numeratedGroups:
-          const elementProto = {
-            id: "",
-            name: "",
-            color: "",
-            isVisible: "",
-            elements: {}
-          }      
-          const DEL = "DEL"
-          let allTempElements ={}
-          allItems.forEach(sheet => {
-            const element = {
-              id: sheet.id,
-              name: sheet.name,
-              color: sheet.tabColor,
-              isVisible: sheet.visibility,
-              elements: {}
-            }
-            let sheetPositionEncoder = new numerationEncoder()
-            let positions = sheetPositionEncoder.decode(element.name)
-            /** Check is it in a group or not */
-            let [firstPosition, secondPosition] = positions
-            if(secondPosition> 0){
-              let el = elementProto
-              if([DEL+firstPosition] in allTempElements){
-                el = allTempElements[DEL+firstPosition]
-              }
-              el.elements[DEL+secondPosition] = element
-              allTempElements[DEL+firstPosition] = el
-            } else {
-              /** check is element exists */
-              if([DEL+firstPosition] in allTempElements){
-                const oldEl = allTempElements[DEL+firstPosition] 
-                const childElements = oldEl.elements
-                element.elements = childElements
-              }
-              allTempElements[DEL+firstPosition] = element
-            }
-          });
-          console.log(allTempElements)
-          /** let's reorder all items */
-          function reordering(groupElements){
-            let groupValues = []
-            let groupKeys = Object.keys(groupElements)
-            groupKeys.sort()
-            
-            for(let key of groupKeys){
-              const el = groupElements[key]
-              
-              /** if child elements >0 then we need to reorder them too*/
-              let childElements = Object.keys(el.elements).length>0 ? reordering(el.elements) : []
-              el.elements = childElements
-              groupValues.push(el)
-            }
-            return groupValues
-          }
-    
-          allElements = reordering(allTempElements)
-          break;
-      }
-      
       state.elements = allElements;
       state.activeSheetId = activeItemId;      
     } catch (error) {
@@ -408,10 +336,19 @@ numerationEncoder.prototype.encode = function(sentence="", firstNumber=0, second
   }
 }
 numerationEncoder.prototype.decode = function(sentence=""){
-  const cleanPattern = sentence.match(/(.\d_\d.)/g)[0]
-  const positionsArray = cleanPattern.split(this.delimiter)
-  const newArr = positionsArray.map(el=>Number(el))
-  return newArr
+  try {
+    const cleanPatternArray = sentence.match(/(.\d_\d.)/g)
+    if(cleanPatternArray !== null){
+      const cleanPattern = cleanPatternArray[0]
+      const positionsArray = cleanPattern.split(this.delimiter)
+      const newArr = positionsArray.map(el=>Number(el))
+      return newArr
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.log('numerationEncoder.decode',error)
+  }
 }
 
 numerationEncoder.prototype.renameAllSheets = async function(newlyNamedSheets){
@@ -424,11 +361,156 @@ numerationEncoder.prototype.renameAllSheets = async function(newlyNamedSheets){
     return await context.sync()
   }).catch(error=>console.log('numerationEncoder.renameAllSheets',error))
 }
+numerationEncoder.prototype.encodeAllSheets = function(sheets){
+  try {
+    let newSheetOrder = []
+    let outerCounter = 0
+    let innerCounter = 0
+    function encodeSheetName(innerSheet){
+      const newSheet = innerSheet
+      let nameEncoder = new numerationEncoder()
+      newSheet.name = nameEncoder.encode(
+        innerSheet.name,outerCounter,innerCounter
+      )
+      return newSheet
+    }
+    
+    for(let sheet of Object.values(sheets)){
+      const newSheet = encodeSheetName(sheet)
+      newSheetOrder.push(newSheet)
+      if(newSheet.elements.length>0){
+        for(let childSheet of Object.values(newSheet.elements)){
+          innerCounter++
+          const newChildSheet = encodeSheetName(childSheet)
+          newSheetOrder.push(newChildSheet)
+        }
+      }
+      
+      outerCounter++
+      innerCounter = 0
+    }
+    return newSheetOrder
+  } catch (error) {
+    console.log('numerationEncoder.encodeAllSheets',error)
+  }
+}
 
 const actions = {
-  // async specialUpdateElements ({dispatch, commit},payload){
-  //   commit('updateElements',payload);
-  // },
+  async updateSpecificElement({dispatch, commit},{id,elements}){
+    commit('updateSpecificElement',{id,elements})
+    await dispatch('updateElements',state.elements)
+  },
+  async loadWorksheetsDetailed ({dispatch, commit},{allItems,activeItemId}){
+    try {
+      function createSheets(elements){
+        let allElements = []
+        elements.forEach(sheet => {
+          const element = {
+            id: sheet.id,
+            name: sheet.name,
+            color: sheet.tabColor,
+            isVisible: sheet.visibility,
+            elements: []
+          }
+          allElements.push(element)
+        })
+        return allElements
+      }
+      function createNumeratedSheets(elements){
+        const elementProto = {
+          id: "",
+          name: "",
+          color: "",
+          isVisible: "",
+          elements: {}
+        }      
+        const DEL = "DEL"
+        let allTempElements ={}
+        for(let sheet of Object.values(elements)){
+          const element = {
+            id: sheet.id,
+            name: sheet.name,
+            color: sheet.tabColor,
+            isVisible: sheet.visibility,
+            elements: {}
+          }
+          let sheetPositionEncoder = new numerationEncoder()
+          let positions = sheetPositionEncoder.decode(element.name)
+          /** if positions failed, then we need to rename all sheets 
+           * and then start process again
+          */
+         if(positions == false){
+           console.log("warn",positions)
+          return {items: createSheets(elements), status: false}
+         }
+          /** Check is it in a group or not */
+          let [firstPosition, secondPosition] = positions
+          if(secondPosition> 0){
+            let el = elementProto
+            if([DEL+firstPosition] in allTempElements){
+              el = allTempElements[DEL+firstPosition]
+            }
+            el.elements[DEL+secondPosition] = element
+            allTempElements[DEL+firstPosition] = el
+          } else {
+            /** check is element exists */
+            if([DEL+firstPosition] in allTempElements){
+              const oldEl = allTempElements[DEL+firstPosition] 
+              const childElements = oldEl.elements
+              element.elements = childElements
+            }
+            allTempElements[DEL+firstPosition] = element
+          }
+        }
+        /** let's reorder all items */
+        function reordering(groupElements){
+          let groupValues = []
+          let groupKeys = Object.keys(groupElements)
+          groupKeys.sort()
+          
+          for(let key of groupKeys){
+            const el = groupElements[key]
+            
+            /** if child elements >0 then we need to reorder them too*/
+            let childElements = Object.keys(el.elements).length>0 ? reordering(el.elements) : []
+            el.elements = childElements
+            groupValues.push(el)
+          }
+          return groupValues
+        }
+        return {items: reordering(allTempElements), status: true}
+      }
+
+
+      const positioningType = state.appSettings.positioningType
+      let allElements = []
+      let localStatus = true
+      switch (positioningType) {
+        case enumPositioningOptions.default:
+          allElements = createSheets(allItems)
+          break;
+      
+        case enumPositioningOptions.numeratedGroups:
+          let {items, status} = createNumeratedSheets(allItems)
+          localStatus = status
+          allElements = items;
+
+          break;
+      }
+      commit('loadWorksheets',{allElements,activeItemId})
+      if(localStatus == false){
+        await dispatch('renameAllSheets', allElements)
+      }
+    } catch (error) {
+      console.log("loadWorksheetsDetailed",error)
+    }
+  },
+  async renameAllSheets({dispatch, commit, state}, sheets){
+    let nameEncoder = new numerationEncoder()
+    let newlyNamedSheets = nameEncoder.encodeAllSheets(sheets)
+    console.log('newlyNamedSheets',newlyNamedSheets)
+    await nameEncoder.renameAllSheets(newlyNamedSheets)
+  },
   async updateElements ({dispatch, commit, state}, payload) {
     try {
       const positioningType = state.appSettings.positioningType
@@ -446,37 +528,12 @@ const actions = {
           break;
         case enumPositioningOptions.numeratedGroups:
           // changing names - adding numeration
-          let outerCounter = 0
-          let innerCounter = 0
-          function encodeSheetName(innerSheet){
-            const newSheet = innerSheet
-            let nameEncoder = new numerationEncoder()
-            newSheet.name = nameEncoder.encode(
-              innerSheet.name,outerCounter,innerCounter
-            )
-            return newSheet
-          }
-          
-          for(let sheet of Object.values(payload)){
-            const newSheet = encodeSheetName(sheet)
-            newSheetOrder.push(newSheet)
-            if(newSheet.elements.length>0){
-              for(let childSheet of Object.values(newSheet.elements)){
-                innerCounter++
-                const newChildSheet = encodeSheetName(childSheet)
-                newSheetOrder.push(newChildSheet)
-              }
-            }
-            
-            outerCounter++
-            innerCounter = 0
-          }
-          console.log(newSheetOrder)
           let nameEncoder = new numerationEncoder()
+          newSheetOrder = nameEncoder.encodeAllSheets(payload)
           await nameEncoder.renameAllSheets(newSheetOrder)
           break;
       }
-      console.log(newSheetOrder)
+      console.log('updateElements',newSheetOrder)
 
       // check which sheet changed
       const itemLoader = new loadWorksheetsItems();
@@ -490,11 +547,11 @@ const actions = {
     }
 
   },
-  async loadWorksheets ({commit},payload){
+  async loadWorksheets ({commit,dispatch},payload){
     const items = new loadWorksheetsItems()
     const allItems =   await items.getItems()
     const activeItemId = await items.activeItemId;
-    commit("loadWorksheets",{allItems,activeItemId})
+    await dispatch("loadWorksheetsDetailed",{allItems,activeItemId})
   },
   async renameWorksheet ({dispatch, commit}, {id, name}){
     await Excel.run(async context => {

@@ -8,8 +8,6 @@
   <root-nested-items 
     :isParent="true" v-model="elements" 
   />
-
-
 <settings-modal 
   :settingsState="isSettingsActive"
   @settings-modal-state-changed="isSettingsActive=$event">

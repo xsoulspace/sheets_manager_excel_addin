@@ -25,7 +25,7 @@
   <div v-show="isParent" class="children-box">
     <child-nested-items 
       :isParent="false"
-      :list="realValue"
+      v-model="elements"
     />
   </div>
   <modal 
@@ -54,10 +54,9 @@ import Modal from "./Modal";
 export default {
   name:'nested-item',
   props: {
-    elements: {
-      type: Array,
-      default: [],
-      required: false
+    el: {
+      required: false,
+      type: Object,
     },
     id:{
       default: "",
@@ -93,9 +92,30 @@ export default {
     },
     changeColorSwitchState: function(newState){
       this.isColorSwitchesActive = newState
+    },
+    updateSpecificElement: async function(elements){
+      if(!this.isParent) return
+      const obj ={
+        id: this.id,
+        elements
+      }
+      await this.$store.dispatch('updateSpecificElement',obj)
     }
   },
   computed: {
+    elements: {
+      set: async function(elements){
+        if(!this.isParent) return
+        const obj ={
+          id: this.id,
+          elements
+        }
+        await this.$store.dispatch('updateSpecificElement',obj)
+      },
+      get: function(){
+        return this.el.elements
+      }
+    },
     tabColor: {
       get: function(){
         return this.$store.getters['getColor'](this.id)
