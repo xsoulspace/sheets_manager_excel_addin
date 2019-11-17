@@ -83,12 +83,16 @@ numerationEncoder.prototype.simplifySheetsHierarhy=function(sheets){
 
 numerationEncoder.prototype.renameAllSheets = async function(newlyNamedSheets){
   await Excel.run(async context=>{
-    let sheets = context.workbook.worksheets;
-    for(let newSheet of Object.values(newlyNamedSheets)){
-      let sheet = sheets.getItem(newSheet.id)
-      sheet.name = newSheet.name
+    try {
+      let sheets = context.workbook.worksheets;
+      for(let newSheet of Object.values(newlyNamedSheets)){
+        let sheet = sheets.getItem(newSheet.id)
+        sheet.name = newSheet.name
+      }
+      return await context.sync()      
+    } catch (error) {
+      console.log('numerationEncoder.renameAllSheets.context',error)
     }
-    return await context.sync()
   }).catch(error=>console.log('numerationEncoder.renameAllSheets',error))
 }
 numerationEncoder.prototype.decodeAllSheets = function(sheets){
@@ -147,6 +151,42 @@ numerationEncoder.prototype.encodeAllSheets = function(sheets){
     return newSheetOrder
   } catch (error) {
     console.log('numerationEncoder.encodeAllSheets',error)
+  }
+}
+
+numerationEncoder.prototype.encodeAllSheetsElements = function(sheets){
+  try {
+    
+    let outerCounter = 0
+    let innerCounter = 0
+    function encodeSheetName(innerSheet){
+      const newSheet = innerSheet
+      let nameEncoder = new numerationEncoder()
+      newSheet.name = nameEncoder.encode(
+        innerSheet.name,outerCounter,innerCounter
+      )
+      return newSheet
+    }
+    let newSheetOrder = Object.values(sheets).map(sheet=>{
+      const newSheet = encodeSheetName(sheet)
+      const newSheetElements = Object.values(newSheet.elements)
+      if(newSheetElements.length>0){
+        const newElements = newSheetElements.map(childSheet=>{
+          innerCounter++
+          const newChildSheet = encodeSheetName(childSheet)
+          return newChildSheet
+        })
+        newSheet.elements = newElements
+      }
+      
+      outerCounter++
+      innerCounter = 0
+      return newSheet
+    })
+
+    return newSheetOrder
+  } catch (error) {
+    console.log('numerationEncoder.encodeAllSheetsElements',error)
   }
 }
 

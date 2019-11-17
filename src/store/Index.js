@@ -344,8 +344,28 @@ const actions = {
         return allElements
       }
       const DEL = "DEL"
-      let shiftNumber = 0
+      let numbersHadBeenShifted = false
+      
       function createNumeratedSheets(elements){
+        /** first, we need to make correct hierarhy 
+         * second, we need to find doubles and correct names and positions
+         * third, we need to rename all sheets
+         * Making correct hierarhy:
+         * 1. Element exists, but name == protoName
+         * 1.1 No elements -> place is free
+         * -> child elements can be placed
+         * 1.2 Has elements -> place is free
+         * -> child elements can be placed
+         * 2. Element exists, but name != protoName
+         * -> child elements can be placed
+         * -> place is taken
+         * -> find last number + 1
+         * -> take this place
+         * 3. Element not exists 
+         * -> place is free
+         * -> place protoElement
+         * -> child elements can be placed
+        */
         const elementProto = {
           id: "",
           name: "",
@@ -355,7 +375,10 @@ const actions = {
         }      
         let maxFirstNumber = 0
         let allTempElements ={}
+        let sheetPositionEncoder = new numerationEncoder()
+        
         for(let sheet of Object.values(elements)){
+          let shiftNumber = 0
           const element = {
             id: sheet.id,
             name: sheet.name,
@@ -363,7 +386,6 @@ const actions = {
             isVisible: sheet.visibility,
             elements: {}
           }
-          let sheetPositionEncoder = new numerationEncoder()
           let positions = sheetPositionEncoder.decode(element.name)
           /** if positions failed, then we need to rename all sheets 
            * and then start process again
@@ -375,17 +397,19 @@ const actions = {
           
           /** Check is it in a group or not */
           let [firstPosition, secondPosition] = positions
+          
           function setNewMaxFirstPosition(newOne){
             maxFirstNumber= newOne > maxFirstNumber ? newOne : maxFirstNumber
           }
-          function newFirstPosition(newFirstNumber){
-            return newFirstNumber ==0 ? firstPosition + shiftNumber : newFirstNumber + shiftNumber
+
+          function newFirstPosition(){
+            return firstPosition + shiftNumber
           }
           function shiftedFirstPosition(){
-            return DEL+newFirstPosition(maxFirstNumber)
+            return DEL+newFirstPosition()
           }
           let shiftedFirstPositionWithKey = shiftedFirstPosition()
-          console.log(shiftedFirstPositionWithKey)
+          
           function encodeShiftedName(innerElement){
             if(shiftNumber>0){
               const oldName = innerElement.name
@@ -394,33 +418,49 @@ const actions = {
             }
             return innerElement
           }
-          if(secondPosition> 0){
-            let el = elementProto
-            if([shiftedFirstPositionWithKey] in allTempElements){
-              el = allTempElements[shiftedFirstPositionWithKey]
-            }
-
-            el.elements[DEL+secondPosition] = encodeShiftedName(element)
+          let el
+          const elementExists = shiftedFirstPositionWithKey in allTempElements
+          if(elementExists){
+            el = allTempElements[shiftedFirstPositionWithKey]
+          } else {
+            el = elementProto
+          }
+          const isItChildElement = secondPosition> 0
+          function getChildrenAndPutThemToNewElement(){
+            const childElements = el.elements
+            element.elements = childElements
+          }
+          function shiftToNewPosition(){
+            const newMaxNumber = maxFirstNumber+shiftNumber
+            setNewMaxFirstPosition(newMaxNumber)
+            allTempElements[DEL+(newMaxNumber)] = element
+          }
+          if(isItChildElement){
+            el.elements[DEL+secondPosition] = element
             allTempElements[shiftedFirstPositionWithKey] = el
           } else {
-            /** check is element exists */
-            if([shiftedFirstPositionWithKey] in allTempElements){
-              const oldEl = allTempElements[shiftedFirstPositionWithKey]
-              /** check name of element, if it is not equal 
-               * and its not proto, then we need to 
-               * shift it down
-               * */
-              if(oldEl.name != elementProto.name && oldEl.id != element.id){
+            /** check name of element, if it is not equal 
+             * and its not proto, then we need to 
+             * shift it down
+             * */
+            switch (true) {
+              case !elementExists:
+                allTempElements[DEL+firstPosition] = element
+                break;
+              case el.name == elementProto.name:
+                getChildrenAndPutThemToNewElement()
+                break;
+              case el.id != element.id:
+                /** need to shift element */
                 shiftNumber++
-              } else {
-                const childElements = oldEl.elements
-                element.elements = childElements
-              } 
+                shiftToNewPosition()
+                numbersHadBeenShifted = true
+                break;
+              default:
+                console.log("what's going on? detailed loading worksheet", element)
+                break;
             }
-            console.log("element",element)
-            console.log('shiftNumber',shiftNumber)
-            setNewMaxFirstPosition(firstPosition)
-            allTempElements[shiftedFirstPosition()] = encodeShiftedName(element)
+            setNewMaxFirstPosition(firstPosition + shiftNumber)
           }
         }
         function prepareToSort(keys){
@@ -446,8 +486,11 @@ const actions = {
           }
           return groupValues
         }
-        return {items: reordering(allTempElements), status: true}
+        let reorderedItems = reordering(allTempElements)
+        let encodedItems = sheetPositionEncoder.encodeAllSheetsElements(reorderedItems)
+        return {items: encodedItems, status: true}
       }
+
       const positioningType = state.appSettings.positioningType
       let allElements = []
       let localStatus = true
@@ -467,13 +510,11 @@ const actions = {
       if(localStatus == false){
         await dispatch('encodeAllSheets', allElements)
       }
-      console.log(allElements)
-      // if(shiftNumber>0){
-      //   let nameEncoder = new numerationEncoder()
-      //   const simplifiedSheets = nameEncoder.simplifySheetsHierarhy(state.elements)
-      //   console.log(simplifiedSheets)
-      //   await nameEncoder.renameAllSheets(simplifiedSheets)
-      // }
+      if(numbersHadBeenShifted){
+        let nameEncoder = new numerationEncoder()
+        const simplifiedSheets = nameEncoder.simplifySheetsHierarhy(allElements)
+        await nameEncoder.renameAllSheets(simplifiedSheets)
+      }
     } catch (error) {
       console.log("loadWorksheetsDetailed",error)
     }
@@ -481,7 +522,7 @@ const actions = {
   async encodeAllSheets({dispatch, commit, state}, sheets){
     let nameEncoder = new numerationEncoder()
     let decodedNamedSheets = nameEncoder.decodeAllSheets(sheets)
-    let encodedNamedSheets = nameEncoder.encodeAllSheets(decodedNamedSheets)
+    let encodedNamedSheets = nameEncoder.encodeAllSheetsElements(decodedNamedSheets)
     await nameEncoder.renameAllSheets(encodedNamedSheets)
   },
   async decodeAllSheets({dispatch, commit, state}, sheets){
@@ -507,10 +548,12 @@ const actions = {
   },
   async updateElements ({dispatch, commit, state}, payload) {
     try {
+
       const positioningType = state.appSettings.positioningType
       let newSheetOrder = []
       switch (positioningType) {
         case enumPositioningOptions.default:
+          /** FIXME: refactor to simplify its */
           for(let sheet of Object.values(payload)){
             newSheetOrder.push(sheet)
             if(sheet.elements.length>0){
@@ -524,6 +567,7 @@ const actions = {
           // changing names - adding numeration
           let nameEncoder = new numerationEncoder()
           console.log('updateElements',payload)
+          /** FIXME: refactor encodeAllSheets */
           newSheetOrder = nameEncoder.encodeAllSheets(payload)
           await nameEncoder.renameAllSheets(newSheetOrder)
           break;
@@ -532,6 +576,7 @@ const actions = {
 
       // check which sheet changed
       const itemLoader = new loadWorksheetsItems();
+      /** FIXME: refactor changePositions if there is more then one level*/
       const changedItems = await itemLoader.changePositions(newSheetOrder);
       for(let item of Object.values(changedItems)){
         await dispatch('reorderWorksheet', item)
