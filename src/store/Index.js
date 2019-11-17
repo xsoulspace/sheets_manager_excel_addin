@@ -1,4 +1,5 @@
 import enumPositioningOptions from "./EnumPositioningOptions";
+import numerationEncoder from "./NumerationEncoder";
 const state = {
 
   elements: [
@@ -296,7 +297,6 @@ loadWorksheetsItems.prototype.getItems = async function(){
 loadWorksheetsItems.prototype.changePositions = async function(changedValues){
   try {
     await this.getItems()
-    console.log("changedValues",changedValues)
     var changedItem;
     var newChangedItems=[];
     var fisrtChange = false;
@@ -319,124 +319,13 @@ loadWorksheetsItems.prototype.changePositions = async function(changedValues){
   }
 }
 
-let numerationEncoder= function(){
-  this.delimiter = "_"
-}
-numerationEncoder.prototype.encode = function(sentence="", firstNumber=0, secondNumber=0){
-  /** 1. extract possible pattern -> 00_00 but it can be e0_0uio,
-   * so it is necessary to clean up after match and separate to two numbers
-   * 2. to clean up pattern 0_0 and all numbers in name
-   * 3. create new name 
-   */
-  const cleanSentence = sentence.replace(/(.\d_\d.)/g, "")
-  
-  const firstPart = returnPart(firstNumber)
-  const secondPart = returnPart(secondNumber)
-  const readyPattern = firstPart + this.delimiter + secondPart
-  return cleanSentence + readyPattern
-
-  function returnPart(draftValue){
-    return draftValue > 9 ? draftValue.toString() : "0" + draftValue.toString()
-  }
-}
-numerationEncoder.prototype.decode = function(sentence=""){
-  try {
-    const cleanPatternArray = sentence.match(/(.\d_\d.)/g)
-    if(cleanPatternArray !== null){
-      const cleanPattern = cleanPatternArray[0]
-      const positionsArray = cleanPattern.split(this.delimiter)
-      const newArr = positionsArray.map(el=>Number(el))
-      return newArr
-    } else {
-      return false
-    }
-  } catch (error) {
-    console.log('numerationEncoder.decode',error)
-  }
-}
-numerationEncoder.prototype.decodeAndClean = function(sentence=""){
-  try {
-    const sentenceWithoutNumeration = sentence.replace(/(.\d_\d.)/g,"")
-    // const sentenceWithoutNumbers = sentenceWithoutNumeration.replace(/(\d)/g,"")
-    return sentenceWithoutNumeration
-  } catch (error) {
-    console.log('numerationEncoder.decode',error)
-  }
-}
-
-numerationEncoder.prototype.renameAllSheets = async function(newlyNamedSheets){
-  await Excel.run(async context=>{
-    let sheets = context.workbook.worksheets;
-    for(let newSheet of Object.values(newlyNamedSheets)){
-      let sheet = sheets.getItem(newSheet.id)
-      sheet.name = newSheet.name
-    }
-    return await context.sync()
-  }).catch(error=>console.log('numerationEncoder.renameAllSheets',error))
-}
-numerationEncoder.prototype.decodeAllSheets = function(sheets){
-  try {
-    let newSheetOrder = []
-    function decodeSheetName(innerSheet){
-      const newSheet = innerSheet
-      let nameEncoder = new numerationEncoder()
-      newSheet.name = nameEncoder.decodeAndClean(innerSheet.name)
-      return newSheet
-    }
-    
-    for(let sheet of Object.values(sheets)){
-      const newSheet = decodeSheetName(sheet)
-      newSheetOrder.push(newSheet)
-      if(newSheet.elements.length>0){
-        for(let childSheet of Object.values(newSheet.elements)){
-          const newChildSheet = decodeSheetName(childSheet)
-          newSheetOrder.push(newChildSheet)
-        }
-      }
-    }
-    return newSheetOrder
-  } catch (error) {
-    console.log('numerationEncoder.encodeAllSheets',error)
-  }
-}
-numerationEncoder.prototype.encodeAllSheets = function(sheets){
-  try {
-    let newSheetOrder = []
-    let outerCounter = 0
-    let innerCounter = 0
-    function encodeSheetName(innerSheet){
-      const newSheet = innerSheet
-      let nameEncoder = new numerationEncoder()
-      newSheet.name = nameEncoder.encode(
-        innerSheet.name,outerCounter,innerCounter
-      )
-      return newSheet
-    }
-    
-    for(let sheet of Object.values(sheets)){
-      const newSheet = encodeSheetName(sheet)
-      newSheetOrder.push(newSheet)
-      if(newSheet.elements.length>0){
-        for(let childSheet of Object.values(newSheet.elements)){
-          innerCounter++
-          const newChildSheet = encodeSheetName(childSheet)
-          newSheetOrder.push(newChildSheet)
-        }
-      }
-      
-      outerCounter++
-      innerCounter = 0
-    }
-    return newSheetOrder
-  } catch (error) {
-    console.log('numerationEncoder.encodeAllSheets',error)
-  }
-}
-
 const actions = {
   async updateSpecificElement({dispatch, commit},{id,elements}){
     commit('updateSpecificElement',{id,elements})
-    await dispatch('updateElements',state.elements)
+    console.log('updateSpecificElement',{id, elements})
+    console.log('elements 1',Object.freeze(state.elements))
+    // await dispatch('updateElements',state.elements)
+    // console.log('elements 2',Object.freeze(state.elements))
   },
   async loadWorksheetsDetailed ({dispatch, commit},{allItems,activeItemId}){
     try {
@@ -454,6 +343,8 @@ const actions = {
         })
         return allElements
       }
+      const DEL = "DEL"
+      let shiftNumber = 0
       function createNumeratedSheets(elements){
         const elementProto = {
           id: "",
@@ -462,7 +353,7 @@ const actions = {
           isVisible: "",
           elements: {}
         }      
-        const DEL = "DEL"
+        let maxFirstNumber = 0
         let allTempElements ={}
         for(let sheet of Object.values(elements)){
           const element = {
@@ -477,37 +368,76 @@ const actions = {
           /** if positions failed, then we need to rename all sheets 
            * and then start process again
           */
-         if(positions == false){
-           console.log("warn",positions)
-          return {items: createSheets(elements), status: false}
-         }
+          if(positions == false){
+            console.log("warn",element.name)
+            return {items: createSheets(elements), status: false}
+          }
+          
           /** Check is it in a group or not */
           let [firstPosition, secondPosition] = positions
+          function setNewMaxFirstPosition(newOne){
+            maxFirstNumber= newOne > maxFirstNumber ? newOne : maxFirstNumber
+          }
+          function newFirstPosition(newFirstNumber){
+            return newFirstNumber ==0 ? firstPosition + shiftNumber : newFirstNumber + shiftNumber
+          }
+          function shiftedFirstPosition(){
+            return DEL+newFirstPosition(maxFirstNumber)
+          }
+          let shiftedFirstPositionWithKey = shiftedFirstPosition()
+          console.log(shiftedFirstPositionWithKey)
+          function encodeShiftedName(innerElement){
+            if(shiftNumber>0){
+              const oldName = innerElement.name
+              const newName = sheetPositionEncoder.encode(oldName,newFirstPosition(),secondPosition)
+              innerElement.name = newName
+            }
+            return innerElement
+          }
           if(secondPosition> 0){
             let el = elementProto
-            if([DEL+firstPosition] in allTempElements){
-              el = allTempElements[DEL+firstPosition]
+            if([shiftedFirstPositionWithKey] in allTempElements){
+              el = allTempElements[shiftedFirstPositionWithKey]
             }
-            el.elements[DEL+secondPosition] = element
-            allTempElements[DEL+firstPosition] = el
+
+            el.elements[DEL+secondPosition] = encodeShiftedName(element)
+            allTempElements[shiftedFirstPositionWithKey] = el
           } else {
             /** check is element exists */
-            if([DEL+firstPosition] in allTempElements){
-              const oldEl = allTempElements[DEL+firstPosition] 
-              const childElements = oldEl.elements
-              element.elements = childElements
+            if([shiftedFirstPositionWithKey] in allTempElements){
+              const oldEl = allTempElements[shiftedFirstPositionWithKey]
+              /** check name of element, if it is not equal 
+               * and its not proto, then we need to 
+               * shift it down
+               * */
+              if(oldEl.name != elementProto.name && oldEl.id != element.id){
+                shiftNumber++
+              } else {
+                const childElements = oldEl.elements
+                element.elements = childElements
+              } 
             }
-            allTempElements[DEL+firstPosition] = element
+            console.log("element",element)
+            console.log('shiftNumber',shiftNumber)
+            setNewMaxFirstPosition(firstPosition)
+            allTempElements[shiftedFirstPosition()] = encodeShiftedName(element)
           }
+        }
+        function prepareToSort(keys){
+          let newKeys= []
+          for(let key of keys){
+            const newKey = key.replace(DEL,"")
+            newKeys.push(newKey)
+          }
+          return newKeys
         }
         /** let's reorder all items */
         function reordering(groupElements){
           let groupValues = []
-          let groupKeys = Object.keys(groupElements)
-          groupKeys.sort()
-          
+          let groupKeys = prepareToSort(Object.keys(groupElements))
+          groupKeys.sort((a,b)=>a-b)
           for(let key of groupKeys){
-            const el = groupElements[key]
+            const el = groupElements[DEL+key]
             
             /** if child elements >0 then we need to reorder them too*/
             let childElements = Object.keys(el.elements).length>0 ? reordering(el.elements) : []
@@ -518,7 +448,6 @@ const actions = {
         }
         return {items: reordering(allTempElements), status: true}
       }
-
       const positioningType = state.appSettings.positioningType
       let allElements = []
       let localStatus = true
@@ -538,19 +467,28 @@ const actions = {
       if(localStatus == false){
         await dispatch('encodeAllSheets', allElements)
       }
+      console.log(allElements)
+      // if(shiftNumber>0){
+      //   let nameEncoder = new numerationEncoder()
+      //   const simplifiedSheets = nameEncoder.simplifySheetsHierarhy(state.elements)
+      //   console.log(simplifiedSheets)
+      //   await nameEncoder.renameAllSheets(simplifiedSheets)
+      // }
     } catch (error) {
       console.log("loadWorksheetsDetailed",error)
     }
   },
   async encodeAllSheets({dispatch, commit, state}, sheets){
     let nameEncoder = new numerationEncoder()
-    let newlyNamedSheets = nameEncoder.encodeAllSheets(sheets)
-    await nameEncoder.renameAllSheets(newlyNamedSheets)
+    let decodedNamedSheets = nameEncoder.decodeAllSheets(sheets)
+    let encodedNamedSheets = nameEncoder.encodeAllSheets(decodedNamedSheets)
+    await nameEncoder.renameAllSheets(encodedNamedSheets)
   },
   async decodeAllSheets({dispatch, commit, state}, sheets){
     let nameEncoder = new numerationEncoder()
     let newlyNamedSheets = nameEncoder.decodeAllSheets(sheets)
-    await nameEncoder.renameAllSheets(newlyNamedSheets)
+    let newlyNamedSheetsWithoutDoubles = nameEncoder._checkAndReturnWithoutDoubles(newlyNamedSheets)
+    await nameEncoder.renameAllSheets(newlyNamedSheetsWithoutDoubles)
   },
   async clearSheetsNumeration({dispatch, commit, state}){
     await dispatch('decodeAllSheets',state.elements)
@@ -560,11 +498,12 @@ const actions = {
       case enumPositioningOptions.default:
         await dispatch('decodeAllSheets', state.elements)
         break;
-      case enumPositioninchangePositioningTypegOptions.numeratedGroups:
+      case enumPositioningOptions.numeratedGroups:
         await dispatch('encodeAllSheets', state.elements)
         break;
     }
-    commit('',newType)
+    commit('changePositioningType',newType)
+    await dispatch('loadWorksheets')
   },
   async updateElements ({dispatch, commit, state}, payload) {
     try {
@@ -584,6 +523,7 @@ const actions = {
         case enumPositioningOptions.numeratedGroups:
           // changing names - adding numeration
           let nameEncoder = new numerationEncoder()
+          console.log('updateElements',payload)
           newSheetOrder = nameEncoder.encodeAllSheets(payload)
           await nameEncoder.renameAllSheets(newSheetOrder)
           break;
