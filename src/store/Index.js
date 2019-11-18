@@ -274,21 +274,27 @@ const mutations = {
 
 var loadWorksheetsItems = function(){}
 loadWorksheetsItems.prototype.load= async function(){
-  var self = this;
   await Excel.run(async context=>{
-    var sheets = context.workbook.worksheets;
+    let sheets = context.workbook.worksheets;
     sheets.load('items');
-    var activeItem = context.workbook.worksheets.getActiveWorksheet()
+    let activeItem = context.workbook.worksheets.getActiveWorksheet()
     activeItem.load('id')
     await context.sync()
     this.activeItemId = activeItem.id; 
-    self.sheets = sheets.items
+    this.sheets = sheets.items
     return context.sync();
   }).catch(error=>console.log('loadWorksheetsItems.load',error))
 }
 loadWorksheetsItems.prototype.getAll = async function(){
   await this.load()
   return this.all;
+}
+loadWorksheetsItems.prototype.getSheetsIds = async function(){
+  await this.load()
+  const ids = this.sheets.map(el=>{
+    return el.id
+  })
+  return ids
 }
 loadWorksheetsItems.prototype.getItems = async function(){
   await this.load()
@@ -318,13 +324,57 @@ loadWorksheetsItems.prototype.changePositions = async function(changedValues){
     console.log('loadWorksheetsItems.changePositions',error)
   }
 }
+loadWorksheetsItems.prototype.changeSheetsPositions = async function(changedValues){
+  try {
+    /** getting sheets */
+    const sheetsIds =await this.getSheetsIds()
+    /** getting current positions */
+    const simplifiedItemsIds = []
+    for(let item of changedValues){
+      simplifiedItemsIds.push(item.id)
+      if(item.elements.length>0){
+        for(let childElement of item.elements){
+          simplifiedItemsIds.push(childElement.id)
+        }
+      }
+    }
+    /** finding changes */
+    const changedItems = simplifiedItemsIds.filter((item,index)=>{
+      const currentIndexOfItem = sheetsIds.indexOf(item.id)
+      return (index != currentIndexOfItem)
+    })
+    /** making new array to change positions */
+    if (changedItems.length>0){
+      for(let [key,values] of Object.entries(changedItems)){
+        await this.reorderSheet({id:values,position:key})
+      }
+      
+    }   
+  } catch (error) {
+    console.log('loadWorksheetsItems.changeSheetsPositions',error)
+  }
+}
+loadWorksheetsItems.prototype.reorderSheet=async function({id,position}){
+  await Excel.run(async context => {
+    let sheet;
+    switch (typeof id) {
+      case "undefined":
+        sheet = context.workbook.worksheets.getActiveWorksheet();        
+        break;
+      default:
+        sheet = context.workbook.worksheets.getItem(id)
+        break;
+    }
+    sheet.position = Number(position)
+    return await context.sync()
+  }).catch(error=>console.log('loadWorksheetsItems.reorderSheet',error))
+}
+
 
 const actions = {
   async updateSpecificElement({dispatch, commit},{id,elements}){
     commit('updateSpecificElement',{id,elements})
-    console.log('updateSpecificElement',{id, elements})
-    console.log('elements 1',Object.freeze(state.elements))
-    // await dispatch('updateElements',state.elements)
+    await dispatch('updateElements',state.elements)
     // console.log('elements 2',Object.freeze(state.elements))
   },
   async loadWorksheetsDetailed ({dispatch, commit},{allItems,activeItemId}){
@@ -554,22 +604,15 @@ const actions = {
       switch (positioningType) {
         case enumPositioningOptions.default:
           /** FIXME: refactor to simplify its */
-          for(let sheet of Object.values(payload)){
-            newSheetOrder.push(sheet)
-            if(sheet.elements.length>0){
-              for(let sheetChild of Object.values(sheet.elements)){
-                newSheetOrder.push(sheetChild)
-              }        
-            }
-          }
+          newSheetOrder = payload;
           break;
         case enumPositioningOptions.numeratedGroups:
           // changing names - adding numeration
           let nameEncoder = new numerationEncoder()
-          console.log('updateElements',payload)
           /** FIXME: refactor encodeAllSheets */
-          newSheetOrder = nameEncoder.encodeAllSheets(payload)
-          await nameEncoder.renameAllSheets(newSheetOrder)
+          newSheetOrder = nameEncoder.encodeAllSheetsElements(payload)
+          const simplifiedSheets = nameEncoder.simplifySheetsHierarhy(newSheetOrder)
+          await nameEncoder.renameAllSheets(simplifiedSheets)
           break;
       }
       console.log('updateElements',newSheetOrder)
@@ -577,11 +620,8 @@ const actions = {
       // check which sheet changed
       const itemLoader = new loadWorksheetsItems();
       /** FIXME: refactor changePositions if there is more then one level*/
-      const changedItems = await itemLoader.changePositions(newSheetOrder);
-      for(let item of Object.values(changedItems)){
-        await dispatch('reorderWorksheet', item)
-      }
-      commit('updateElements',payload);      
+      await itemLoader.changeSheetsPositions(newSheetOrder);
+      commit('updateElements',newSheetOrder);      
     } catch (error) {
       commit('log',error)
     }
@@ -609,8 +649,8 @@ const actions = {
       id = sheet.load("id")
       return await context.sync()
     })
-    dispatch('reorderWorksheet', {id, position});
-    dispatch("changeColorWorksheet",{id,color});    
+    await dispatch('reorderWorksheet', {id, position});
+    await dispatch("changeColorWorksheet",{id,color});    
   },
   async worksheetAdded ({dispatch,commit},id){
     dispatch('loadWorksheets')
@@ -666,19 +706,8 @@ const actions = {
     commit('changeActiveWorksheet', {id})
   },
   async reorderWorksheet ({dispatch, commit}, {id, position}){
-    await Excel.run(async context => {
-      let sheet;
-      switch (typeof id) {
-        case "undefined":
-          sheet = context.workbook.worksheets.getActiveWorksheet();        
-          break;
-        default:
-          sheet = context.workbook.worksheets.getItem(id)
-          break;
-      }
-      sheet.position = position
-      return await context.sync()
-    })
+    let encoderSheet = new numerationEncoder()
+    await encoderSheet.reorderSheet({id, position})
   }
 }
 
