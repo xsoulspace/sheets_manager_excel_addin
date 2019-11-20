@@ -25,6 +25,7 @@
   <div v-show="isParent" class="children-box">
     <child-nested-items 
       :isParent="false"
+      :parentID="id"
       v-model="elements"
     />
   </div>

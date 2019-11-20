@@ -60,6 +60,10 @@ const getters = {
       return state.elements;
     }
   },
+  getElementChildren: state=>id=>{
+    const elements = state.elements
+    return elements.filter(el=>el.id==id).elements
+  },
   getSheetFilter: state=>{
     return state.sheetFilter;
   },
@@ -149,8 +153,6 @@ function getIdInElements(elements, propertyName, value){
   return founded;
 }
 
-
-
 function changeValueInElements(id,elements, propertyName, value){
   const newItems = elements.map(element => {
     var newChildren =[];
@@ -227,10 +229,22 @@ const mutations = {
     state.elements = elements;
   },
   updateSpecificElement: (state,{id, elements})=>{
-    const elementIndex = state.elements.findIndex(el=>el.id == id)
-    const element = state.elements[elementIndex]
-    element.elements = elements
-    state.elements[elementIndex] = element
+    try {
+      let oldElements = state.elements
+      // console.log(oldElements)
+      const elementIndex = oldElements.findIndex(el=>el.id == id)
+      // console.log(elementIndex)
+      let element = oldElements[elementIndex]
+      // console.log('until',element)
+      // console.log('childrenElements',elements)
+      element.elements = elements
+      // console.log('after',element)
+      oldElements[elementIndex] = element
+      state.elements = oldElements
+      console.log('state',state)   
+    } catch (error) {
+      console.log('updateSpecificElement',error)
+    }
   },
   appSettings: (state, payload)=>{
     state.appSettings = payload
@@ -326,10 +340,10 @@ loadWorksheetsItems.prototype.changePositions = async function(changedValues){
 }
 loadWorksheetsItems.prototype.changeSheetsPositions = async function(changedValues){
   try {
-    console.log('0.loadWorksheetsItems.changeSheetsPositions.changedValues',changedValues)
+    // console.log('0.loadWorksheetsItems.changeSheetsPositions.changedValues',changedValues)
     /** getting sheets */
     const sheetsIds =await this.getSheetsIds()
-    console.log('0.1.loadWorksheetsItems.changeSheetsPositions.sheetsIds',sheetsIds)
+    // console.log('0.1.loadWorksheetsItems.changeSheetsPositions.sheetsIds',sheetsIds)
 
     /** getting current positions */
     const simplifiedItemsIds = []
@@ -341,15 +355,15 @@ loadWorksheetsItems.prototype.changeSheetsPositions = async function(changedValu
         }
       }
     }
-    console.log('1.loadWorksheetsItems.changeSheetsPositions',changedValues)
-    console.log('1.1.loadWorksheetsItems.changeSheetsPositions.simplifiedItemsIds',simplifiedItemsIds)
+    // console.log('1.loadWorksheetsItems.changeSheetsPositions',changedValues)
+    // console.log('1.1.loadWorksheetsItems.changeSheetsPositions.simplifiedItemsIds',simplifiedItemsIds)
     /** finding changes */
     const changedItems = simplifiedItemsIds.filter((item,index)=>{
       const currentIndexOfItem = sheetsIds.indexOf(item.id)
       return (index != currentIndexOfItem)
     })
-    console.log('2.loadWorksheetsItems.changeSheetsPositions',changedValues)
-    console.log('2.1.loadWorksheetsItems.changeSheetsPositions',changedItems)
+    // console.log('2.loadWorksheetsItems.changeSheetsPositions',changedValues)
+    // console.log('2.1.loadWorksheetsItems.changeSheetsPositions',changedItems)
 
     /** making new array to change positions */
     if (changedItems.length>0){
@@ -357,7 +371,7 @@ loadWorksheetsItems.prototype.changeSheetsPositions = async function(changedValu
         await this.reorderSheet({id:values,position:key})
       }
     }
-    console.log('3.loadWorksheetsItems.changeSheetsPositions',changedValues)
+    // console.log('3.loadWorksheetsItems.changeSheetsPositions',changedValues)
  
   } catch (error) {
     console.log('loadWorksheetsItems.changeSheetsPositions',error)
@@ -381,11 +395,6 @@ loadWorksheetsItems.prototype.reorderSheet=async function({id,position}){
 
 
 const actions = {
-  async updateSpecificElement({dispatch, commit},{id,elements}){
-    commit('updateSpecificElement',{id,elements})
-    await dispatch('updateElements',state.elements)
-    // console.log('elements 2',Object.freeze(state.elements))
-  },
   async loadWorksheetsDetailed ({dispatch, commit},{allItems,activeItemId}){
     try {
       function createSheets(elements){
@@ -405,156 +414,10 @@ const actions = {
         } catch (error) {
           console.log('loadWorksheetsDetailed.createSheets',error)
         }
-
       }
-      const DEL = "DEL"
-      let numbersHadBeenShifted = false
+
+      let sheetsEncoder = new numerationEncoder()
       
-      function createNumeratedSheets(elements){
-        /** first, we need to make correct hierarhy 
-         * second, we need to find doubles and correct names and positions
-         * third, we need to rename all sheets
-         * Making correct hierarhy:
-         * 1. Element exists, but name == protoName
-         * 1.1 No elements -> place is free
-         * -> child elements can be placed
-         * 1.2 Has elements -> place is free
-         * -> child elements can be placed
-         * 2. Element exists, but name != protoName
-         * -> child elements can be placed
-         * -> place is taken
-         * -> find last number + 1
-         * -> take this place
-         * 3. Element not exists 
-         * -> place is free
-         * -> place protoElement
-         * -> child elements can be placed
-        */
-        const elementProto = {
-          id: "",
-          name: "",
-          color: "",
-          isVisible: "",
-          elements: {}
-        }      
-        let maxFirstNumber = 0
-        let allTempElements ={}
-        let sheetPositionEncoder = new numerationEncoder()
-        
-        for(let sheet of Object.values(elements)){
-          let shiftNumber = 0
-          const element = {
-            id: sheet.id,
-            name: sheet.name,
-            color: sheet.tabColor,
-            isVisible: sheet.visibility,
-            elements: {}
-          }
-          let positions = sheetPositionEncoder.decode(element.name)
-          /** if positions failed, then we need to rename all sheets 
-           * and then start process again
-          */
-          if(positions == false){
-            console.log("warn",element.name)
-            return {items: createSheets(elements), status: false}
-          }
-          
-          /** Check is it in a group or not */
-          let [firstPosition, secondPosition] = positions
-          
-          function setNewMaxFirstPosition(newOne){
-            maxFirstNumber= newOne > maxFirstNumber ? newOne : maxFirstNumber
-          }
-
-          function newFirstPosition(){
-            return firstPosition + shiftNumber
-          }
-          function shiftedFirstPosition(){
-            return DEL+newFirstPosition()
-          }
-          let shiftedFirstPositionWithKey = shiftedFirstPosition()
-          
-          function encodeShiftedName(innerElement){
-            if(shiftNumber>0){
-              const oldName = innerElement.name
-              const newName = sheetPositionEncoder.encode(oldName,newFirstPosition(),secondPosition)
-              innerElement.name = newName
-            }
-            return innerElement
-          }
-          let el
-          const elementExists = shiftedFirstPositionWithKey in allTempElements
-          if(elementExists){
-            el = allTempElements[shiftedFirstPositionWithKey]
-          } else {
-            el = elementProto
-          }
-          const isItChildElement = secondPosition> 0
-          function getChildrenAndPutThemToNewElement(){
-            const childElements = el.elements
-            element.elements = childElements
-          }
-          function shiftToNewPosition(){
-            const newMaxNumber = maxFirstNumber+shiftNumber
-            setNewMaxFirstPosition(newMaxNumber)
-            allTempElements[DEL+(newMaxNumber)] = element
-          }
-          if(isItChildElement){
-            el.elements[DEL+secondPosition] = element
-            allTempElements[shiftedFirstPositionWithKey] = el
-          } else {
-            /** check name of element, if it is not equal 
-             * and its not proto, then we need to 
-             * shift it down
-             * */
-            switch (true) {
-              case !elementExists:
-                allTempElements[DEL+firstPosition] = element
-                break;
-              case el.name == elementProto.name:
-                getChildrenAndPutThemToNewElement()
-                break;
-              case el.id != element.id:
-                /** need to shift element */
-                shiftNumber++
-                shiftToNewPosition()
-                numbersHadBeenShifted = true
-                break;
-              default:
-                console.log("what's going on? detailed loading worksheet", element)
-                break;
-            }
-            setNewMaxFirstPosition(firstPosition + shiftNumber)
-          }
-        }
-        function prepareToSort(keys){
-          let newKeys= []
-          for(let key of keys){
-            const newKey = key.replace(DEL,"")
-            newKeys.push(newKey)
-          }
-          return newKeys
-        }
-        /** let's reorder all items */
-        function reordering(groupElements){
-          let groupValues = []
-          let groupKeys = prepareToSort(Object.keys(groupElements))
-          groupKeys.sort((a,b)=>a-b)
-          for(let key of groupKeys){
-            const el = groupElements[DEL+key]
-            
-            /** if child elements >0 then we need to reorder them too*/
-            let childElements = Object.keys(el.elements).length>0 ? reordering(el.elements) : []
-            el.elements = childElements
-            groupValues.push(el)
-          }
-          return groupValues
-        }
-        let reorderedItems = reordering(allTempElements)
-        let encodedItems = sheetPositionEncoder.encodeAllSheetsElements(reorderedItems)
-        return {items: encodedItems, status: true}
-      }
-
       const positioningType = state.appSettings.positioningType
       let allElements = []
       let localStatus = true
@@ -562,32 +425,44 @@ const actions = {
         case enumPositioningOptions.default:
           allElements = createSheets(allItems)
           break;
-      
         case enumPositioningOptions.numeratedGroups:
-          let {items, status} = createNumeratedSheets(allItems)
+          let {items, status} = sheetsEncoder.createNumeratedSheets(allItems)
           localStatus = status
           allElements = items;
-
           break;
       }
       commit('loadWorksheets',{allElements,activeItemId})
       if(localStatus == false){
+        console.log('starting encoding')
         await dispatch('encodeAllSheets', allElements)
-      }
-      if(numbersHadBeenShifted){
-        let nameEncoder = new numerationEncoder()
-        const simplifiedSheets = nameEncoder.simplifySheetsHierarhy(allElements)
-        await nameEncoder.renameAllSheets(simplifiedSheets)
       }
     } catch (error) {
       console.log("loadWorksheetsDetailed",error)
     }
   },
+  async loadWorksheets ({commit,dispatch},payload){
+    try {
+      const itemLoader = new loadWorksheetsItems()
+      const allItems =   await itemLoader.getItems()
+      const activeItemId = await itemLoader.activeItemId;
+      await dispatch("loadWorksheetsDetailed",{allItems,activeItemId})      
+    } catch (error) {
+      console.log('loadWorksheets',error)
+    }
+  },
   async encodeAllSheets({dispatch, commit, state}, sheets){
-    let nameEncoder = new numerationEncoder()
-    let decodedNamedSheets = nameEncoder.decodeAllSheets(sheets)
-    let encodedNamedSheets = nameEncoder.encodeAllSheetsElements(decodedNamedSheets)
-    await nameEncoder.renameAllSheets(encodedNamedSheets)
+    try {
+      let nameEncoder = new numerationEncoder()
+      let decodedNamedSheets = nameEncoder.decodeAllSheets(sheets)
+      console.log('decodedNamedSheets',decodedNamedSheets)
+      let encodedNamedSheets = nameEncoder.encodeAllSheetsElements(decodedNamedSheets)
+      console.log('encodedNamedSheets',encodedNamedSheets)
+      // const simplifiedSheets = nameEncoder.simplifySheetsHierarhy(encodedNamedSheets)
+      // console.log('simplifiedSheets',simplifiedSheets)
+      await nameEncoder.renameAllSheets(encodedNamedSheets)      
+    } catch (error) {
+      console.log('encodeAllSheets',error)
+    }
   },
   async decodeAllSheets({dispatch, commit, state}, sheets){
     let nameEncoder = new numerationEncoder()
@@ -610,6 +485,21 @@ const actions = {
     commit('changePositioningType',newType)
     await dispatch('loadWorksheets')
   },
+  async updateSpecificElement({dispatch, commit,state},{id,elements}){
+    try {
+      // console.log('elements 22',elements)
+      let sheetEncoder = new numerationEncoder()
+      const newElements = sheetEncoder.encodeAllSheets(elements)
+      // console.log('newElements 2',newElements)
+      commit('updateSpecificElement',{id,elements:newElements})
+      // await dispatch('updateElements',state.elements)
+      // console.log('elements 2',Object.freeze(state.elements))
+
+    } catch (error) {
+      console.log('updateSpecificElement',error)
+    }
+
+  },
   async updateElements ({dispatch, commit, state}, elements) {
     try {
       /** FIXME: strange problem - 
@@ -618,43 +508,39 @@ const actions = {
        * also it causes error with numeration
        * */
       // await dispatch('loadWorksheetsDetailed',{allItems:elements,activeItemId: state.activeSheetId})
-      // console.log('__ elements',elements)
+      console.log('__ elements',elements)
       /** old code */
-      // const positioningType = state.appSettings.positioningType
-      // let newSheetOrder = []
-      // switch (positioningType) {
-      //   case enumPositioningOptions.default:
-      //     /** FIXME: refactor to simplify its */
-      //     newSheetOrder = elements;
-      //     break;
-      //   case enumPositioningOptions.numeratedGroups:
-      //     // changing names - adding numeration
-      //     let nameEncoder = new numerationEncoder()
-      //     /** FIXME: refactor encodeAllSheets */
-      //     newSheetOrder = nameEncoder.encodeAllSheetsElements(elements)
-      //     const simplifiedSheets = nameEncoder.simplifySheetsHierarhy(newSheetOrder)
-      //     await nameEncoder.renameAllSheets(simplifiedSheets)
-      //     break;
-      // }
-      // console.log('1. updateElements after switch',newSheetOrder)
+      const positioningType = state.appSettings.positioningType
+      let newSheetOrder = []
+      switch (positioningType) {
+        case enumPositioningOptions.default:
+          /** FIXME: refactor to simplify its */
+          newSheetOrder = elements;
+          break;
+        case enumPositioningOptions.numeratedGroups:
+          // changing names - adding numeration
+          let nameEncoder = new numerationEncoder()
+          /** FIXME: refactor encodeAllSheets */
+          newSheetOrder = nameEncoder.encodeAllSheetsElements(elements)
+          // const simplifiedSheets = nameEncoder.simplifySheetsHierarhy(newSheetOrder)
+          await nameEncoder.renameAllSheets(newSheetOrder)
+          // console.log('1. simplifiedSheets',simplifiedSheets)
 
-      // // check which sheet changed
-      // const itemLoader = new loadWorksheetsItems();
+          break;
+      }
+      console.log('1. updateElements after switch',newSheetOrder)
+
+      // check which sheet changed
+      const itemLoader = new loadWorksheetsItems();
       // /** FIXME: refactor changePositions if there is more then one level*/
       
-      // await itemLoader.changeSheetsPositions(newSheetOrder);
-      // console.log('2. updateElements after changeSheetsPositions',newSheetOrder)
-      // commit('updateElements',newSheetOrder);      
+      await itemLoader.changeSheetsPositions(newSheetOrder);
+      // // console.log('2. updateElements after changeSheetsPositions',newSheetOrder)
+      commit('updateElements',newSheetOrder);      
     } catch (error) {
       commit('log',error)
     }
 
-  },
-  async loadWorksheets ({commit,dispatch},payload){
-    const items = new loadWorksheetsItems()
-    const allItems =   await items.getItems()
-    const activeItemId = await items.activeItemId;
-    await dispatch("loadWorksheetsDetailed",{allItems,activeItemId})
   },
   async renameWorksheet ({dispatch, commit}, {id, name}){
     await Excel.run(async context => {

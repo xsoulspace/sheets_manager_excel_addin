@@ -76,6 +76,33 @@ export default {
         ghostClass: "ghost"
       };
     },
+    // realValue:{
+    //   set:  async function(elements){
+    //     console.log('set realValue',elements)
+    //     if(this.isParent){
+    //       const obj ={
+    //         id: this.parentId,
+    //         elements
+    //       }
+    //       await this.$store.dispatch('updateSpecificElement',obj)
+    //     }else {
+    //       await this.$store.dispatch('updateElements',elements)
+    //     }
+    //   },
+    //   get:  function(){
+    //     let els
+    //     if(this.isParent){
+    //       // els = this.value ? this.value : this.list;
+    //       els = this.$store.getters['getNested'];
+    //       console.log('els',els)
+    //     }else {
+    //       els= this.$store.getters['getElementChildren'](this.parentId);          
+    //       console.log('elschild',els)
+    //     }
+    //     console.log('els',els)
+    //     return els
+    //   }
+    // },
     realValue:function(){
       return this.value ? this.value : this.list;
     }
