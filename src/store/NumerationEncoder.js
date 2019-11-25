@@ -36,8 +36,8 @@ numerationEncoder.prototype.decode = function(sentence=""){
 numerationEncoder.prototype.decodeAndClean = function(sentence=""){
   try {
     const sentenceWithoutNumeration = sentence.replace(/(.\d_\d.)/g,"")
-    const sentenceWithoutNumbers = sentenceWithoutNumeration.replace(/(\d)/g,"")
-    return sentenceWithoutNumbers
+    // const sentenceWithoutNumbers = sentenceWithoutNumeration.replace(/(\d)/g,"")
+    return sentenceWithoutNumeration
   } catch (error) {
     console.log('numerationEncoder.decode',error)
   }
@@ -60,6 +60,25 @@ numerationEncoder.prototype._checkAndReturnWithoutDoubles = function(sheets){
     return Object.values(newSheets)
   } catch (error) {
     console.log('numerationEncoder._checkAndReturnWithoutDoubles',error)
+  }
+}
+
+numerationEncoder.prototype.createSheets=function(elements){
+  try {
+    let allElements = []
+    elements.forEach(sheet => {
+      const element = {
+        id: sheet.id,
+        name: sheet.name,
+        color: sheet.tabColor,
+        isVisible: sheet.visibility,
+        elements: []
+      }
+      allElements.push(element)
+    })
+    return allElements
+  } catch (error) {
+    console.log('numerationEncoder.createSheets',error)
   }
 }
 
@@ -90,7 +109,8 @@ numerationEncoder.prototype.createNumeratedSheets = function (elements){
     color: "",
     isVisible: "",
     elements: {}
-  }      
+  } 
+  let areItemsWereShifted = false
   let maxFirstNumber = 0
   let allTempElements ={}
   const DEL = "DEL"
@@ -112,7 +132,7 @@ numerationEncoder.prototype.createNumeratedSheets = function (elements){
     */
     if(positions == false){
       console.log("warn",element.name)
-      return {items: createSheets(elements), status: false}
+      return {items: self.createSheets(elements), status: false}
     }
     
     /** Check is it in a group or not */
@@ -150,10 +170,26 @@ numerationEncoder.prototype.createNumeratedSheets = function (elements){
     
     const isItChildElement = Number(secondPosition)> 0
     if(isItChildElement){
-      console.log('child element',element)
-      el.elements[DEL+secondPosition] = element
+      // console.log('child element',element)
+      let maxChildrenNumber =0
+      function childId(){
+        if(maxChildrenNumber>0){
+          const max = (maxChildrenNumber+1 > secondPosition ? maxChildrenNumber : secondPosition)
+          return DEL+(max+1)
+        } else {
+          return DEL+secondPosition
+        } 
+      }
+      const isChildExists = childId() in el.elements
+      // console.log(isChildExists)
+      if(isChildExists){
+        maxChildrenNumber = Object.values(el.elements).length
+        areItemsWereShifted = true
+      }
+      // console.log('maxNumber',{id:childId(),maxChildrenNumber})
+      el.elements[childId()] = element
       allTempElements[shiftedFirstPositionWithKey] = el
-      console.log('children all elements',{all:(allTempElements),el})
+      // console.log('children all elements',{all:(allTempElements),el})
     } else {
       /** check name of element, if it is not equal 
        * and its not proto, then we need to 
@@ -163,19 +199,20 @@ numerationEncoder.prototype.createNumeratedSheets = function (elements){
       /** FIXME: algorithm of children and parents is broken */
       switch (true) {
         case !elementExists:
-          console.log('element not exists',element)
+          // console.log('element not exists',element)
           allTempElements[DEL+firstPosition] = element
           break;
         case el.name == elementProto.name:
-          console.log('el.name == elementProto.name',element)
+          // console.log('el.name == elementProto.name',element)
           let childElements = el.elements
           element.elements = childElements
           allTempElements[DEL+firstPosition] = element
           break;
         case el.id != element.id:
           /** need to shift element */
-          console.log('el.id != element.id',element)
+          // console.log('el.id != element.id',element)
           shiftNumber++
+          areItemsWereShifted = true
           const newMaxNumber = maxFirstNumber+shiftNumber
           setNewMaxFirstPosition(newMaxNumber)
           allTempElements[DEL+(newMaxNumber)] = element
@@ -222,11 +259,12 @@ numerationEncoder.prototype.createNumeratedSheets = function (elements){
   }
 
   let reorderedItems = reordering(allTempElements)
-  console.log(reorderedItems)
+  // console.log(reorderedItems)
   // console.log('reorderedItems',reorderedItems)
   let encodedItems = self.encodeAllSheetsElements(reorderedItems)
   // console.log('encodedItems',encodedItems)
-  return {items: encodedItems, status: true}
+  // console.log(areItemsWereShifted)
+  return {items: encodedItems, status: true, areItemsWereShifted}
  } catch (error) {
    console.log('numerationEncoder.createNumeratedSheets',error)
  } 
@@ -283,7 +321,7 @@ numerationEncoder.prototype.decodeAllSheets = function(sheets){
   }
 }
 
-numerationEncoder.prototype.encodeAllSheets = function(sheets){
+numerationEncoder.prototype.encodeAllSheets = function({sheets,outerCounter}){
   try {
     let newSheetOrder = []
     let innerCounter = 1
@@ -293,7 +331,9 @@ numerationEncoder.prototype.encodeAllSheets = function(sheets){
       let nameEncoder = new numerationEncoder()
       let [outerCounterDecoded,innerCounterDecoded] = self.decode(innerSheet.name)
       newSheet.name = nameEncoder.encode(
-        innerSheet.name,outerCounterDecoded,innerCounter
+        innerSheet.name,
+        outerCounter==undefined ? outerCounterDecoded : outerCounter,
+        innerCounter
       )
       return newSheet
     }
@@ -326,6 +366,7 @@ numerationEncoder.prototype.encodeAllSheetsElements = function(sheets){
     let newSheetOrder = Object.values(sheets).map(sheet=>{
       const newSheet = encodeSheetName(sheet)
       const newSheetElements = Object.values(newSheet.elements)
+      // console.log(newSheet)
       // console.log('newSheetElements until',newSheetElements)
       if(newSheetElements.length>0){
         const newElements = newSheetElements.map(childSheet=>{
