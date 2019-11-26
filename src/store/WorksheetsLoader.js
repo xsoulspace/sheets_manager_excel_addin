@@ -1,12 +1,19 @@
-// Object loader
+import ExcelBuilder from "./ExcelBuilder";
+import functionExtend from "./FunctionExtend";
 
 let WorksheetsLoader = function(){
   this._enum ={
     title: 'WorksheetsLoader'
   }
 }
+WorksheetsLoader.prototype.init =async function(excelContext = undefined){
+  functionExtend(this,ExcelBuilder)
+  await this._iniExcel(excelContext)
+}
+
 WorksheetsLoader.prototype.load= async function(){
-  await Excel.run(async context=>{
+  try {
+    let context = await this._context
     let sheets = context.workbook.worksheets;
     sheets.load('items');
     let activeItem = context.workbook.worksheets.getActiveWorksheet()
@@ -14,8 +21,9 @@ WorksheetsLoader.prototype.load= async function(){
     await context.sync()
     this.activeItemId = activeItem.id; 
     this.sheets = sheets.items
-    return context.sync();
-  }).catch(error=>console.log(`${this._enum.title}.load`,error))
+  } catch (error) {
+    console.log(`${this._enum.title}.load`,error)
+  }
 }
 WorksheetsLoader.prototype.getAll = async function(){
   try {
@@ -47,15 +55,14 @@ WorksheetsLoader.prototype.getItems = async function(){
 WorksheetsLoader.prototype.changePositions = async function(changedValues){
   try {
     await this.getItems()
-    var changedItem;
-    var newChangedItems=[];
-    var fisrtChange = false;
+    let newChangedItems=[];
+    let fisrtChange = false;
     changedValues.forEach((item, index)=>{
       const changedItems = this.sheets.filter((oldItem)=>{
         return (item.id ==oldItem.id && oldItem.position != index)
       })
       if (changedItems.length>0 && fisrtChange==false){
-        changedItem = {
+        let changedItem = {
           id: item.id,
           position: index
         }
@@ -65,7 +72,7 @@ WorksheetsLoader.prototype.changePositions = async function(changedValues){
     })
     return newChangedItems;    
   } catch (error) {
-    console.log('WorksheetsLoader.changePositions',error)
+    console.log(`${this._enum.title}.changePositions`,error)
   }
 }
 WorksheetsLoader.prototype.changeSheetsPositions = async function(changedValues){
@@ -96,11 +103,9 @@ WorksheetsLoader.prototype.changeSheetsPositions = async function(changedValues)
     // console.log('2.1.WorksheetsLoader.changeSheetsPositions',changedItems)
 
     /** making new array to change positions */
+
     if (changedItems.length>0){
-      for(let [key,values] of Object.entries(changedItems)){
-        // console.log('reorderSheet before',{id:values,position:key})
-        await this.reorderSheet({id:values,position:key})
-      }
+      await this.reorderSheets({changedItems})
     }
     // console.log('3.WorksheetsLoader.changeSheetsPositions',changedValues)
  
@@ -108,21 +113,26 @@ WorksheetsLoader.prototype.changeSheetsPositions = async function(changedValues)
     console.log(`${this._enum.title}.changeSheetsPositions`,error)
   }
 }
-WorksheetsLoader.prototype.reorderSheet=async function({id,position}){
-  await Excel.run(async context => {
-    let sheet;
-    switch (typeof id) {
-      case "undefined":
-        sheet = context.workbook.worksheets.getActiveWorksheet();        
-        break;
-      default:
-        sheet = context.workbook.worksheets.getItem(id)
-        break;
+WorksheetsLoader.prototype.reorderSheets=async function({changedItems}){
+  try {
+    let context = await this._context
+    for(let [position,id] of Object.entries(changedItems)){
+      let sheet;
+      switch (typeof id) {
+        case "undefined":
+          sheet = context.workbook.worksheets.getActiveWorksheet();        
+          break;
+        default:
+          sheet = context.workbook.worksheets.getItem(id)
+          break;
+      }
+      // console.log(Number(position))
+      sheet.position = Number(position)
     }
-    // console.log(Number(position))
-    sheet.position = Number(position)
-    return await context.sync()
-  }).catch(error=>console.log(`${this._enum.title}.reorderSheet`,error))
+  } catch (error) {
+    console.log(`${this._enum.title}.reorderSheets`,error)
+  }
 }
+
 
 export {WorksheetsLoader};

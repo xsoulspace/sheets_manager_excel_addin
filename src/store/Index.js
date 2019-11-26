@@ -288,6 +288,8 @@ const actions = {
   async loadWorksheetsDetailed ({dispatch, commit},{allItems,activeItemId}){
     try {
       let sheetsEncoder = new numerationEncoder()
+      await sheetsEncoder.init()
+      let context = await sheetsEncoder.excelContext()
       let localAreItemsWereShifted = false
       const positioningType = state.appSettings.positioningType
       let allElements = []
@@ -313,18 +315,22 @@ const actions = {
       if(localAreItemsWereShifted == true){
         await sheetsEncoder.renameAllSheets(allElements)
         const itemLoader = new WorksheetsLoader();
+        await itemLoader.init(context)
         // console.log(allElements)
         await itemLoader.changeSheetsPositions(allElements)
       }
+      await context.sync()
     } catch (error) {
       console.log("loadWorksheetsDetailed",error)
     }
   },
   async loadWorksheets ({commit,dispatch},payload){
     try {
-      const itemLoader = new WorksheetsLoader()
-      const allItems =   await itemLoader.getItems()
+      const itemLoader =  new WorksheetsLoader()
+      await itemLoader.init()
+      const allItems = await itemLoader.getItems()
       const activeItemId = await itemLoader.activeItemId;
+      await itemLoader.syncExcelContext()
       await dispatch("loadWorksheetsDetailed",{allItems,activeItemId})      
     } catch (error) {
       console.log('loadWorksheets',error)
@@ -333,6 +339,7 @@ const actions = {
   async encodeAllSheets({dispatch, commit, state}, sheets){
     try {
       let nameEncoder = new numerationEncoder()
+      await nameEncoder.init()
       let decodedNamedSheets = nameEncoder.decodeAllSheets(sheets)
       // console.log('decodedNamedSheets',decodedNamedSheets)
       let newlyNamedSheetsWithoutDoubles = nameEncoder._checkAndReturnWithoutDoubles(decodedNamedSheets)
@@ -340,16 +347,19 @@ const actions = {
       // console.log('encodedNamedSheets',encodedNamedSheets)
       // const simplifiedSheets = nameEncoder.simplifySheetsHierarhy(encodedNamedSheets)
       // console.log('simplifiedSheets',simplifiedSheets)
-      await nameEncoder.renameAllSheets(encodedNamedSheets)      
+      await nameEncoder.renameAllSheets(encodedNamedSheets)
+      await nameEncoder.syncExcelContext()   
     } catch (error) {
       console.log('encodeAllSheets',error)
     }
   },
   async decodeAllSheets({dispatch, commit, state}, sheets){
     let nameEncoder = new numerationEncoder()
+    await nameEncoder.init()
     let newlyNamedSheets = nameEncoder.decodeAllSheets(sheets)
     let newlyNamedSheetsWithoutDoubles = nameEncoder._checkAndReturnWithoutDoubles(newlyNamedSheets)
     await nameEncoder.renameAllSheets(newlyNamedSheetsWithoutDoubles)
+    await nameEncoder.syncExcelContext()   
   },
   async clearSheetsNumeration({dispatch, commit, state}){
     await dispatch('decodeAllSheets',state.elements)
@@ -372,15 +382,18 @@ const actions = {
       const el = currentElements.find(el=>el.id==id)
       // console.log('elements 22',elements)
       let sheetEncoder = new numerationEncoder()
+      await sheetEncoder.init()
+      let context = await sheetEncoder.excelContext()
       const [outerCounter,innerCounter] = sheetEncoder.decode(el.name)
       const newElements = sheetEncoder.encodeAllSheets({sheets:elements,outerCounter})
       // console.log('newElements 2',newElements)
       commit('updateSpecificElement',{id,elements:newElements})
       const itemPositioner = new WorksheetsLoader()
+      itemPositioner.init(context)
       // console.log('newElementsUpdate',newElements)
       await sheetEncoder.renameAllSheets(newElements)
       await itemPositioner.changeSheetsPositions(newElements)
-
+      await context.sync()
       // await dispatch('updateElements',state.elements)
       // console.log('elements 2',Object.freeze(state.elements))
 
@@ -401,6 +414,9 @@ const actions = {
       /** old code */
       const positioningType = state.appSettings.positioningType
       let newSheetOrder = []
+      let nameEncoder = new numerationEncoder()
+      await nameEncoder.init()
+      let context = await nameEncoder.excelContext()
       switch (positioningType) {
         case enumPositioningOptions.default:
           /** FIXME: refactor to simplify its */
@@ -408,7 +424,6 @@ const actions = {
           break;
         case enumPositioningOptions.numeratedGroups:
           // changing names - adding numeration
-          let nameEncoder = new numerationEncoder()
           /** FIXME: refactor encodeAllSheets */
           newSheetOrder = nameEncoder.encodeAllSheetsElements(elements)
           console.log('newSheetOrder after encoder',newSheetOrder)
@@ -422,9 +437,10 @@ const actions = {
 
       // check which sheet changed
       const itemLoader = new WorksheetsLoader();
+      await itemLoader.init(context)
       /** FIXME: refactor changePositions if there is more then one level*/
       await itemLoader.changeSheetsPositions(newSheetOrder);   
-
+      await context.sync()
       // console.log('2. updateElements after changeSheetsPositions',newSheetOrder)
       commit('updateElements',newSheetOrder);   
     } catch (error) {
@@ -505,9 +521,11 @@ const actions = {
     commit('changeActiveWorksheet', {id})
   },
   async reorderWorksheet ({dispatch, commit}, {id, position}){
-    let encoderSheet = new numerationEncoder()
+    let itemLoader = new WorksheetsLoader()
+    await itemLoader.init()
     console.log('dispatch reorder worksheet',{id, position})
-    await encoderSheet.reorderSheet({id, position})
+    await itemLoader.reorderSheets({changedItems:[{id, position}]})
+    await itemLoader.syncExcelContext()
   }
 }
 

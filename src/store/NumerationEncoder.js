@@ -1,5 +1,13 @@
+
+import ExcelBuilder from "./ExcelBuilder";
+import functionExtend from "./FunctionExtend";
+
 let numerationEncoder= function(){
   this.delimiter = "_"
+}
+numerationEncoder.prototype.init =async function(excelContext = undefined){
+  functionExtend(this,ExcelBuilder)
+  await this._iniExcel(excelContext)
 }
 numerationEncoder.prototype.encode = function(sentence="", firstNumber=0, secondNumber=0){
   /** 1. extract possible pattern -> 00_00 but it can be e0_0uio,
@@ -271,30 +279,28 @@ numerationEncoder.prototype.createNumeratedSheets = function (elements){
 }
 
 numerationEncoder.prototype.renameAllSheets = async function(newlyNamedSheets){
-  await Excel.run(async context=>{
-    try {
-      // console.log('rnm',Object.freeze(newlyNamedSheets))
-      let sheets = context.workbook.worksheets;
-      for(let newSheet of Object.values(newlyNamedSheets)){
-        let sheet = sheets.getItem(newSheet.id)
-        // console.log('parentname',newSheet.name)
-        sheet.name = newSheet.name
-        const elements = Object.values(newSheet.elements)
-        if(elements.length>0){
-          for(let childSheet of elements){
-            let realSheet = sheets.getItem(childSheet.id)
-            // console.log('childname',childSheet.name)
-            realSheet.name = childSheet.name
-          }
+  try {
+    // console.log('rnm',Object.freeze(newlyNamedSheets))
+    let context = await this._context
+    let sheets = context.workbook.worksheets;
+    for(let newSheet of Object.values(newlyNamedSheets)){
+      let sheet = sheets.getItem(newSheet.id)
+      // console.log('parentname',newSheet.name)
+      sheet.name = newSheet.name
+      const elements = Object.values(newSheet.elements)
+      if(elements.length>0){
+        for(let childSheet of elements){
+          let realSheet = sheets.getItem(childSheet.id)
+          // console.log('childname',childSheet.name)
+          realSheet.name = childSheet.name
         }
       }
-      return await context.sync()      
-    } catch (error) {
-      console.log('numerationEncoder.renameAllSheets.context',error)
     }
-  }).catch(error=>console.log('numerationEncoder.renameAllSheets',error))
+  } catch (error) {
+    console.log('numerationEncoder.renameAllSheets',error)
+  }
 }
-
+/** Must be used context.sync() */
 numerationEncoder.prototype.decodeAllSheets = function(sheets){
   try {
     let newSheetOrder = []
