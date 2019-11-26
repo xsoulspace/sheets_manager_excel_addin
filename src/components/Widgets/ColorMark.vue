@@ -1,15 +1,16 @@
 <template>
   <figure 
-    @click="clicked" class="action has-corner" 
+    @click="clicked" class="action has-shadow" 
+    :class="{'has-corner':!isTouchDevice,'is-rounded':isTouchDevice}"
     :style="{
-      'border-color': tabColor
+      'border-color': tabColor,
+      'background-color': tabColor
     }">
   </figure>
   
 </template>
 
 <script>
-
 export default {
   name: "color-mark",
   props: ['id'],
@@ -28,13 +29,25 @@ export default {
   computed: {
     tabColor: {
       get: function(){
-        return this.$store.getters['getColor'](this.id)
+        let localColor = this.$store.getters['getColor'](this.id);
+        let color
+        localColor == "" ?
+          color = "#4f4f4f" :
+          color = localColor 
+        // let opacity;
+        // this.isTouchDevice ?
+        //   opacity = "0.8" :
+        //   opacity = "0.9"
+        return color
       },
       set: function(color){
         const id = this.id
         this.$store.dispatch('changeColorWorksheet',{id,color})
       }
     },
+    isTouchDevice(){
+      return this.$store.getters['getIsTouchDevice']
+    }
   }
 }
 </script>

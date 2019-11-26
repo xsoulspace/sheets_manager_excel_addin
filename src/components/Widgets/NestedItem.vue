@@ -2,7 +2,7 @@
 <div class="draggable-item" 
   :class="{'is-draggable': !onEdit}" 
   :style="{'background-color':backgroundColor}">
-  <div class="actions-grid">
+  <div class="actions-flex">
     <color-mark 
       :id="id"
       @color-mark-clicked="changeColorSwitchState(true)"
@@ -187,23 +187,46 @@ $color-mark-width: 6px;
   &:first-of-type{
     margin-bottom: 0.2em;
   }
-  .actions-grid{
-    display: grid;
+  .actions-flex{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: start;
+    margin-right: 0.3em;
     align-self: stretch;
-    grid-template-columns: $color-mark-width 1fr auto;
-    grid-template-rows: 1fr;
+    justify-content: space-between;
     .action{
       padding-top: $padding-top;
       padding-bottom: $padding-bottom;
       align-content: center;
+
       &.has-corner{
         border-style: solid;
         border-left-width: $color-mark-width;
         border-top-left-radius: 0.4em;
         border-bottom-left-radius: 0.4em;
+        display: flex;
+        align-self: stretch;
         cursor: crosshair;
         &:hover{
           border-left-width: 20px;
+        }
+        &.has-shadow{
+          // https://www.cssmatic.com/box-shadow
+          box-shadow: 7px 1px 9px -4px rgba(31,31,31,0.41);
+        }
+      }
+      &.is-rounded{
+        border-style: solid;
+        width: 1.5em;
+        border-top-left-radius: 0.4em;
+        border-bottom-left-radius: 0.4em;
+        border-top-right-radius: 0.4em;
+        border-bottom-right-radius: 0.4em;
+        display: flex;
+        align-self: stretch;
+        cursor: pointer;
+        &.has-shadow{
+          box-shadow: 3px 4px 9px -4px rgba(31,31,31,0.41);
         }
       }
       .item-name{
@@ -213,15 +236,6 @@ $color-mark-width: 6px;
         }
       }
     }
-  }
-  .actions{
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: start;
-    margin-right: 0.3em;
-    align-self: stretch;
-    justify-content: space-between;
-
   }
 
   .children-box{

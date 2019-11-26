@@ -15,7 +15,7 @@
       </div>  
       <div class="field">
         <label class="checkbox">
-          <input type="checkbox">
+          <input v-model="isTouchDevice" type="checkbox">
           Адаптировать интерфейс под тач
         </label>        
       </div> 
@@ -49,6 +49,14 @@ export default {
     }
   },  
   computed: {
+    isTouchDevice:{
+      set: function(isTouchDevice){
+        this.$store.commit('setIsTouchDevice',isTouchDevice)
+      },
+      get: function(){
+        return this.$store.getters['getIsTouchDevice']
+      }
+    },
     positioning: {
       set: async function(value){
         let positioningType

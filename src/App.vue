@@ -17,6 +17,9 @@ export default {
       StoreAppSettings: "appSettings",
     }        
   },
+  mounted: function(){
+    this.checkIsTouchDevice()
+  },
   computed: {
     log: function(){
       return this.$store.getters['getLog']
@@ -41,6 +44,27 @@ export default {
     }
   },
   methods: {
+    checkIsTouchDevice() {
+      //https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript/4819886#4819886
+      try {
+        let prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
+        let mq = function(query) {
+          return window.matchMedia(query).matches;
+        }
+        
+        if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+          return true;
+        }
+
+        // include the 'heartz' as a way to have a non matching MQ to help terminate the join
+        // https://git.io/vznFH
+        let query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('');
+        let isTouchDevice = mq(query);
+        this.$store.commit('setIsTouchDevice',isTouchDevice)   
+      } catch (error) {
+        console.log('isTouchDevice',error)
+      }
+    },
     eventHandler: async function(event){
       var self = this;
       // self.$store.commit('joinlog', JSON.stringify(event))

@@ -44,7 +44,8 @@ const state = {
   appSettings: {
     childrenEnabled: true,
     visibilitySwitchesActive: true,
-    positioningType: enumPositioningOptions.numeratedGroups
+    positioningType: enumPositioningOptions.numeratedGroups,
+    isTouchDevice: false
   },
   log: "",
   activeSheetId: "",
@@ -53,6 +54,9 @@ const state = {
 }
 
 const getters = {
+  getIsTouchDevice: state=>{
+    return state.appSettings.isTouchDevice
+  },
   getNested: state=>{
     const filteredWord = state.sheetFilter
     if (filteredWord.length>0){
@@ -212,6 +216,9 @@ function deleteIdInElements(id,elements, state){
 // Mutations
 
 const mutations = {
+  setIsTouchDevice:(state,isTouchDevice)=>{
+    state.appSettings.isTouchDevice = isTouchDevice
+  },
   setSheetFilter: (state,value) =>{
     state.sheetFilter =value
   },
@@ -287,9 +294,23 @@ const mutations = {
 const actions = {
   async loadWorksheetsDetailed ({dispatch, commit},{allItems,activeItemId}){
     try {
+
+    } catch (error) {
+      console.log("loadWorksheetsDetailed",error)
+    }
+  },
+  async loadWorksheets ({commit,dispatch},payload){
+    try {
+      const itemLoader =  new WorksheetsLoader()
+      await itemLoader.init()
+      let context = await itemLoader.excelContext()
+      const allItems = await itemLoader.getItems()
+      const activeItemId = await itemLoader.activeItemId;
+      
+
       let sheetsEncoder = new numerationEncoder()
-      await sheetsEncoder.init()
-      let context = await sheetsEncoder.excelContext()
+      await sheetsEncoder.init(context)
+
       let localAreItemsWereShifted = false
       const positioningType = state.appSettings.positioningType
       let allElements = []
@@ -307,39 +328,27 @@ const actions = {
       }
       
       commit('loadWorksheets',{allElements,activeItemId})
+
       if(localStatus == false){
         // console.log('starting encoding')
-        await dispatch('encodeAllSheets', allElements)
+        await dispatch('encodeAllSheets', {sheets:allElements, context})
       }
       // console.log(localAreItemsWereShifted)
       if(localAreItemsWereShifted == true){
         await sheetsEncoder.renameAllSheets(allElements)
-        const itemLoader = new WorksheetsLoader();
-        await itemLoader.init(context)
         // console.log(allElements)
         await itemLoader.changeSheetsPositions(allElements)
       }
       await context.sync()
-    } catch (error) {
-      console.log("loadWorksheetsDetailed",error)
-    }
-  },
-  async loadWorksheets ({commit,dispatch},payload){
-    try {
-      const itemLoader =  new WorksheetsLoader()
-      await itemLoader.init()
-      const allItems = await itemLoader.getItems()
-      const activeItemId = await itemLoader.activeItemId;
-      await itemLoader.syncExcelContext()
-      await dispatch("loadWorksheetsDetailed",{allItems,activeItemId})      
+
     } catch (error) {
       console.log('loadWorksheets',error)
     }
   },
-  async encodeAllSheets({dispatch, commit, state}, sheets){
+  async encodeAllSheets({dispatch, commit, state}, {sheets, context}){
     try {
       let nameEncoder = new numerationEncoder()
-      await nameEncoder.init()
+      await nameEncoder.init(context)
       let decodedNamedSheets = nameEncoder.decodeAllSheets(sheets)
       // console.log('decodedNamedSheets',decodedNamedSheets)
       let newlyNamedSheetsWithoutDoubles = nameEncoder._checkAndReturnWithoutDoubles(decodedNamedSheets)
@@ -365,16 +374,20 @@ const actions = {
     await dispatch('decodeAllSheets',state.elements)
   },
   async changePositioningType({dispatch, commit, state}, newType){
-    switch (newType) {
-      case enumPositioningOptions.default:
-        await dispatch('decodeAllSheets', state.elements)
-        break;
-      case enumPositioningOptions.numeratedGroups:
-        await dispatch('encodeAllSheets', state.elements)
-        break;
+    try {
+      switch (newType) {
+        case enumPositioningOptions.default:
+          await dispatch('decodeAllSheets', {sheets: state.elements})
+          break;
+        case enumPositioningOptions.numeratedGroups:
+          await dispatch('encodeAllSheets', {sheets: state.elements})
+          break;
+      }
+      commit('changePositioningType',newType)
+      await dispatch('loadWorksheets')
+    } catch (error) {
+      console.log('changePositioningType')
     }
-    commit('changePositioningType',newType)
-    await dispatch('loadWorksheets')
   },
   async updateSpecificElement({dispatch, commit,state},{id,elements}){
     try {
@@ -449,26 +462,34 @@ const actions = {
 
   },
   async renameWorksheet ({dispatch, commit}, {id, name}){
-    await Excel.run(async context => {
-      let sheet = context.workbook.worksheets.getItem(id)
-      sheet.name = name;
-      return await context.sync()
-    })
-    commit('renameWorksheet',{id, name})
+    try {
+      await Excel.run(async context => {
+        let sheet = context.workbook.worksheets.getItem(id)
+        sheet.name = name;
+        return await context.sync()
+      })
+      commit('renameWorksheet',{id, name})
+    } catch (error) {
+      console.log('renameWorksheet',error)
+    }
   },
   async addNewWorksheet({dispatch, commit}, {name,position, color}){
-    let id;
-    await Excel.run(async context => {
+    try {
+      let context = await Excel.run(async context=> context)
       let sheets = context.workbook.worksheets
       let sheet = sheets.add(name)
-      id = sheet.load("id")
-      return await context.sync()
-    })
-    await dispatch('reorderWorksheet', {id, position});
-    await dispatch("changeColorWorksheet",{id,color});    
+      let id = sheet.load("id")
+      await context.sync()
+  
+      await dispatch('reorderWorksheet', {id, position, context});
+      await dispatch("changeColorWorksheet",{id,color, context});
+    } catch (error) {
+      console.log('addNewWorksheet',error)
+    }
+    
   },
   async worksheetAdded ({dispatch,commit},id){
-    dispatch('loadWorksheets')
+    await dispatch('loadWorksheets')
   },
   async deleteWorksheet({dispatch, commit}, {id}){
     await Excel.run(async context => {
@@ -498,34 +519,48 @@ const actions = {
     });
     commit('toogleWorksheetVisibility', {id,isVisible})
   },
-  async changeColorWorksheet({dispatch, commit}, {id, color}){
-    await Excel.run(async context => {
-      let sheet = context.workbook.worksheets.getItem(id)
+  async changeColorWorksheet({dispatch, commit}, {id, color, context}){
+    try {
+      let localContext
+      context === undefined ? localContext = await Excel.run(async ctx=> await ctx) : localContext = context
+      let sheet = localContext.workbook.worksheets.getItem(id)
       sheet.tabColor = color;
-      return await context.sync()
-    });
-    commit('changeColorWorksheet', {id,color})
+      await localContext.sync()
+      commit('changeColorWorksheet', {id,color})
+    } catch (error) {
+      console.log('changeColorWorksheet',error)
+    }
   },
   async selectWorksheet({dispatch, commit, state}, id){
-    const oldId = state.activeSheetId; 
-    if (id != oldId) {
-      await Excel.run(async context => {
-        const sheet = context.workbook.worksheets.getItem(id)
-        sheet.activate();        
-        return await context.sync()
-      })
-    commit('changeActiveWorksheet', {id})
+    try {
+      const oldId = state.activeSheetId; 
+      if (id != oldId) {
+        await Excel.run(async context => {
+          const sheet = context.workbook.worksheets.getItem(id)
+          sheet.activate();        
+          return await context.sync()
+        })
+      commit('changeActiveWorksheet', {id})
+      }
+    } catch (error) {
+      console.log('selectWorksheet',error)
     }
   },
   async worksheetActivated({commit,state},id){
     commit('changeActiveWorksheet', {id})
   },
-  async reorderWorksheet ({dispatch, commit}, {id, position}){
-    let itemLoader = new WorksheetsLoader()
-    await itemLoader.init()
-    console.log('dispatch reorder worksheet',{id, position})
-    await itemLoader.reorderSheets({changedItems:[{id, position}]})
-    await itemLoader.syncExcelContext()
+  async reorderWorksheet ({dispatch, commit}, {id, position,context}){
+    try {
+      let localContext
+      context === undefined ? localContext = await Excel.run(async context=>context) : localContext = context
+
+      let itemLoader = new WorksheetsLoader()
+      await itemLoader.init(localContext)
+      await itemLoader.reorderSheets({changedItems:[{id, position}]})
+      await localContext.sync()
+    } catch (error) {
+      console.log('reorderWorksheet',error)
+    }
   }
 }
 
