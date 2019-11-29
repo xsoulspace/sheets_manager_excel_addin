@@ -1,8 +1,10 @@
 <template>
 <p 
   v-if="!onEdit"
-  @dblclick="onEdit=true"
-  @click="selectWorksheet" 
+  @dblclick.prevent="onEdit=true"
+  @click.prevent="selectWorksheet" 
+  v-hammer:press="handlePress"
+  v-hammer:tap="handleTouch"
 >
   {{sheetName}}
 </p>
@@ -11,6 +13,7 @@
   :maxlength="maxLength" 
   v-else-if="onEdit"
   @click.native="onEdit=true"
+  v-hammer:tap="handleTouch"
   @keydown.enter="onEdit=false"
   v-closable="{
     exclude: ['input'],
@@ -26,11 +29,11 @@
 <script>
 export default {
   name: "editable-text",
-  props: ['id'],
+  props: ['id','dragging'],
   data(){
     return {
       onEdit: false,
-      maxLength: 26
+      maxLength: 26,
     }
   },
   mounted: function () {
@@ -46,6 +49,24 @@ export default {
     },
     editOff: function(){
       this.onEdit=false
+    },
+    async handlePress(){
+      try {
+        if(this.isTouchDevice && !this.dragging){
+          await this.selectWorksheet()
+        }
+      } catch (error) {
+        
+      }
+    },
+    handleTouch(){
+      try {
+        if(this.isTouchDevice && !this.dragging){
+          this.onEdit=true
+        }
+      } catch (error) {
+        
+      }
     }
   },
   computed: {
@@ -59,6 +80,9 @@ export default {
         this.$store.dispatch('renameWorksheet',{id, name}) 
       }
     },
+    isTouchDevice(){
+      return this.$store.getters['getIsTouchDevice']
+    }
   }
 }
 </script>

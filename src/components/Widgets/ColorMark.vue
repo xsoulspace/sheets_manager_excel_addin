@@ -1,21 +1,22 @@
 <template>
   <figure 
     @click="clicked" class="action has-shadow" 
+    v-hammer:tap="touched"
     :class="{'has-corner':!isTouchDevice,'is-rounded':isTouchDevice}"
     :style="{
       'border-color': tabColor,
       'background-color': tabColor
-    }">
-  </figure>
-  
+    }"
+  />
 </template>
 
 <script>
 export default {
   name: "color-mark",
-  props: ['id'],
+  props: ['id','dragging'],
   data () {
     return {
+      
     }
   },
   mounted: function(){
@@ -24,6 +25,11 @@ export default {
   methods: {
     clicked:function(){
       this.$emit("color-mark-clicked")
+    },
+    touched(){
+      if(this.isTouchDevice && !this.dragging){
+        this.clicked()
+      }
     }
   },
   computed: {

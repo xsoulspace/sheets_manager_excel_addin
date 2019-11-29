@@ -6,7 +6,8 @@
     <color-mark 
       :id="id"
       @color-mark-clicked="changeColorSwitchState(true)"
-    ></color-mark>
+      :dragging='dragging'
+    />
     <div class="action">
       <span class="icon">
         <i class="fas fa-ellipsis-v"></i>
@@ -17,6 +18,7 @@
         <editable-text 
           :id="id"
           @editable-text-on-edit="onEditChanged($event)"
+          :dragging='dragging'
         />
       </div>
     </div>

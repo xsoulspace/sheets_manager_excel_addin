@@ -10,14 +10,16 @@
     @input="emitter"
     class="draganddrop-container"
 >
-  <nested-item
-    :key="el.id" 
-    v-for="el in realValue"
-    :el="el"
-    :id="el.id"
-    :isParent="isParent"
-    :dragging="dragging"
-    ></nested-item>
+  <transition-group>
+    <nested-item
+      :key="el.id" 
+      v-for="el in realValue"
+      :el="el"
+      :id="el.id"
+      :isParent="isParent"
+      :dragging="dragging"
+      />
+  </transition-group>
 </draggable>
 </template>
 

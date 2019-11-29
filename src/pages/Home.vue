@@ -1,17 +1,16 @@
 <template>
 <div class="home">
-<navigation-tabs
-  @tab-settings-clicked="isSettingsActive=$event"
-  :pIsSettingsActive = "isSettingsActive"
->
-</navigation-tabs>
-<settings-modal 
-  :settingsState="isSettingsActive"
-  @settings-modal-state-changed="isSettingsActive=$event">
-</settings-modal>
+  <navigation-tabs
+    @tab-settings-clicked="isSettingsActive=$event"
+    :pIsSettingsActive = "isSettingsActive"
+  />
+  <settings-modal 
+    :settingsState="isSettingsActive"
+    @settings-modal-state-changed="isSettingsActive=$event"
+  />
   <root-nested-items 
     :isParent="true" v-model="elements" 
-  ></root-nested-items>
+  />
 
 
 </div>

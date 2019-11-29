@@ -10,6 +10,12 @@ import "vue-swatches/dist/vue-swatches.min.css"
 //https://stackoverflow.com/questions/36170425/detect-click-outside-element
 import "./directives/outside-click";
 
+/**
+ * To handle all touch gestures
+ * https://github.com/bsdfzzzy/vue2-hammer
+ */
+import { VueHammer } from 'vue2-hammer'
+Vue.use(VueHammer)
 
 
 //Check were we are
