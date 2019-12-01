@@ -1,8 +1,11 @@
 import enumPositioningOptions from "./EnumPositioningOptions";
 import numerationEncoder from "./NumerationEncoder";
 import {WorksheetsLoader} from "./WorksheetsLoader";
-const state = {
+/** CLASSES */
+import {FilterElementsProvider} from "./Providers/FilterElementsProvider";
 
+const state = {
+  filteredElements: [],
   elements: [
     {
       id: 1,
@@ -45,11 +48,11 @@ const state = {
     childrenEnabled: true,
     visibilitySwitchesActive: true,
     positioningType: enumPositioningOptions.numeratedGroups,
-    isTouchDevice: false
+    isTouchDevice: false,
+    filteredWord: "",
   },
   log: "",
   activeSheetId: "",
-  sheetFilter: "",
   isExcelActive: ""
 }
 
@@ -58,11 +61,11 @@ const getters = {
     return state.appSettings.isTouchDevice
   },
   getNested: state=>{
-    const filteredWord = state.sheetFilter
+    const filteredWord = state.appSettings.filteredWord
     if (filteredWord.length>0){
-      return filterElements(state.elements,filteredWord)
+      return state.filteredElements
     } else {
-      return state.elements;
+      return state.elements
     }
   },
   getElementChildren: state=>id=>{
@@ -219,8 +222,9 @@ const mutations = {
   setIsTouchDevice:(state,isTouchDevice)=>{
     state.appSettings.isTouchDevice = isTouchDevice
   },
-  setSheetFilter: (state,value) =>{
-    state.sheetFilter =value
+  setSheetFilter: (state,{filteredWord,filteredElements}) =>{
+    state.appSettings.filteredWord = filteredWord
+    state.filteredElements = filteredElements
   },
   toogleEditMode: (state, payload) =>{
     const current = state.editMode
@@ -292,6 +296,14 @@ const mutations = {
 }
 
 const actions = {
+  async setSheetFilter({state,commit},{filteredWord}){
+    try {
+      let filteredElements = await FilterElementsProvider.run({elements: state.elements,filteredWord})
+      commit('setSheetFilter',{filteredWord,filteredElements})
+    } catch (error) {
+      console.log("setSheetFilter",error)
+    }
+  },
   async loadWorksheetsDetailed ({dispatch, commit},{allItems,activeItemId}){
     try {
 
@@ -307,7 +319,6 @@ const actions = {
       const allItems = await itemLoader.getItems()
       const activeItemId = await itemLoader.activeItemId;
       
-
       let sheetsEncoder = new numerationEncoder()
       await sheetsEncoder.init(context)
 

@@ -86,8 +86,8 @@ export default {
   },
   computed: {
     sheetFilter:{
-      set: function(value){
-        this.$store.commit('setSheetFilter', value)
+      set: async function(filteredWord){
+        await this.$store.dispatch('setSheetFilter', {filteredWord})
       },
       get: function(){
         return this.$store.getters['getSheetFilter']

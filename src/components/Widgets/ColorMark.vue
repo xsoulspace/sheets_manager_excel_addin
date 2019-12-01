@@ -59,20 +59,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.left-arrow {
-	border-top-color: transparent;
-  border-bottom-color: transparent;
-	border-style: solid;
-	border-width: 0px 0px 20px 20px;
-	height: 0px;
-	width: 0px;
-  cursor: crosshair;
-}
-.left-corner {
-	border-style: solid;
-	border-width: 0px 0px 0px 2px;
-	height: auto;
-	width: 0px;
-  cursor: crosshair;
-}
+
 </style>

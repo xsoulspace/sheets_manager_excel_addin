@@ -26,18 +26,19 @@ export default {
   name: 'home',
   data(){
     return{
-      isSettingsActive: false
+      isSettingsActive: false,
     }
   },
   mounted: function(){
     this.$store.dispatch('loadWorksheets')
   },
   methods: {
+
   },
   components: {
     NavigationTabs,
     SettingsModal,
-    'root-nested-items':NestedItems
+    'root-nested-items': NestedItems
   },
   computed:{
     elements: {
