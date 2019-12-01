@@ -1,0 +1,59 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": [
+      "webpack-env",
+      "jest",
+    ],
+    "paths": {
+      "*": ["GraphicCore","src/GraphicCore/*"],
+
+      "@/*": [
+        "src/*",
+      ],
+      "Framework/*": [
+        "src/GraphicCore/Framework/*"
+      ],
+      "StatefullWidget/*": [
+        "src/GraphicCore/StatefullWidget/*"
+      ],
+      "StatelessWidget/*": [
+        "src/GraphicCore/StatelessWidget/*"
+      ],
+      "LogicCore/*": [
+        "src/LogicCore/*"
+      ],
+      "StorageCore/*": [
+        "src/StorageCore/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  },
+  "include": [
+    "src/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "types"
+  ]
+}

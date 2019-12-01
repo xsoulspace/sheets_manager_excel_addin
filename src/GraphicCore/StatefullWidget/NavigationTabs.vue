@@ -64,45 +64,57 @@
   </div>
 </nav>
 </template>
-<script>
-export default {
-  name: 'navigation-tabs',
-  props: {
-    pIsSettingsActive:{
-      required: true,
-      type: Boolean,
-      default: false
-    }
+<script lang="ts">
+
+
+import { Component, Vue } from 'vue-property-decorator'
+@Component({
+  name: "navigation-tabs",
+  components: {
   },
-  data: function(){
-    return{
-      isSearchActive: false
-    }
-  },
-  methods:{
-    refreshSheets: async function(){
-      await this.$store.dispatch("loadWorksheets")
-    }
-  },
-  computed: {
-    sheetFilter:{
-      set: async function(filteredWord){
-        await this.$store.dispatch('setSheetFilter', {filteredWord})
-      },
-      get: function(){
-        return this.$store.getters['getSheetFilter']
-      }
-    },
-    isSettingsActive: {
-      set: function(value){
-        this.$emit('tab-settings-clicked',value)
-      },
-      get: function(){
-        return this.pIsSettingsActive
-      }
-    }
-  }
+})
+export default class NavigationTabs extends Vue {
+
 }
+
+// export default {
+//   name: 'navigation-tabs',
+//   props: {
+//     pIsSettingsActive:{
+//       required: true,
+//       type: Boolean,
+//       default: false
+//     }
+//   },
+//   data: function(){
+//     return{
+//       isSearchActive: false
+//     }
+//   },
+//   methods:{
+//     refreshSheets: async function(){
+//       await this.$store.dispatch("loadWorksheets")
+//     }
+//   },
+//   computed: {
+//     sheetFilter:{
+//       set: async function(filteredWord){
+//         await this.$store.dispatch('setSheetFilter', {filteredWord})
+//       },
+//       get: function(){
+//         return this.$store.getters['getSheetFilter']
+//       }
+//     },
+//     isSettingsActive: {
+//       set: function(value){
+//         this.$emit('tab-settings-clicked',value)
+//       },
+//       get: function(){
+//         return this.pIsSettingsActive
+//       }
+//     }
+//   }
+// }
 </script>
 <style lang="scss" scoped>
 .tabs {
