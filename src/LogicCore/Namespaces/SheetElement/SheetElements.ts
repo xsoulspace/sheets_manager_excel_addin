@@ -1,7 +1,15 @@
 /// <reference path="Index.ts"/>
+interface SheetElementsMapConfigInterface{
+  typeOfName: string
+}
+
 namespace Elements{
   export class SheetElementsMap implements SheetElementsInterface  {
-    constructor() {}
+    constructor({typeOfName}:SheetElementsMapConfigInterface,excelSheets: Excel.Worksheet[]) {
+      if(excelSheets !== undefined) this.createSheetElements(excelSheets)
+      this.typeOfName = typeOfName
+    }
+    public typeOfName: string
     private _map= new Map() as SheetElementsMapInterface
     public entries(){
       try {
@@ -10,20 +18,21 @@ namespace Elements{
         
       }
     }
-    public rewriteItems(values: SheetElementsMapInterface){
+    public rewriteItems(values: SheetElementsMapInterface): void{
       try {
         this._map = values
       } catch (error) {
         
       }
     }
-    public createSheetElements(excelSheets: Excel.Worksheet[]){
+    public createSheetElements(excelSheets: Excel.Worksheet[]): void{
       try {
         let allElements = new Map() as SheetElementsMapInterface
         for(const excelSheet of excelSheets){
           const element = new SheetElement()
           element.color = excelSheet.tabColor
           element.name = excelSheet.name
+          element.typeOfName = this.typeOfName
           element.id = excelSheet.id
           element.isVisible = excelSheet.visibility
           allElements.set(element.id,element)
@@ -33,7 +42,7 @@ namespace Elements{
         console.log('createSheetElements',error)
       }
     }
-    public correctDoubles(){
+    public correctDoubles(): void{
       try {
         let newSheets = new Map() as SheetElementsMapInterface
         let sheetNames: Array<string>= []
