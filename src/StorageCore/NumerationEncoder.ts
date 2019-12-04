@@ -1,5 +1,5 @@
 /** Interfaces */
-import {SheetElement, SheetElementObject} from "./Interfaces";
+import {SheetElement, SheetElements} from "./Interfaces";
 /** Classes */
 import {ExcelBuilder} from "@/LogicCore/APIExcel/ExcelBuilder"
 
@@ -55,14 +55,25 @@ export class numerationEncoder extends ExcelBuilder{
       console.log('numerationEncoder.decode',error)
     }
   }
-  _checkAndReturnWithoutDoubles(sheets: SheetElement[]): SheetElement[] | undefined{
+  /**
+   * The main principle:
+   * we create array and for each item starting to 
+   * push old name or if its exists - corrected name
+   * FIXME: Works only with no children elements!
+   * @param sheets are sheetElements
+   */
+  _checkAndReturnWithoutDoubles(sheets: SheetElements): SheetElements | undefined{
     try {
-      let newSheets: Map<string,SheetElement> = new Map()
+      let newSheets: Map<SheetElement["id"],SheetElement> = new Map()
+      let sheetNames: Array<string>= []
       let i: number = 1
-      for(let sheet of Object.values(sheets)){
+      for(const [sheetId, sheet] of sheets){
+
+        if(sheet === undefined) throw "some error";
+
         const sheetName: string = sheet.name
         let finalSheetName: string
-        if(newSheets.has(sheetName)){
+        if(sheetNames.includes(sheetName)){
           const newSheetName:string = sheetName + String(i)
           sheet.name = newSheetName
           i++
@@ -70,33 +81,35 @@ export class numerationEncoder extends ExcelBuilder{
         } else {
           finalSheetName = sheetName
         }
-        newSheets.set(finalSheetName,sheet)
+        sheetNames.push(finalSheetName)
+        newSheets.set(sheetId,sheet)
       }
-      return Object.values(newSheets)
+      return newSheets
     } catch (error) {
       console.log('numerationEncoder._checkAndReturnWithoutDoubles',error)
     }
   }
-  createSheets(elements: Excel.Worksheet[]){
+  createSheets(excelSheets: Excel.Worksheet[]): SheetElements | undefined{
     try {
-      let allElements: SheetElement[] = []
-      elements.forEach(sheet => {
+      let allElements: SheetElements = new Map()
+      for(const excelSheet of excelSheets){
         const element: SheetElement = {
-          id: sheet.id,
-          name: sheet.name,
-          color: sheet.tabColor,
-          isVisible: sheet.visibility,
-          elements: []
+          id: excelSheet.id,
+          name: excelSheet.name,
+          color: excelSheet.tabColor,
+          orderNumber: "",
+          isVisible: excelSheet.visibility,
+          elements: {} as SheetElements
         }
-        allElements.push(element)
-      })
+        allElements.set(element.id,element)
+      }
       return allElements
     } catch (error) {
       console.log('numerationEncoder.createSheets',error)
     }
   }
-  createNumeratedSheets (elements: Excel.Worksheet[]): 
-  {items: SheetElement[] | undefined, status: boolean} | undefined{
+  createNumeratedSheets (excelSheets: Excel.Worksheet[]): 
+  {items: SheetElements | undefined, status: boolean} | undefined{
     /** first, we need to make correct hierarhy 
      * second, we need to find doubles and correct names and positions
      * third, we need to rename all sheets
@@ -117,26 +130,28 @@ export class numerationEncoder extends ExcelBuilder{
      * -> child elements can be placed
     */
    try {
-    let elementProto: SheetElementObject = {
+    let elementProto: SheetElement = {
       id: "",
       name: "",
       color: "",
+      orderNumber: "",
       isVisible: "",
       elements: new Map(),
     } 
     let areItemsWereShifted: boolean = false
     let maxFirstNumber: number = 0
-    let allTempElements: Map<string, SheetElementObject> = new Map()
+    let allTempElements: Map<SheetElement['id'], SheetElement> = new Map()
     const DEL: string = "DEL"
     // console.log('sheets elements',elements)
-    for(let sheet of Object.values(elements)){
+    for(let sheet of excelSheets){
       let shiftNumber: number = 0
-      let element: SheetElementObject = {
+      let element: SheetElement = {
         id: sheet.id,
         name: sheet.name,
         color: sheet.tabColor,
+        orderNumber: "",
         isVisible: sheet.visibility,
-        elements: new Map()
+        elements: new Map() as SheetElements
       }
   
       let positions: returnedNumbers | undefined = this.decode(element.name)
@@ -146,7 +161,7 @@ export class numerationEncoder extends ExcelBuilder{
       if(positions === undefined) return {items: undefined, status: false}
       if(positions.status == false){
         console.log("warn",element.name)
-        return {items: this.createSheets(elements), status: false}
+        return {items: this.createSheets(excelSheets), status: false}
       }
       
       /** Check is it in a group or not */
@@ -165,15 +180,16 @@ export class numerationEncoder extends ExcelBuilder{
         static withKey: string = DEL+ ShiftedFirstPosition.onlyNumber   
       }
 
-      let el: SheetElementObject | undefined
+      let el: SheetElement | undefined
       const elementExists: boolean = allTempElements.has(ShiftedFirstPosition.withKey)
       if(elementExists){
         el = allTempElements.get(ShiftedFirstPosition.withKey)
       } else {
         el = elementProto
       }     
-
+      if(el === undefined) throw "some error";
       const isItChildElement: boolean = Number(secondPosition)> 0
+
       if(isItChildElement){
         // console.log('child element',element)
         let maxChildrenNumber: number =0
@@ -185,20 +201,17 @@ export class numerationEncoder extends ExcelBuilder{
             return DEL+secondPosition
           } 
         }
-        if(el !== undefined){
-          const isChildExists = childId() in el.elements
-          // console.log(isChildExists)
-          if(isChildExists){
-            maxChildrenNumber = Object.values(el.elements).length
-            areItemsWereShifted = true
-          }
-          // console.log('maxNumber',{id:childId(),maxChildrenNumber})
-          el.elements.set(childId(),element)
-          allTempElements.set(ShiftedFirstPosition.withKey, el)
-          // console.log('children all elements',{all:(allTempElements),el})
-        } else {
-          /** throw error */
+        
+        const isChildExists = childId() in el.elements
+        // console.log(isChildExists)
+        if(isChildExists){
+          maxChildrenNumber = Object.values(el.elements).length
+          areItemsWereShifted = true
         }
+        // console.log('maxNumber',{id:childId(),maxChildrenNumber})
+        el.elements.set(childId(),element)
+        allTempElements.set(ShiftedFirstPosition.withKey, el)
+        // console.log('children all elements',{all:(allTempElements),el})
       } else {
         /** check name of element, if it is not equal 
          * and its not proto, then we need to 
@@ -206,35 +219,32 @@ export class numerationEncoder extends ExcelBuilder{
          * */
         // console.log('el/element',{el,element})
         /** FIXME: algorithm of children and parents is broken */
-        if(el !== undefined){
-          switch (true) {
-            case !elementExists:
-              // console.log('element not exists',element)
-              allTempElements.set(DEL+firstPosition,element)
-              break;
-            case el.name == elementProto.name:
-              // console.log('el.name == elementProto.name',element)
-              let childElements = el.elements
-              element.elements = childElements
-              allTempElements.set(DEL+firstPosition,element)
-              break;
-            case el.id != element.id:
-              /** need to shift element */
-              // console.log('el.id != element.id',element)
-              shiftNumber++
-              areItemsWereShifted = true
-              const newMaxNumber = maxFirstNumber+shiftNumber
-              setNewMaxFirstPosition(newMaxNumber)
-              allTempElements.set(DEL+newMaxNumber, element)
-              break;
-            default:
-              console.log("what's going on? detailed loading worksheet", element)
-              break;
-          }
-          setNewMaxFirstPosition(firstPosition + shiftNumber)
-        } else {
-          /** throw error */
+        
+        switch (true) {
+          case !elementExists:
+            // console.log('element not exists',element)
+            allTempElements.set(DEL+firstPosition,element)
+            break;
+          case el.name == elementProto.name:
+            // console.log('el.name == elementProto.name',element)
+            let childElements = el.elements
+            element.elements = childElements
+            allTempElements.set(DEL+firstPosition,element)
+            break;
+          case el.id != element.id:
+            /** need to shift element */
+            // console.log('el.id != element.id',element)
+            shiftNumber++
+            areItemsWereShifted = true
+            const newMaxNumber = maxFirstNumber+shiftNumber
+            setNewMaxFirstPosition(newMaxNumber)
+            allTempElements.set(DEL+newMaxNumber, element)
+            break;
+          default:
+            console.log("what's going on? detailed loading worksheet", element)
+            break;
         }
+        setNewMaxFirstPosition(firstPosition + shiftNumber)
         
       }
       // console.log('el',el)
@@ -254,14 +264,14 @@ export class numerationEncoder extends ExcelBuilder{
     }
   
     /** let's reorder all items */
-    function reordering(groupElements: Map<string, SheetElementObject>){
+    function reordering(groupElements: Map<string, SheetElement>){
       try {
         let groupValues: SheetElement[] = []
         let groupKeys: number[] | undefined = cleanDelimiters(Object.keys(groupElements))
         if(groupKeys !== undefined){
           groupKeys.sort((a,b)=>a-b)
           for(let key of groupKeys){
-            const el: SheetElementObject | undefined = groupElements.get(DEL+key)
+            const el: SheetElement | undefined = groupElements.get(DEL+key)
             if(el !== undefined){
               /** if child elements >0 then we need to reorder them too*/
               let newEl = new Object()

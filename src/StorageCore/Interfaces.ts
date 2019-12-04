@@ -3,11 +3,10 @@ interface SheetElementBasic{
   name: string,
   isVisible: string,
   color: string,
-}
-interface SheetElementObject extends SheetElementBasic{
-  elements: Map<string, SheetElementObject>
+  orderNumber: string,
 }
 interface SheetElement extends SheetElementBasic{
-  elements: SheetElement[] | []
+  elements: Map<string, SheetElement>
 }
-export {SheetElement, SheetElementObject}
+interface SheetElements extends Map<SheetElement["id"], SheetElement>{}
+export {SheetElement, SheetElements}
