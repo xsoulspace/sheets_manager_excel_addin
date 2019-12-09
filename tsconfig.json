@@ -16,25 +16,8 @@
       "jest",
     ],
     "paths": {
-      "*": ["GraphicCore","src/GraphicCore/*"],
-
       "@/*": [
         "src/*",
-      ],
-      "Framework/*": [
-        "src/GraphicCore/Framework/*"
-      ],
-      "StatefullWidget/*": [
-        "src/GraphicCore/StatefullWidget/*"
-      ],
-      "StatelessWidget/*": [
-        "src/GraphicCore/StatelessWidget/*"
-      ],
-      "LogicCore/*": [
-        "src/LogicCore/*"
-      ],
-      "StorageCore/*": [
-        "src/StorageCore/*"
       ]
     },
     "lib": [

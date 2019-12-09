@@ -11,8 +11,6 @@
   <root-nested-items 
     :isParent="true" v-model="elements" 
   />
-
-
 </div>
 </template>
 

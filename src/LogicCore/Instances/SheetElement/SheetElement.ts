@@ -1,8 +1,35 @@
 /// <reference path="Index.ts"/>
 namespace Elements{
+
   export class SheetElement implements SheetElementInterface{
-    constructor() {}
+    public elements: SheetElementsMapInterface
+    public positions = {} as SheetElementPositionsInterface
+    public isVisible: string
+    public color: string
+    public delimiter: string = "_"
+    public typeOfName: ExcelSheetNameType
+    private _excelSheetName: string
     public id: string
+    private _regExpNumeration: RegExp = /(.\d_\d.)/g
+    constructor(
+      {
+        id, name, isVisible, color,
+        typeOfName, positionFirst, positionSecond,
+        delimiter, elements,
+      }: SheetElementConstructorInterface
+    ) {
+      this.id = id
+      this.name = name
+      this._excelSheetName = name
+      this.isVisible = isVisible
+      this.color =color
+      this.typeOfName = typeOfName
+      this.positions.firstNumber = positionFirst === undefined? 0 : positionFirst
+      this.positions.secondNumber = positionSecond === undefined? 0 : positionSecond
+      this.delimiter = delimiter === undefined? this.delimiter : delimiter
+      this.elements = elements === undefined? new Map() as SheetElementsMapInterface : elements
+    }
+
     public set name(value: string){
       try {
         this[this.typeOfName] = value
@@ -12,43 +39,35 @@ namespace Elements{
     }
     public get name(): string{
       try {
-        return this[this.typeOfName]
+        const name: string = this[this.typeOfName]
+        return name
       } catch (error) {
-        
+        return ""
       }
     }
-    public isVisible: string
-    public color: string
-    public elements: SheetElementsInterface
-    public delimiter: string = "_"
-    public typeOfName: string 
-    public positions: {
-      firstNumber: 0
-      secondNumber: 0
-    }
-    private _excelName: string
+
     private set _decodedName(value: string) {
       try {
-        this._excelName = value
+        this._excelSheetName = value
       } catch (error) {
-        
+        this._excelSheetName = ""
       }
     }
     private get _decodedName(): string {
       try {
-        const sentence = this._excelName
-        const cleanSentence: string = sentence.replace(/(.\d_\d.)/g, "")
+        const sentence = this._excelSheetName
+        const cleanSentence: string = sentence.replace(this._regExpNumeration, "")
         return cleanSentence
       } catch (error) {
-        
+        return ""
       }
     }
     private set _encodedName(value: string) {
       try {
         const readyPattern: string = this._numerationPattern()
-        this._excelName = value + readyPattern
+        this._excelSheetName = value + readyPattern
       } catch (error) {
-        
+        this._excelSheetName =''
       }
     }
     /** 1. extract possible pattern -> 00_00 but it can be e0_0uio,
@@ -63,7 +82,7 @@ namespace Elements{
 
         return cleanSentence + readyPattern
       } catch (error) {
-        
+        return  ""
       }
     }
     private _numerationPattern(): string {
@@ -78,14 +97,23 @@ namespace Elements{
         return readyPattern
       
       } catch (error) {
-        
+        return ""
+      }
+    }
+    private _doesNameIncludesNumerationPattern(): boolean {
+      try {
+        const result = this._excelSheetName.match(this._regExpNumeration)
+        if(Array.isArray(result) && result.length>0) return true
+        return false
+      } catch (error) {
+        console.log("_doesNameIncludesNumerationPattern", error)
+        return false
       }
     }
   }
-  
   export const SheetElementConfig = {
     typeOfName: {
-      originalName: "_excelName", 
+      originalName: "_excelSheetName", 
       simpleName: "_decodedName",
       numeratedName: "_encodedName",
     }
