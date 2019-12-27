@@ -14,27 +14,27 @@ export default new Vuex.Store({
     filteredElements: [],
     elements: [
       {
-        id: 1,
+        id: "1",
         name: "Shrek",
         isVisible: "Hidden",
         color: "#FFFBBB",
         elements: []
       },
       {
-        id: 2,
+        id: "2",
         name: "Fiona",
         isVisible: "Visible",
         color: "",
         elements: [
           {
-            id: 4,
+            id: "4",
             name: "Lord Farquad",
             isVisible: "Visible",
             color: "",
             elements: []
           },
           {
-            id: 5,
+            id: "5",
             name: "Prince Charming",
             isVisible: "Visible",
             color: "",
@@ -43,7 +43,7 @@ export default new Vuex.Store({
         ]
       },
       {
-        id: 3,
+        id: "3",
         name: "Donkey",
         isVisible: "Visible",
         color: "",
@@ -56,7 +56,8 @@ export default new Vuex.Store({
       positioningType: enumPositioningOptions.numeratedGroups,
       isTouchDevice: false,
       filteredWord: "",
-      excelUsingInfo: {}
+      excelUsingInfo: {},
+      editMode: false
     },
     log: "",
     activeSheetId: "",
@@ -74,7 +75,7 @@ export default new Vuex.Store({
         return state.elements
       }
     },
-    getElementChildren: state=>id=>{
+    getElementChildren: state=>(id:string)=>{
       const elements = state.elements
       return elements.filter(el=>el.id==id).elements
     },
@@ -91,18 +92,18 @@ export default new Vuex.Store({
       return state.log;
     },
     getEditMode: state => {
-      return state.editMode;
+      return state.appSettings.editMode;
     },
-    getColor: state=>id=>{
+    getColor: state=>(id:string)=>{
       return getValueInElements(id,state.elements,"color")
     },
-    getIsVisible: state=>id=>{
+    getIsVisible: state=>(id:string)=>{
       return getValueInElements(id,state.elements,"isVisible")
     },
-    getIsActive: state=>id=>{
+    getIsActive: state=>(id:string)=>{
       return state.activeSheetId == id;
     },
-    getWorksheetName:state=>id=>{
+    getWorksheetName:state=>(id:string)=>{
       return getValueInElements(id,state.elements, "name")
     },
     getPositioningType:state=>{
@@ -132,8 +133,8 @@ export default new Vuex.Store({
       state.filteredElements = filteredElements
     },
     toogleEditMode: (state, payload) =>{
-      const current = state.editMode
-      state.editMode = !current;
+      const current = state.appSettings.editMode
+      state.appSettings.editMode = !current;
     },
     toogleVisibilitySwitchesState: (state,payload)=>{
       let active;

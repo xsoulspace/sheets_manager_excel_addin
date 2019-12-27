@@ -1,16 +1,21 @@
-/// <reference path="Index.ts"/>
-namespace Elements{
+export class SheetElement extends Basic implements SheetElementsInterface.SheetElement{
+    // #region Properties (9)
 
-  export class SheetElement implements SheetElementInterface{
-    public elements: SheetElementsMapInterface
-    public positions = {} as SheetElementPositionsInterface
-    public isVisible: string
+    private _excelSheetName: string
+    private _regExpNumeration: RegExp = /(.\d_\d.)/g
+
     public color: string
     public delimiter: string = "_"
-    public typeOfName: ExcelSheetNameType
-    private _excelSheetName: string
+    public elements: SheetElementsMapInterface
     public id: string
-    private _regExpNumeration: RegExp = /(.\d_\d.)/g
+    public isVisible: string
+    public positions = {} as SheetElementPositionsInterface
+    public typeOfName: ExcelSheetNameType
+
+    // #endregion Properties (9)
+
+    // #region Constructors (1)
+
     constructor(
       {
         id, name, isVisible, color,
@@ -30,17 +35,35 @@ namespace Elements{
       this.elements = elements === undefined? new Map() as SheetElementsMapInterface : elements
     }
 
-    public set name(value: string){
-      try {
-        this[this.typeOfName] = value
-      } catch (error) {
-        
-      }
-    }
+    // #endregion Constructors (1)
+
+    // #region Public Accessors (2)
+
     public get name(): string{
       try {
         const name: string = this[this.typeOfName]
         return name
+      } catch (error) {
+        return ""
+      }
+    }
+
+    public set name(value: string){
+      try {
+        this[this.typeOfName] = value
+      } catch (error) {
+      }
+    }
+
+    // #endregion Public Accessors (2)
+
+    // #region Private Accessors (4)
+
+    private get _decodedName(): string {
+      try {
+        const sentence = this._excelSheetName
+        const cleanSentence: string = sentence.replace(this._regExpNumeration, "")
+        return cleanSentence
       } catch (error) {
         return ""
       }
@@ -53,23 +76,7 @@ namespace Elements{
         this._excelSheetName = ""
       }
     }
-    private get _decodedName(): string {
-      try {
-        const sentence = this._excelSheetName
-        const cleanSentence: string = sentence.replace(this._regExpNumeration, "")
-        return cleanSentence
-      } catch (error) {
-        return ""
-      }
-    }
-    private set _encodedName(value: string) {
-      try {
-        const readyPattern: string = this._numerationPattern()
-        this._excelSheetName = value + readyPattern
-      } catch (error) {
-        this._excelSheetName =''
-      }
-    }
+
     /** 1. extract possible pattern -> 00_00 but it can be e0_0uio,
      * so it is necessary to clean up after match and separate to two numbers
      * 2. to clean up pattern 0_0 and all numbers in name
@@ -85,6 +92,31 @@ namespace Elements{
         return  ""
       }
     }
+
+    private set _encodedName(value: string) {
+      try {
+        const readyPattern: string = this._numerationPattern()
+        this._excelSheetName = value + readyPattern
+      } catch (error) {
+        this._excelSheetName =''
+      }
+    }
+
+    // #endregion Private Accessors (4)
+
+    // #region Private Methods (2)
+
+    private _doesNameIncludesNumerationPattern(): boolean {
+      try {
+        const result = this._excelSheetName.match(this._regExpNumeration)
+        if(Array.isArray(result) && result.length>0) return true
+        return false
+      } catch (error) {
+        console.log("_doesNameIncludesNumerationPattern", error)
+        return false
+      }
+    }
+
     private _numerationPattern(): string {
       try {
         function returnPart(draftValue: number): string{
@@ -100,17 +132,9 @@ namespace Elements{
         return ""
       }
     }
-    private _doesNameIncludesNumerationPattern(): boolean {
-      try {
-        const result = this._excelSheetName.match(this._regExpNumeration)
-        if(Array.isArray(result) && result.length>0) return true
-        return false
-      } catch (error) {
-        console.log("_doesNameIncludesNumerationPattern", error)
-        return false
-      }
-    }
-  }
+
+    // #endregion Private Methods (2)
+}
   export const SheetElementConfig = {
     typeOfName: {
       originalName: "_excelSheetName", 

@@ -1,7 +1,7 @@
 /** Interfaces */
 import {SheetElement, SheetElements} from "./Interfaces";
 /** Classes */
-import {ExcelBuilder} from "@/LogicCore/APIExcel/ExcelBuilder"
+import {ExcelBuilder} from "@/LogicCore/APIExcel/ExcelContextBuilder"
 
 interface returnedNumbers {
   items: number[],
