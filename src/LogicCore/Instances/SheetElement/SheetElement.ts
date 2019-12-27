@@ -1,16 +1,17 @@
+import { Basic } from './Basic'
+
 export class SheetElement extends Basic implements SheetElementsInterface.SheetElement{
     // #region Properties (9)
 
     private _excelSheetName: string
     private _regExpNumeration: RegExp = /(.\d_\d.)/g
 
-    public color: string
     public delimiter: string = "_"
-    public elements: SheetElementsMapInterface
-    public id: string
-    public isVisible: string
-    public positions = {} as SheetElementPositionsInterface
-    public typeOfName: ExcelSheetNameType
+    public elements: SheetElementsInterface.EMap
+    public positions: SheetElementsInterface.Positions = {
+      first: 0,
+      second: 0,
+    }
 
     // #endregion Properties (9)
 
@@ -19,20 +20,15 @@ export class SheetElement extends Basic implements SheetElementsInterface.SheetE
     constructor(
       {
         id, name, isVisible, color,
-        typeOfName, positionFirst, positionSecond,
+        typeOfName, positions,
         delimiter, elements,
-      }: SheetElementConstructorInterface
+      }: SheetElementsInterface.SheetElementConstructor
     ) {
-      this.id = id
-      this.name = name
+      super({id,name,isVisible,color,typeOfName})
       this._excelSheetName = name
-      this.isVisible = isVisible
-      this.color =color
-      this.typeOfName = typeOfName
-      this.positions.firstNumber = positionFirst === undefined? 0 : positionFirst
-      this.positions.secondNumber = positionSecond === undefined? 0 : positionSecond
-      this.delimiter = delimiter === undefined? this.delimiter : delimiter
-      this.elements = elements === undefined? new Map() as SheetElementsMapInterface : elements
+      this.positions = positions
+      if(delimiter) this.delimiter= delimiter
+      this.elements = elements === undefined ? new Map() : elements
     }
 
     // #endregion Constructors (1)

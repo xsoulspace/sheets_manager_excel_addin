@@ -1,5 +1,6 @@
 /// <reference types="@types/office-js" />
 /// <reference path="./LogicCore/Instances/index.d.ts"/>
+/// <reference path='./LogicCore/Debug/Log.d.ts'/>
 /** https://github.com/Microsoft/TypeScript/issues/11420 */ 
 import Vue from 'vue'
 import App from './App.vue'
