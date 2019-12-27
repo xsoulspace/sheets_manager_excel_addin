@@ -2,26 +2,29 @@ import { Basic } from "./Basic";
 
 export class SheetElement extends Basic
   implements SheetElementsInterface.SheetElement {
-  // #region Properties (5)
+  // #region Properties (8)
 
   private _excelSheetName: string;
   private _regExpNumeration: RegExp = /(.\d_\d.)/g;
 
+  public color: string;
   public delimiter: string = "_";
   public elements: SheetElementsInterface.EMap;
+  public id: string;
+  public visibility: Excel.SheetVisibility;
   public positions: SheetElementsInterface.Positions = {
     first: 0,
     second: 0
   };
 
-  // #endregion Properties (5)
+  // #endregion Properties (8)
 
   // #region Constructors (1)
 
   constructor({
     id,
     name,
-    isVisible,
+    visibility,
     color,
     typeOfName,
     positions,
@@ -29,10 +32,6 @@ export class SheetElement extends Basic
     elements
   }: SheetElementsInterface.SheetElementConstructor) {
     super({
-      id,
-      name,
-      isVisible,
-      color,
       typeOfName,
       _classTitle: "SheetElement"
     });
@@ -40,6 +39,10 @@ export class SheetElement extends Basic
     this.positions = positions;
     if (delimiter) this.delimiter = delimiter;
     this.elements = elements === undefined ? new Map() : elements;
+    this.id = id;
+    this.name = name;
+    this.color = color;
+    this.visibility = visibility;
   }
 
   // #endregion Constructors (1)
