@@ -10,28 +10,29 @@ namespace SheetElementsInterface {
     _classTitle: ClassTitle;
     typeOfName: NameType;
     log: LogInterface;
+    delimiter: string;
   }
   export interface BasicConstructor {
     _classTitle: ClassTitle | undefined;
     typeOfName: NameType;
+    delimiter: string | undefined;
   }
   export type NameType = "_excelSheetName" | "_decodedName" | "_encodedName";
+  export type SheetVisibility = Excel.SheetVisibility | "Visible" | "Hidden" | "VeryHidden"
   export interface SheetElement extends Basic {
     id: string;
     name: string;
-    visibility: Excel.SheetVisibility;
+    visibility: SheetVisibility;
     color: string;
-    delimiter: string;
     elements: EMap;
     positions: Positions;
   }
   export interface SheetElementConstructor extends BasicConstructor {
     id: string;
     name: string;
-    visibility: Excel.SheetVisibility;
+    visibility: SheetVisibility;
     color: string;
-    delimiter: string | undefined;
-    elements: EMap;
+    elements: EMap | undefined;
     positions: Positions;
   }
   export interface EMap extends Map<SheetElement["id"], SheetElement> {}

@@ -8,10 +8,9 @@ export class SheetElement extends Basic
   private _regExpNumeration: RegExp = /(.\d_\d.)/g;
 
   public color: string;
-  public delimiter: string = "_";
   public elements: SheetElementsInterface.EMap;
   public id: string;
-  public visibility: Excel.SheetVisibility;
+  public visibility: SheetElementsInterface.SheetVisibility;
   public positions: SheetElementsInterface.Positions = {
     first: 0,
     second: 0
@@ -29,16 +28,16 @@ export class SheetElement extends Basic
     typeOfName,
     positions,
     delimiter,
-    elements
+    elements,
+    _classTitle
   }: SheetElementsInterface.SheetElementConstructor) {
     super({
-      typeOfName,
-      _classTitle: "SheetElement"
+      typeOfName, delimiter,
+      _classTitle: _classTitle ? _classTitle : "SheetElement"
     });
     this._excelSheetName = name;
     this.positions = positions;
-    if (delimiter) this.delimiter = delimiter;
-    this.elements = elements === undefined ? new Map() : elements;
+    this.elements = elements ? elements : new Map();
     this.id = id;
     this.name = name;
     this.color = color;

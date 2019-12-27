@@ -11,16 +11,28 @@ export class SheetElementsMap extends Basic
   // #region Constructors (1)
 
   constructor({
-    typeOfName
+    typeOfName,
+    delimiter,
+    _classTitle
   }: SheetElementsInterface.SheetElementsMapConstructor) {
-    super({ _classTitle: "SheetElementsMap", typeOfName });
+    super({
+      _classTitle: _classTitle ? _classTitle : "SheetElementsMap",
+      typeOfName,
+      delimiter
+    });
     Promise.resolve(this.firstOpenScenarioCreateSheetElements());
   }
 
   // #endregion Constructors (1)
 
   // #region Public Methods (4)
-
+  /**
+   * @description
+   * Names in excel cannot be same.
+   * So, before we will write and make any changes,
+   * we will need to be shure and check,
+   * that all names are unique
+   */
   public correctDoubles(): void {
     try {
       let newSheets: SheetElementsInterface.EMap = new Map();
@@ -75,13 +87,14 @@ export class SheetElementsMap extends Basic
    */
   public async firstOpenScenarioCreateSheetElements(): Promise<void> {
     try {
-
     } catch (error) {
       throw this.log.error("firstOpenScenarioCreateSheetElements", error);
     }
   }
 
-  public writeSheets(sheetsEMap: SheetElementsInterface.EMap): void {
+  public async writeSheets(
+    sheetsEMap: SheetElementsInterface.EMap
+  ): Promise<void> {
     try {
       this._map = sheetsEMap;
     } catch (error) {
@@ -93,32 +106,36 @@ export class SheetElementsMap extends Basic
 
   // #region Private Methods (1)
 
-  private _simpleSheetsLoading(excelSheets: Excel.Worksheet[]): void {
+  private async _simpleSheetsLoading(
+    excelSheets: Excel.Worksheet[]
+  ): Promise<void> {
     try {
+      const { SheetElement } = await import("./SheetElement");
       let allElements: SheetElementsInterface.EMap = new Map();
       for (const [index, excelSheet] of Object.entries(excelSheets)) {
-        const positions: SheetElementsInterface.Positions ={
+        const positions: SheetElementsInterface.Positions = {
           first: Number(index),
-          second: 0,
-        }
-        const options: SheetElementsInterface.SheetElementConstructor ={
+          second: 0
+        };
+        const options: SheetElementsInterface.SheetElementConstructor = {
           color: excelSheet.tabColor,
           name: excelSheet.name,
           typeOfName: this.typeOfName,
           positions,
           id: excelSheet.id,
-          visibility: excelSheet.visibility
-        }
-  
-        const element = new SheetElement({
-          
-        });
+          visibility: excelSheet.visibility,
+          delimiter: this.delimiter,
+          elements: undefined,
+          _classTitle: undefined
+        };
+
+        const element = new SheetElement(options);
 
         allElements.set(element.id, element);
       }
-      this.writeSheets(allElements);
+      await this.writeSheets(allElements);
     } catch (error) {
-      console.log("simpleSheetsLoading", error);
+      throw this.log.error("_simpleSheetsLoading", error);
     }
   }
 
