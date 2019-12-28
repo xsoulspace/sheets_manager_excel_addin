@@ -5,7 +5,11 @@ export class SheetElementsMap extends Basic
   // #region Properties (1)
 
   private _map: SheetElementsInterface.EMap = new Map();
-
+  public maintainerStatuses = {
+    areSheetsHaveNumeration: false,
+    isNumerationBroken: false,
+    shouldWeRestoreNumeration: false,
+  }
   // #endregion Properties (1)
 
   // #region Constructors (1)
@@ -13,19 +17,21 @@ export class SheetElementsMap extends Basic
   constructor({
     typeOfName,
     delimiter,
-    _classTitle
+    _classTitle,
+    excelSheets
   }: SheetElementsInterface.SheetElementsMapConstructor) {
     super({
       _classTitle: _classTitle ? _classTitle : "SheetElementsMap",
       typeOfName,
       delimiter
     });
-    Promise.resolve(this.firstOpenScenarioCreateSheetElements());
+    Promise.resolve(this.firstOpenScenarioCreateSheetElements(excelSheets));
   }
 
   // #endregion Constructors (1)
 
   // #region Public Methods (4)
+
   /**
    * @description
    * Names in excel cannot be same.
@@ -33,30 +39,31 @@ export class SheetElementsMap extends Basic
    * we will need to be shure and check,
    * that all names are unique
    */
-  public correctDoubles(): void {
+  public async correctDoubles(): Promise<void> {
     try {
       let newSheets: SheetElementsInterface.EMap = new Map();
       let sheetNames: string[] = [];
       let i: number = 1;
       const entries = this.entries();
-      for (const [sheetId, sheet] of entries) {
-        if (sheet === undefined) throw "correctDoubles has sheet === undefined";
-
-        const sheetName: string = sheet.name;
-        let finalSheetName: string;
+      /** function to check and choose available name */
+      const chooseName = (sheetName: string): string => {
         if (sheetNames.includes(sheetName)) {
           const newSheetName: string = sheetName + String(i);
-          sheet.name = newSheetName;
           i++;
-          finalSheetName = newSheetName;
+          return chooseName(newSheetName);
         } else {
-          finalSheetName = sheetName;
+          return sheetName;
         }
-        sheetNames.push(finalSheetName);
+      };
+      for (const [sheetId, sheet] of entries) {
+        if (sheet === undefined) throw "correctDoubles has sheet === undefined";
+        const sheetName: string = chooseName(sheet.name);
+        sheet.name = sheetName;
+        sheetNames.push(sheetName);
         newSheets.set(sheetId, sheet);
       }
 
-      this.writeSheets(newSheets);
+      await this.writeSheets(newSheets);
     } catch (error) {
       throw this.log.error("correctDoubles", error);
     }
@@ -72,29 +79,75 @@ export class SheetElementsMap extends Basic
   }
 
   /**
+   * @description
    * We need to check:
-   * 1. Is it has numeration?
-   * 1.1 It has, but not full - we need to show dialogue
-   * restore all or go simple?
-   * 1.2 Yes - Correct all numeration
-   * 1.3 Reordering sheets
-   * 1.4 Check for doubles
-   * 1.4 Renaming
-   * 1.5 No - go simple
-   * 1.2 It has and all is correct
-   * 1.3 Reordering sheets
-   * 2. Go simple: load original names
+   * 1. Auto -> Is it has numeration?
+   * 2. --! It has / has not full
+   * 3. Human -> we need to show dialogue: restore all or go simple?
+   * 4. -- Yes - Correct all numeration
+   * 5. Reordering sheets
+   * 6. Check for doubles
+   * 7. Renaming
+   * -
+   * 2. -- No - go simple
+   * 3. It has and all is correct
+   * 4. Reordering sheets
+   * 2. --! Go simple: load original names
    */
-  public async firstOpenScenarioCreateSheetElements(): Promise<void> {
+  public async firstOpenScenarioCreateSheetElements(
+    excelSheets: Excel.Worksheet[]
+  ): Promise<void> {
     try {
+      /** firstly we conevert all sheets to elements map */
+      await this._simpleSheetsLoading(excelSheets);
+      await this._sheetsNumerationMaintainer();
+      if(this.maintainerStatuses.areSheetsHaveNumeration && !this.maintainerStatuses.isNumerationBroken){
+        /** if numeration is ok, 
+         * then we need to reorder accordingly */
+        /** TODO:call some method to reorder sheets */
+      }
     } catch (error) {
       throw this.log.error("firstOpenScenarioCreateSheetElements", error);
     }
   }
+  private async _sheetsNumerationMaintainer(): Promise<void> {
+    try {
 
-  public async writeSheets(
-    sheetsEMap: SheetElementsInterface.EMap
-  ): Promise<void> {
+      /** now we need to check every sheet - is it has encoded pattern */
+      this.maintainerStatuses.areSheetsHaveNumeration = ((): boolean => {
+        let hasNumeration: boolean = false;
+        for (let sheet of this._map.values()) {
+          if (!hasNumeration) {
+            hasNumeration = sheet._doesNameIncludesNumerationPattern();
+          } else if (hasNumeration) {
+            /** if one sheet will have numeration,
+             * then every sheet after it will be checked
+             * for borken numeration condition
+             *  */
+            if (!sheet._doesNameIncludesNumerationPattern()) {
+              this.maintainerStatuses.isNumerationBroken = true;
+              return hasNumeration;
+            }
+          }
+        }
+        return hasNumeration
+      })();
+    } catch (error) {
+      throw this.log.error("_sheetsNumerationMaintainer", error);
+    }
+  }
+  /**@description 
+   * if user will need 
+   * we will try to restore numeration */
+  public async sheetsNumerationRepairer(): Promise<void>{
+    if (this.maintainerStatuses.shouldWeRestoreNumeration) {
+      /** TODO:write method to rewrite names sheets */
+
+      /** TODO:call some method to reorder sheets */
+
+    } 
+  }
+  public async writeSheets(sheetsEMap: SheetElementsInterface.EMap): Promise<void> {
     try {
       this._map = sheetsEMap;
     } catch (error) {

@@ -2,7 +2,7 @@ import { Basic } from "./Basic";
 
 export class SheetElement extends Basic
   implements SheetElementsInterface.SheetElement {
-  // #region Properties (8)
+  // #region Properties (7)
 
   private _excelSheetName: string;
   private _regExpNumeration: RegExp = /(.\d_\d.)/g;
@@ -10,13 +10,13 @@ export class SheetElement extends Basic
   public color: string;
   public elements: SheetElementsInterface.EMap;
   public id: string;
-  public visibility: SheetElementsInterface.SheetVisibility;
   public positions: SheetElementsInterface.Positions = {
     first: 0,
     second: 0
   };
+  public visibility: SheetElementsInterface.SheetVisibility;
 
-  // #endregion Properties (8)
+  // #endregion Properties (7)
 
   // #region Constructors (1)
 
@@ -32,7 +32,8 @@ export class SheetElement extends Basic
     _classTitle
   }: SheetElementsInterface.SheetElementConstructor) {
     super({
-      typeOfName, delimiter,
+      typeOfName,
+      delimiter,
       _classTitle: _classTitle ? _classTitle : "SheetElement"
     });
     this._excelSheetName = name;
@@ -117,17 +118,20 @@ export class SheetElement extends Basic
 
   // #endregion Private Accessors (4)
 
-  // #region Private Methods (2)
+  // #region Public Methods (1)
 
-  private _doesNameIncludesNumerationPattern(): boolean {
+  public _doesNameIncludesNumerationPattern(): boolean {
     try {
       const result = this._excelSheetName.match(this._regExpNumeration);
-      if (Array.isArray(result) && result.length > 0) return true;
-      return false;
+      return Array.isArray(result) && result.length > 0 ? true : false;
     } catch (error) {
       throw this.log.error("_doesNameIncludesNumerationPattern", error);
     }
   }
+
+  // #endregion Public Methods (1)
+
+  // #region Private Methods (1)
 
   private _numerationPattern(): string {
     try {
@@ -144,5 +148,5 @@ export class SheetElement extends Basic
     }
   }
 
-  // #endregion Private Methods (2)
+  // #endregion Private Methods (1)
 }

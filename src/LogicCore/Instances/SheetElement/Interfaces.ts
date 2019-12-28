@@ -26,6 +26,7 @@ namespace SheetElementsInterface {
     color: string;
     elements: EMap;
     positions: Positions;
+    _doesNameIncludesNumerationPattern():boolean
   }
   export interface SheetElementConstructor extends BasicConstructor {
     id: string;
@@ -39,6 +40,8 @@ namespace SheetElementsInterface {
   export interface SheetElementsMap extends Basic{
     entries():IterableIterator<[string, SheetElementsInterface.SheetElement]>
   }
-  export interface SheetElementsMapConstructor extends BasicConstructor{}
+  export interface SheetElementsMapConstructor extends BasicConstructor{
+    excelSheets: Excel.Worksheet[]
+  }
 
 }
