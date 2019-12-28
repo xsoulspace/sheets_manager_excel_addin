@@ -2,15 +2,17 @@ import { Basic } from "./Basic";
 
 export class SheetElementsMap extends Basic
   implements SheetElementsInterface.SheetElementsMap {
-  // #region Properties (1)
+  // #region Properties (2)
 
   private _map: SheetElementsInterface.EMap = new Map();
+
   public maintainerStatuses = {
     areSheetsHaveNumeration: false,
     isNumerationBroken: false,
-    shouldWeRestoreNumeration: false,
-  }
-  // #endregion Properties (1)
+    shouldWeRestoreNumeration: false
+  };
+
+  // #endregion Properties (2)
 
   // #region Constructors (1)
 
@@ -30,7 +32,7 @@ export class SheetElementsMap extends Basic
 
   // #endregion Constructors (1)
 
-  // #region Public Methods (4)
+  // #region Public Methods (8)
 
   /**
    * @description
@@ -101,8 +103,11 @@ export class SheetElementsMap extends Basic
       /** firstly we conevert all sheets to elements map */
       await this._simpleSheetsLoading(excelSheets);
       await this._sheetsNumerationMaintainer();
-      if(this.maintainerStatuses.areSheetsHaveNumeration && !this.maintainerStatuses.isNumerationBroken){
-        /** if numeration is ok, 
+      if (
+        this.maintainerStatuses.areSheetsHaveNumeration &&
+        !this.maintainerStatuses.isNumerationBroken
+      ) {
+        /** if numeration is ok,
          * then we need to reorder accordingly */
         /** TODO:call some method to reorder sheets */
       }
@@ -110,9 +115,261 @@ export class SheetElementsMap extends Basic
       throw this.log.error("firstOpenScenarioCreateSheetElements", error);
     }
   }
+
+  /**
+   * @description
+   *
+   */
+  public async numerateSheets() {
+    /** first, we need to make correct hierarhy
+     * second, we need to find doubles and correct names and positions
+     * third, we need to rename all sheets
+     * Making correct hierarhy:
+     * 1. Element exists, but name == protoName
+     * 1.1 No elements -> place is free
+     * -> child elements can be placed
+     * 1.2 Has elements -> place is free
+     * -> child elements can be placed
+     * 2. Element exists, but name != protoName
+     * -> child elements can be placed
+     * -> place is taken
+     * -> find last number + 1
+     * -> take this place
+     * 3. Element not exists
+     * -> place is free
+     * -> place protoElement
+     * -> child elements can be placed
+     */
+    try {
+      let elementProto = {} as SheetElementsInterface.SheetElement;
+      let areItemsWereShifted: boolean = false;
+      let maxFirstNumber: number = 0;
+      let allTempElements: SheetElementsInterface.EMap = new Map();
+      const DEL: string = "DEL";
+      // console.log('sheets elements',elements)
+      for (let sheet of excelSheets) {
+        let shiftNumber: number = 0;
+        let element: SheetElement = {
+          id: sheet.id,
+          name: sheet.name,
+          color: sheet.tabColor,
+          orderNumber: "",
+          isVisible: sheet.visibility,
+          elements: new Map() as SheetElements
+        };
+
+        let positions: returnedNumbers | undefined = this.decode(element.name);
+        /** if positions failed, then we need to rename all sheets
+         * and then start process again
+         */
+        if (positions === undefined) return { items: undefined, status: false };
+        if (positions.status == false) {
+          console.log("warn", element.name);
+          return { items: this.createSheets(excelSheets), status: false };
+        }
+
+        /** Check is it in a group or not */
+        let [firstPosition, secondPosition] = positions.items;
+
+        function setNewMaxFirstPosition(newOne: number): void {
+          try {
+            maxFirstNumber = newOne > maxFirstNumber ? newOne : maxFirstNumber;
+          } catch (error) {
+            console.log("setNewMaxFirstPosition", error);
+          }
+        }
+        class ShiftedFirstPosition {
+          constructor() {}
+          static onlyNumber: number = firstPosition + shiftNumber;
+          static withKey: string = DEL + ShiftedFirstPosition.onlyNumber;
+        }
+
+        let el: SheetElement | undefined;
+        const elementExists: boolean = allTempElements.has(
+          ShiftedFirstPosition.withKey
+        );
+        if (elementExists) {
+          el = allTempElements.get(ShiftedFirstPosition.withKey);
+        } else {
+          el = elementProto;
+        }
+        if (el === undefined) throw "some error";
+        const isItChildElement: boolean = Number(secondPosition) > 0;
+
+        if (isItChildElement) {
+          // console.log('child element',element)
+          let maxChildrenNumber: number = 0;
+          function childId(): string {
+            if (maxChildrenNumber > 0) {
+              const max: number =
+                maxChildrenNumber + 1 > secondPosition
+                  ? maxChildrenNumber
+                  : secondPosition;
+              return DEL + (max + 1);
+            } else {
+              return DEL + secondPosition;
+            }
+          }
+
+          const isChildExists = childId() in el.elements;
+          // console.log(isChildExists)
+          if (isChildExists) {
+            maxChildrenNumber = Object.values(el.elements).length;
+            areItemsWereShifted = true;
+          }
+          // console.log('maxNumber',{id:childId(),maxChildrenNumber})
+          el.elements.set(childId(), element);
+          allTempElements.set(ShiftedFirstPosition.withKey, el);
+          // console.log('children all elements',{all:(allTempElements),el})
+        } else {
+          /** check name of element, if it is not equal
+           * and its not proto, then we need to
+           * shift it down
+           * */
+          // console.log('el/element',{el,element})
+          /** FIXME: algorithm of children and parents is broken */
+
+          switch (true) {
+            case !elementExists:
+              // console.log('element not exists',element)
+              allTempElements.set(DEL + firstPosition, element);
+              break;
+            case el.name == elementProto.name:
+              // console.log('el.name == elementProto.name',element)
+              let childElements = el.elements;
+              element.elements = childElements;
+              allTempElements.set(DEL + firstPosition, element);
+              break;
+            case el.id != element.id:
+              /** need to shift element */
+              // console.log('el.id != element.id',element)
+              shiftNumber++;
+              areItemsWereShifted = true;
+              const newMaxNumber = maxFirstNumber + shiftNumber;
+              setNewMaxFirstPosition(newMaxNumber);
+              allTempElements.set(DEL + newMaxNumber, element);
+              break;
+            default:
+              console.log(
+                "what's going on? detailed loading worksheet",
+                element
+              );
+              break;
+          }
+          setNewMaxFirstPosition(firstPosition + shiftNumber);
+        }
+        // console.log('el',el)
+      }
+
+      function cleanDelimiters(keys: string[]): number[] | undefined {
+        try {
+          let newKeys: number[] = [];
+          for (let key of keys) {
+            const newKey: number = Number(key.replace(DEL, ""));
+            newKeys.push(newKey);
+          }
+          return newKeys;
+        } catch (error) {
+          console.log("cleanDelimiters", error);
+        }
+      }
+
+      /** let's reorder all items */
+      function reordering(groupElements: Map<string, SheetElement>) {
+        try {
+          let groupValues: SheetElement[] = [];
+          let groupKeys: number[] | undefined = cleanDelimiters(
+            Object.keys(groupElements)
+          );
+          if (groupKeys !== undefined) {
+            groupKeys.sort((a, b) => a - b);
+            for (let key of groupKeys) {
+              const el: SheetElement | undefined = groupElements.get(DEL + key);
+              if (el !== undefined) {
+                /** if child elements >0 then we need to reorder them too*/
+                let newEl = new Object();
+                let childElements: SheetElement[] | undefined;
+                for (let [propKey, propValue] of Object.entries(el)) {
+                  if (propKey == "elements") {
+                    const childKeys: string[] = Object.keys(el.elements);
+                    childElements =
+                      childKeys.length > 0 ? reordering(el.elements) : [];
+                  } else {
+                    newEl[propKey] = propValue;
+                  }
+                }
+                // Object.assign(newEl, el)
+                // el.elements = childElements
+                // groupValues.push(el)
+              } else {
+                /** throw error */
+              }
+            }
+            return groupValues;
+          } else {
+            /** throw error */
+          }
+        } catch (error) {
+          console.log("reordering", error);
+        }
+      }
+
+      let reorderedItems = reordering(allTempElements);
+      // console.log(reorderedItems)
+      // console.log('reorderedItems',reorderedItems)
+      let encodedItems = self.encodeAllSheetsElements(reorderedItems);
+      // console.log('encodedItems',encodedItems)
+      // console.log(areItemsWereShifted)
+      return { items: encodedItems, status: true, areItemsWereShifted };
+    } catch (error) {
+      console.log("numerationEncoder.createNumeratedSheets", error);
+    }
+  }
+  /**
+   * @description Extract all possible names
+   */
+  public async reorderSheets(): Promise<void> {
+    try {
+    } catch (error) {
+      throw this.log.error("reorderSheets", error);
+    }
+  }
+
+  public async repairSheetsNames(): Promise<void> {
+    try {
+    } catch (error) {
+      throw this.log.error("repairSheetsNames", error);
+    }
+  }
+
+  /**@description
+   * if user will need
+   * we will try to restore numeration */
+  public async sheetsNumerationRepairer(): Promise<void> {
+    if (this.maintainerStatuses.shouldWeRestoreNumeration) {
+      /** TODO:write method to rewrite names sheets */
+      await this.repairSheetsNames();
+      /** TODO:call some method to reorder sheets */
+      await this.reorderSheets();
+    }
+  }
+
+  public async writeSheets(
+    sheetsEMap: SheetElementsInterface.EMap
+  ): Promise<void> {
+    try {
+      this._map = sheetsEMap;
+    } catch (error) {
+      throw this.log.error("writeSheets", error);
+    }
+  }
+
+  // #endregion Public Methods (8)
+
+  // #region Private Methods (2)
+
   private async _sheetsNumerationMaintainer(): Promise<void> {
     try {
-
       /** now we need to check every sheet - is it has encoded pattern */
       this.maintainerStatuses.areSheetsHaveNumeration = ((): boolean => {
         let hasNumeration: boolean = false;
@@ -130,34 +387,12 @@ export class SheetElementsMap extends Basic
             }
           }
         }
-        return hasNumeration
+        return hasNumeration;
       })();
     } catch (error) {
       throw this.log.error("_sheetsNumerationMaintainer", error);
     }
   }
-  /**@description 
-   * if user will need 
-   * we will try to restore numeration */
-  public async sheetsNumerationRepairer(): Promise<void>{
-    if (this.maintainerStatuses.shouldWeRestoreNumeration) {
-      /** TODO:write method to rewrite names sheets */
-
-      /** TODO:call some method to reorder sheets */
-
-    } 
-  }
-  public async writeSheets(sheetsEMap: SheetElementsInterface.EMap): Promise<void> {
-    try {
-      this._map = sheetsEMap;
-    } catch (error) {
-      throw this.log.error("writeSheets", error);
-    }
-  }
-
-  // #endregion Public Methods (4)
-
-  // #region Private Methods (1)
 
   private async _simpleSheetsLoading(
     excelSheets: Excel.Worksheet[]
@@ -192,5 +427,5 @@ export class SheetElementsMap extends Basic
     }
   }
 
-  // #endregion Private Methods (1)
+  // #endregion Private Methods (2)
 }
