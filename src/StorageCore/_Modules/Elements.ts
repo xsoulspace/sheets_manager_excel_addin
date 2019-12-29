@@ -1,7 +1,7 @@
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
 @Module
 export default class Elements extends VuexModule {
-  elementsMap: SheetElementsInterface.SheetElementsMap;
+  elementsMap!: SheetElementsInterface.SheetElementsMap;
 
 	get sheets(){
 		return this.elementsMap.eMap
@@ -15,6 +15,14 @@ export default class Elements extends VuexModule {
   @Action
   async setSheets(sheets: SheetElementsInterface.EMap): Promise<void> {
     this.setSheetsMutation(sheets)
+	}
+	@Mutation
+	setExcelContextMutation(context: Excel.RequestContext){
+		this.appSettings.excelContext = context
+	}
+	@Action
+	async setExcelContext(context: Excel.RequestContext){
+		this.setExcelContextMutation(context)
 	}
 
 	@Mutation
