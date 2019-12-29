@@ -13,6 +13,7 @@ export default {
   data(){
     return {
       StoreAppSettings: "appSettings",
+      hostInfo: undefined
     }        
   },
   mounted: function(){

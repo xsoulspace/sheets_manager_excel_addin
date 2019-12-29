@@ -7,14 +7,14 @@ export const getKeysAndSort = (
   ).sort((a, b) => {
     return Number(a) - Number(b);
   });
-  for (let key of keys) {
+  for (let [i, key] of Object.entries(keys)) {
     const element: SheetElementsInterface.SheetElement | undefined = oldMap.get(
       key
     );
     if (element) {
       const elementMap = element.elements;
       element.elements = getKeysAndSort(elementMap);
-      tempMap.set(key, element);
+      tempMap.set(i, element);
     }
   }
   return tempMap;

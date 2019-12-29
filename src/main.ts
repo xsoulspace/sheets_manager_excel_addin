@@ -15,6 +15,7 @@ let vm: Vue | undefined = undefined
  */
 //Check were we are
 let infoGlobal = window.sessionStorage['hostInfoValue']
+
 switch (infoGlobal == undefined){
   case true: //outside office client
     console.log("I'm an outsider");
@@ -23,18 +24,19 @@ switch (infoGlobal == undefined){
       store,
       render: function (h) { return h(App) }
     }).$mount('#app');
+    vm.$data.hostInfo = undefined
     break;
   default: //we are in office client
     console.log("I'm an office man");
     (function(){
       Office.onReady(function(info){
-        infoGlobal = info
         vm = new Vue({
           el: '#app',
           router,
           store,
           render: h => h(App)
         })
+        vm.$data.hostInfo = info
       });
     })()
   break;
