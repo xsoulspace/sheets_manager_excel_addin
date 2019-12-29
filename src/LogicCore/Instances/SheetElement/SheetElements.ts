@@ -34,43 +34,6 @@ export class SheetElementsMap extends Basic
 
   // #region Public Methods (6)
 
-  /**
-   * @description
-   * Names in excel cannot be same.
-   * So, before we will write and make any changes,
-   * we will need to be shure and check,
-   * that all names are unique
-   */
-  public async correctDoubles(): Promise<void> {
-    try {
-      let newSheets: SheetElementsInterface.EMap = new Map();
-      let sheetNames: string[] = [];
-      let i: number = 1;
-      const entries = this.entries();
-      /** function to check and choose available name */
-      const chooseName = (sheetName: string): string => {
-        if (sheetNames.includes(sheetName)) {
-          const newSheetName: string = sheetName + String(i);
-          i++;
-          return chooseName(newSheetName);
-        } else {
-          return sheetName;
-        }
-      };
-      for (const [sheetId, sheet] of entries) {
-        if (sheet === undefined) throw "correctDoubles has sheet === undefined";
-        const sheetName: string = chooseName(sheet.name);
-        sheet.name = sheetName;
-        sheetNames.push(sheetName);
-        newSheets.set(sheetId, sheet);
-      }
-
-      await this.writeSheets(newSheets);
-    } catch (error) {
-      throw this.log.error("correctDoubles", error);
-    }
-  }
-
   public entries() {
     try {
       const entries = this._map.entries();
@@ -123,87 +86,6 @@ export class SheetElementsMap extends Basic
     }
   }
 
-  /**
-   * @description Reorder all sheets by requered type
-   */
-  public async reorderSheets({
-    requereToCorrectType
-  }: {
-    requereToCorrectType: boolean;
-  }): Promise<void> {
-    try {
-      const newMap: SheetElementsInterface.EMap = new Map();
-      const getKeysAndSort = (
-        oldMap: SheetElementsInterface.EMap
-      ): SheetElementsInterface.EMap => {
-        const tempMap: SheetElementsInterface.EMap = new Map();
-        const keys: SheetElementsInterface.SheetElement["id"][] = Object.values(
-          oldMap.keys()
-        ).sort((a, b) => {
-          return Number(a) - Number(b);
-        });
-        for (let key of keys) {
-          const element:
-            | SheetElementsInterface.SheetElement
-            | undefined = oldMap.get(key);
-          if (element) {
-            const elementMap = element.elements;
-            element.elements = getKeysAndSort(elementMap);
-            tempMap.set(key, element);
-          }
-        }
-        return tempMap;
-      };
-      switch (this.typeOfName) {
-        case "_encodedName":
-          /** numeration loading */
-          const tempMap: SheetElementsInterface.EMap = new Map();
-          for (let sheet of this._map.values()) {
-            if (requereToCorrectType) sheet.typeOfName = this.typeOfName;
-            // const el = {} as SheetElementsInterface.SheetElement;
-            /** chec if elements exists */
-            let max: number = sheet.elements.size;
-            const checkAndTry = (
-              position: number,
-              eMap: SheetElementsInterface.EMap
-            ): number => {
-              if (eMap.has(String(position))) {
-                position = max;
-                max++;
-                return checkAndTry(position, eMap);
-              } else {
-                return position;
-              }
-            };
-            if (sheet.positions.second > 0) {
-              const el = tempMap.get(String(sheet.positions.second));
-              const newElement = el
-                ? el
-                : ({} as SheetElementsInterface.SheetElement);
-              const pos = checkAndTry(
-                sheet.positions.second,
-                newElement.elements
-              );
-              sheet.positions.second = pos;
-              newElement.elements.set(String(sheet.positions.second), sheet);
-              tempMap.set(String(newElement.positions.first), newElement);
-            } else {
-              const pos = checkAndTry(sheet.positions.first, tempMap);
-              sheet.positions.first = pos;
-              tempMap.set(String(sheet.positions.first), sheet);
-            }
-          }
-          /** resort elemnts */
-          await this.writeSheets(getKeysAndSort(tempMap));
-        default:
-          /** simple loading */
-          await this.writeSheets(getKeysAndSort(this._map));
-      }
-    } catch (error) {
-      throw this.log.error("reorderSheets", error);
-    }
-  }
-
   /**@description
    * if user will need
    * we will try to restore numeration */
@@ -219,7 +101,91 @@ export class SheetElementsMap extends Basic
       throw this.log.error("writeSheets", error);
     }
   }
+  /**
+   * @description Reorder all sheets by requered type
+   */
+  public async reorderSheets({
+    requereToCorrectType
+  }: {
+    requereToCorrectType: boolean;
+  }): Promise<void> {
+    try {
+      const { getKeysAndSort } = await import(
+        "../SheetElementFunctions/GetKeysAndSort"
+      );
+      switch (this.typeOfName) {
+        case "_encodedName":
+          /** numeration loading */
+          const tempMap: SheetElementsInterface.EMap = new Map();
+          for (let sheet of this._map.values()) {
+            if (requereToCorrectType) sheet.typeOfName = this.typeOfName;
+            // const el = {} as SheetElementsInterface.SheetElement;
+            /** chec if elements exists */
+            const { checkAndTry } = await import(
+              "../SheetElementFunctions/CheckPositionAndTryNew"
+            );
+            if (sheet.positions.second > 0) {
+              let max: number = sheet.elements.size == 0 ? 1 : sheet.elements.size;
+              const el = tempMap.get(String(sheet.positions.second));
+              const newElement = el
+                ? el
+                : ({} as SheetElementsInterface.SheetElement);
+              const pos = checkAndTry(
+                sheet.positions.second,
+                newElement.elements,
+                max
+              );
+              sheet.positions.second = pos;
+              newElement.elements.set(String(sheet.positions.second), sheet);
+              tempMap.set(String(newElement.positions.first), newElement);
+            } else {
+              let max: number = tempMap.size;
+              const pos = checkAndTry(sheet.positions.first, tempMap, max);
+              sheet.positions.first = pos;
+              tempMap.set(String(sheet.positions.first), sheet);
+            }
+          }
+          /** resort elements */
+          await this.writeSheets(getKeysAndSort(tempMap));
+        default:
+          /** simple loading */
+          await this.correctDoubles()
+          await this.writeSheets(getKeysAndSort(this._map));
+      }
+    } catch (error) {
+      throw this.log.error("reorderSheets", error);
+    }
+  }
+  
+  /**
+   * @description
+   * Names in excel cannot be same.
+   * So, before we will write and make any changes,
+   * we will need to be shure and check,
+   * that all names are unique
+   */
+  public async correctDoubles(): Promise<void> {
+    try {
+      let newSheets: SheetElementsInterface.EMap = new Map();
+      let sheetNames: Map<string,string>= new Map();
+      let i: number = 1;
+      const entries = this.entries();
+      /** function to check and choose available name */
+      const {checkNameAndTryNew} = await import('../SheetElementFunctions/CheckNameAndTryNew')
+      
+      for (const [sheetId, sheet] of entries) {
+        if (sheet === undefined) throw "correctDoubles has sheet === undefined";
+        const sheetName: string = checkNameAndTryNew(sheet.name, sheetNames,i);
+        sheet.name = sheetName;
+        sheetNames.set(sheetName, sheetName);
+        newSheets.set(sheetId, sheet);
+      }
 
+      await this.writeSheets(newSheets);
+    } catch (error) {
+      throw this.log.error("correctDoubles", error);
+    }
+  }
   public async writeSheets(
     sheetsEMap: SheetElementsInterface.EMap
   ): Promise<void> {
