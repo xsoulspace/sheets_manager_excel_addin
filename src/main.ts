@@ -6,7 +6,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import './registerServiceWorker'
 import router from '@/GraphicCore/Router'
-import store from '@/StorageCore'
+import {store} from '@/StorageCore/Index'
 
 Vue.config.productionTip = false
 let vm: Vue | undefined = undefined
