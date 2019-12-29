@@ -43,8 +43,7 @@ export class SheetElementsMap extends Basic
     }
   }
 
-  /**
-   * @description
+  /**@description
    * We need to check:
    * 1. Auto -> Is it has numeration?
    * 2. --! It has / has not full
@@ -60,7 +59,7 @@ export class SheetElementsMap extends Basic
    * 2. --! Go simple: load original names
    */
   public async firstOpenScenarioCreateSheetElements(
-    excelSheets: Excel.Worksheet[]
+    excelSheets: SheetElementsInterface.sheetsSource
   ): Promise<void> {
     try {
       /** firstly we conevert all sheets to elements map */
@@ -101,8 +100,9 @@ export class SheetElementsMap extends Basic
       throw this.log.error("writeSheets", error);
     }
   }
-  /**
-   * @description Reorder all sheets by requered type
+
+  /**@description 
+   * Reorder all sheets by requered type
    */
   public async reorderSheets({
     requereToCorrectType
@@ -156,9 +156,8 @@ export class SheetElementsMap extends Basic
       throw this.log.error("reorderSheets", error);
     }
   }
-  
-  /**
-   * @description
+
+  /**@description
    * Names in excel cannot be same.
    * So, before we will write and make any changes,
    * we will need to be shure and check,
@@ -186,9 +185,10 @@ export class SheetElementsMap extends Basic
       throw this.log.error("correctDoubles", error);
     }
   }
-  public async writeSheets(
+
+  public writeSheets(
     sheetsEMap: SheetElementsInterface.EMap
-  ): Promise<void> {
+  ): void {
     try {
       this._map = sheetsEMap;
     } catch (error) {
@@ -227,7 +227,7 @@ export class SheetElementsMap extends Basic
   }
 
   private async _simpleSheetsLoading(
-    excelSheets: Excel.Worksheet[]
+    excelSheets: SheetElementsInterface.sheetsSource
   ): Promise<void> {
     try {
       const { SheetElement } = await import("./SheetElement");
