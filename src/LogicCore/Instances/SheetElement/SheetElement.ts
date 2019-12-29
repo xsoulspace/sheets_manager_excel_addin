@@ -6,6 +6,7 @@ export class SheetElement extends Basic
 
   private _excelSheetName: string;
   private _regExpNumeration: RegExp = /(.\d_\d.)/g;
+  private _regExpPositions: RegExp = /\d\d/g;
 
   public color: string;
   public elements: SheetElementsInterface.EMap;
@@ -123,7 +124,16 @@ export class SheetElement extends Basic
   public _doesNameIncludesNumerationPattern(): boolean {
     try {
       const result = this._excelSheetName.match(this._regExpNumeration);
-      return Array.isArray(result) && result.length > 0 ? true : false;
+      if (Array.isArray(result) && result.length > 0) {
+        const approxPositions = result[0].match(this._regExpPositions);
+        if (approxPositions === null) return false;
+        if (approxPositions.length == 2) {
+          this.positions.first = Number(approxPositions[0]);
+          this.positions.second = Number(approxPositions[1]);
+          return true;
+        }
+      }
+      return false;
     } catch (error) {
       throw this.log.error("_doesNameIncludesNumerationPattern", error);
     }
