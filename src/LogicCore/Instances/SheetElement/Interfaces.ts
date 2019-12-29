@@ -58,8 +58,9 @@ namespace SheetElementsInterface {
       requereToCorrectType: boolean;
     }): Promise<void>;
     correctDoubles(): Promise<void>;
-    writeSheets(sheetsEMap: SheetElementsInterface.EMap): void;
-    entries(): IterableIterator<[string, SheetElementsInterface.SheetElement]>;
+    writeSheets(sheetsEMap: EMap): void;
+    entries(): IterableIterator<[string, SheetElement]>;
+    eMap: EMap
   }
   export interface SheetElementsMapConstructor extends BasicConstructor {
     excelSheets: sheetsSource

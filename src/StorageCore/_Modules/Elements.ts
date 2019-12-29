@@ -3,15 +3,18 @@ import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
 export default class Elements extends VuexModule {
   elementsMap: SheetElementsInterface.SheetElementsMap;
 
+	get sheets(){
+		return this.elementsMap.eMap
+	}
 
 	/** function to assign updated elements to state */
 	@Mutation
-	setElementsMutation(sheets: SheetElementsInterface.EMap){
+	setSheetsMutation(sheets: SheetElementsInterface.EMap){
 		this.elementsMap.writeSheets(sheets);
 	}
   @Action
-  async setElements(sheets: SheetElementsInterface.EMap): Promise<void> {
-    this.setElementsMutation(sheets)
+  async setSheets(sheets: SheetElementsInterface.EMap): Promise<void> {
+    this.setSheetsMutation(sheets)
 	}
 
 	@Mutation
@@ -19,7 +22,7 @@ export default class Elements extends VuexModule {
 		this.elementsMap = elementsMap
 	}
   @Action
-  async initializeStore(): Promise<void> {
+  async initializeStore(sheets: SheetElementsInterface.sheetsSource): Promise<void> {
     const { SheetElementsMap } = await import(
       "@/LogicCore/Instances/SheetElement/SheetElements"
     );
@@ -27,7 +30,7 @@ export default class Elements extends VuexModule {
       typeOfName: "_excelSheetName",
       delimiter: "_",
       _classTitle: "SheetElementsMap",
-      excelSheets: []
+      excelSheets: sheets
     };
     const elementsMap: SheetElementsInterface.SheetElementsMap = new SheetElementsMap(
       options

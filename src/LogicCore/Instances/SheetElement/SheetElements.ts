@@ -185,7 +185,9 @@ export class SheetElementsMap extends Basic
       throw this.log.error("correctDoubles", error);
     }
   }
-
+  public get eMap(): SheetElementsInterface.EMap{
+    return this._map
+  }
   public writeSheets(
     sheetsEMap: SheetElementsInterface.EMap
   ): void {
