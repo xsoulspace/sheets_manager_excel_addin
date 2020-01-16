@@ -19,15 +19,13 @@ export class SheetElementsMap extends Basic
   constructor({
     typeOfName,
     delimiter,
-    _classTitle,
-    excelSheets
+    _classTitle
   }: SheetElementsInterface.SheetElementsMapConstructor) {
     super({
       _classTitle: _classTitle ? _classTitle : "SheetElementsMap",
       typeOfName,
       delimiter
     });
-    Promise.resolve(this.firstOpenScenarioCreateSheetElements(excelSheets));
   }
 
   // #endregion Constructors (1)

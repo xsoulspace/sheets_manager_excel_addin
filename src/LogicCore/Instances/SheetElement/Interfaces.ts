@@ -62,7 +62,5 @@ namespace SheetElementsInterface {
     entries(): IterableIterator<[string, SheetElement]>;
     eMap: EMap
   }
-  export interface SheetElementsMapConstructor extends BasicConstructor {
-    excelSheets: sheetsSource
-  }
+  export interface SheetElementsMapConstructor extends BasicConstructor {}
 }
