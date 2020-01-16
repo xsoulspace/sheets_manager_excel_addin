@@ -29,7 +29,7 @@ export class ExcelContextBuilder {
   /** @description
    * Method to get context from class
    * */
-  public async context(): Promise<Excel.RequestContext> {
+  public context(): Excel.RequestContext {
     return this._context;
   }
   /** @description
