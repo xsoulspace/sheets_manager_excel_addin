@@ -1,6 +1,5 @@
 <template>
 	<div id="app">
-		{{ log }}
 
 		<router-view />
 	</div>
@@ -9,28 +8,27 @@
 <script>
 import { ExcelContextBuilder } from './LogicCore/APIExcel/ExcelContextBuilder'
 import { getModule } from 'vuex-module-decorators'
-import Elements from './StorageCore/_Modules/Elements'
+import Sheets from './StorageCore/Sheets'
+
 export default {
 	name: 'App',
 	data() {
 		return {
 			StoreAppSettings: 'appSettings',
 			hostInfo: undefined,
+			sourceApp: 'browser'
 		}
 	},
 	computed: {
-		log: function() {
-			return this.$store.getters['getLog']
-		},
 		isLocalStorageExists: function() {
 			return typeof localStorage != 'undefined'
 		},
 		appSettings: {
 			set: function(value) {
-				this.$store.commit(this.StoreAppSettings, value)
+				//this.$store.commit(this.StoreAppSettings, value)
 			},
 			get: function() {
-				return this.$store.getters[this.StoreAppSettings]
+				return ''//this.$store.getters[this.StoreAppSettings]
 			},
 		},
 	},
@@ -69,27 +67,26 @@ export default {
 					')',
 				].join('')
 				let isTouchDevice = mq(query)
-				this.$store.commit('setIsTouchDevice', isTouchDevice)
+				//this.$store.commit('setIsTouchDevice', isTouchDevice)
 			} catch (error) {
 				console.log('isTouchDevice', error)
 			}
 		},
 		eventHandler: async function(event) {
-			var self = this
 			// self.$store.commit('joinlog', JSON.stringify(event))
 			switch (event.type) {
 				case 'WorksheetAdded':
-					self.$store.dispatch('worksheetAdded', event.worksheetId)
+					//this.$store.dispatch('worksheetAdded', event.worksheetId)
 					break
 
 				case 'WorksheetActivated':
-					self.$store.dispatch(
-						'worksheetActivated',
-						event.worksheetId
-					)
+					// this.$store.dispatch(
+					// 	'worksheetActivated',
+					// 	event.worksheetId
+					// )
 					break
 				case 'WorksheetDeleted':
-					self.$store.dispatch('worksheetDeleted', event.worksheetId)
+					// this.$store.dispatch('worksheetDeleted', event.worksheetId)
 					break
 			}
 			//
@@ -98,19 +95,20 @@ export default {
 	async mounted() {
 		this.checkIsTouchDevice()
 		// Catch all events from Excel
-		let context = await ExcelContextBuilder.init()
-    let sheets = await context.workbook.worksheets
-    sheets.onActivated.add(this.eventHandler)
-    sheets.onAdded.add(this.eventHandler)
-    sheets.onDeleted.add(this.eventHandler)
-    sheets.onChanged.add(this.eventHandler)
-    await context.sync()
-		// ****************
-		// Excel Events end
-		// ****************
-    /** dispatch context to store */
-    const elements = getModule(Elements,this.$store)
-    await elements.setExcelContext(context)
+		// let context = await ExcelContextBuilder.init()
+		// let sheets = await context.workbook.worksheets
+		// sheets.onActivated.add(this.eventHandler)
+		// sheets.onAdded.add(this.eventHandler)
+		// sheets.onDeleted.add(this.eventHandler)
+		// sheets.onChanged.add(this.eventHandler)
+		// await context.sync()
+			// ****************
+			// Excel Events end
+			// ****************
+		/** dispatch context to store */
+		const elements = getModule(Sheets,this.$store)
+		console.log('this.sourceApp',this.sourceApp)
+		await elements.initializeStore(this.sourceApp)
 		// const elements = localStorage.getItem("elements")
 		// if(typeof elements != "undefined"){
 		//   this.$store.dispatch('specialUpdateElements',elements)

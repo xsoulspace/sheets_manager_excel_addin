@@ -1,16 +1,16 @@
 <template>
 <div class="home">
-  <navigation-tabs
+  <!-- <navigation-tabs
     @tab-settings-clicked="isSettingsActive=$event"
     :pIsSettingsActive = "isSettingsActive"
-  />
-  <settings-modal 
+  /> -->
+  <!-- <settings-modal 
     :settingsState="isSettingsActive"
     @settings-modal-state-changed="isSettingsActive=$event"
-  />
-  <root-nested-items 
+  /> -->
+  <!-- <root-nested-items 
     :isParent="true" v-model="elements" 
-  />
+  /> -->
 </div>
 </template>
 
@@ -21,6 +21,8 @@ import SettingsModal from "@/GraphicCore/StatefullWidget/SettingsModal.vue";
 import NavigationTabs from "@/GraphicCore/StatefullWidget/NavigationTabs.vue";
 
 import { Component, Vue } from 'vue-property-decorator'
+import { getModule } from 'vuex-module-decorators';
+import Sheets from '../../StorageCore/Sheets';
 @Component({
   components: {
     NavigationTabs,
@@ -32,17 +34,18 @@ export default class Home extends Vue {
   
   private isSettingsActive: boolean = false
   
-  public get elements(): Array<Object> {
-    return this.$store.getters['getNested'];
+  public get elements(): SheetElementsInterface.EMap {
+    const sheetsModule = getModule(Sheets,this.$store)
+    return sheetsModule.getSheets
   }
-  public set elements(value: Array<Object>) {
-    async() => {
-      await this.$store.dispatch("updateElements", value)
-    }
-  }
-  private get excelUsingInfo(): Array<Object> {
-    return this.$store.getters['getNested'];
-  }
+  // public set elements(value: Array<Object>) {
+  //   async() => {
+  //     await this.$store.dispatch("updateElements", value)
+  //   }
+  // }
+  // private get excelUsingInfo(): Array<Object> {
+  //   return this.$store.getters['getNested'];
+  // }
   async mounted(){
     // await this.$store.dispatch('loadWorksheets')
   }

@@ -5,6 +5,7 @@ namespace SheetElementsInterface {
     first: number;
     second: number;
   }
+  export type outsideApp = 'browser' | 'excelDesktop'
   export type sheetsSource = Excel.Worksheet[] | any[]
   export type ClassTitle = "Basic" | "SheetElement" | "SheetElementsMap";
   export interface Basic {

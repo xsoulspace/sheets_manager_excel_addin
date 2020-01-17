@@ -35,7 +35,7 @@ export default {
   computed: {
     tabColor: {
       get: function(){
-        let localColor = this.$store.getters['getColor'](this.id);
+        let localColor = '' //this.$store.getters['getColor'](this.id);
         let color
         localColor == "" ?
           color = "#4f4f4f" :
@@ -48,11 +48,12 @@ export default {
       },
       set: function(color){
         const id = this.id
-        this.$store.dispatch('changeColorWorksheet',{id,color})
+        // this.$store.dispatch('changeColorWorksheet',{id,color})
       }
     },
     isTouchDevice(){
-      return this.$store.getters['getIsTouchDevice']
+      return false
+      // return this.$store.getters['getIsTouchDevice']
     }
   }
 }

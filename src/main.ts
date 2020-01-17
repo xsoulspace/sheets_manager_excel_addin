@@ -15,7 +15,8 @@ let vm: Vue | undefined = undefined
  */
 //Check were we are
 let infoGlobal = window.sessionStorage['hostInfoValue']
-
+const sourceExcel: SheetElementsInterface.outsideApp = 'excelDesktop' 
+const sourceBrowser: SheetElementsInterface.outsideApp = 'browser'
 switch (infoGlobal == undefined){
   case true: //outside office client
     console.log("I'm an outsider");
@@ -24,7 +25,7 @@ switch (infoGlobal == undefined){
       store,
       render: function (h) { return h(App) }
     }).$mount('#app');
-    vm.$data.hostInfo = undefined
+    vm.$data.sourceApp =sourceBrowser
     break;
   default: //we are in office client
     console.log("I'm an office man");
@@ -36,16 +37,17 @@ switch (infoGlobal == undefined){
           store,
           render: h => h(App)
         })
+        vm.$data.sourceApp = sourceExcel
         vm.$data.hostInfo = info
       });
     })()
   break;
 }
 
-if(vm !== undefined){
-  vm.$root.$store.commit('setExcelUsingInfo',infoGlobal)
-  console.log(vm.$root.$store)
-}
+// if(vm !== undefined){
+//   vm.$root.$store.commit('setExcelUsingInfo',infoGlobal)
+//   console.log(vm.$root.$store)
+// }
 
 
 

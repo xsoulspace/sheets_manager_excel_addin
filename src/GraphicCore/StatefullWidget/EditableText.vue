@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     selectWorksheet: async function(){
-      await this.$store.dispatch('selectWorksheet',this.id)
+      // await this.$store.dispatch('selectWorksheet',this.id)
     },
     editOff: function(){
       this.onEdit=false
@@ -53,7 +53,7 @@ export default {
     async handlePress(){
       try {
         if(this.isTouchDevice && !this.dragging){
-          await this.selectWorksheet()
+          // await this.selectWorksheet()
         }
       } catch (error) {
         
@@ -73,15 +73,17 @@ export default {
     sheetName:{ 
       get: function(){
         const id = this.id
-        return this.$store.getters['getWorksheetName'](id) 
+        return ''
+        // return this.$store.getters['getWorksheetName'](id) 
       },
       set: function(name){
         const id = this.id
-        this.$store.dispatch('renameWorksheet',{id, name}) 
+        // this.$store.dispatch('renameWorksheet',{id, name}) 
       }
     },
     isTouchDevice(){
-      return this.$store.getters['getIsTouchDevice']
+      return false
+      // return this.$store.getters['getIsTouchDevice']
     }
   }
 }
