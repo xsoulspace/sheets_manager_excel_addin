@@ -4,7 +4,7 @@ $theme-color-key: 'base' !default;
 $theme_colors: (
 	// texts
 	'primary': (
-		'base': #181818,
+		'base': #323130,
 		'dark': #2cc99a,
 	),
 	'accent': (
@@ -21,12 +21,12 @@ $theme_colors: (
 		'dark': #2f3640,
 	),
 	'background': (
-		'base': #ffffff,
+		'base': #FAF9F8,
 		'dark': #2f3640,
 	),
 	'hoverground': (
-		'base': #d1d1d1,
-		'dark': #cccccc,
+		'base': rgb(224, 224, 224),
+		'dark': #424d5c,
 	),
 );
 

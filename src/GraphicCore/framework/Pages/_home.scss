@@ -1,3 +1,7 @@
+@use '../Library/colours';
 .home{
-    
+    background: colours.theme-color('background','base');
+    &.--is-dark{
+        background: colours.theme-color('background','dark');
+    }
 }

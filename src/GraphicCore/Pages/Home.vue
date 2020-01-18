@@ -1,5 +1,10 @@
 <template>
-	<div class="home">
+	<div
+		class="home"
+		:class="{
+			'--is-dark': isDarkTheme,
+		}"
+	>
 		<header class="header">
 			<navigation-tabs
 				@tab-settings-clicked="isSettingsActive = $event"
@@ -24,7 +29,8 @@ import NavigationTabs from '@/GraphicCore/StatefullWidget/NavigationTabs.vue'
 
 import { Component, Vue } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
-import Sheets from '../../StorageCore/Sheets'
+import Sheets from '@/StorageCore/Sheets'
+import AppSettings from "@/StorageCore/AppSettings";
 @Component({
 	components: {
 		NavigationTabs,
@@ -34,10 +40,13 @@ import Sheets from '../../StorageCore/Sheets'
 })
 export default class Home extends Vue {
 	isSettingsActive: boolean = true
-
 	public get elements(): SheetElementsInterface.EMap {
 		const sheetsModule = getModule(Sheets, this.$store)
 		return sheetsModule.getSheets
+	}
+	public get isDarkTheme(){
+		const module = getModule(AppSettings,this.$store)
+		return module.getIsDarkTheme
 	}
 	// public set elements(value: Array<Object>) {
 	//   async() => {

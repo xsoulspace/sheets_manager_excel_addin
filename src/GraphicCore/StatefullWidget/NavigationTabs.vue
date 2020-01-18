@@ -90,12 +90,18 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import AppSettings from "@/StorageCore/AppSettings";
+import { getModule } from 'vuex-module-decorators'
+
 @Component({
 	name: 'navigation-tabs',
 	components: {},
 })
 export default class NavigationTabs extends Vue {
-	isDarkTheme: boolean = false
+	public get isDarkTheme(){
+		const module = getModule(AppSettings,this.$store)
+		return module.getIsDarkTheme
+	}
 	isSearchActive: boolean = false
 	searchingWord: string = ''
 	turnOnInfo() {}

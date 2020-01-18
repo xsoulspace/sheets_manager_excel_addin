@@ -11,30 +11,28 @@
 	&.--is-dark {
 		background: _colours.theme-color('background', 'dark');
 		color: _colours.theme-color('primary', 'dark');
-		+ .tabs__tab {
+		> .tabs__tab {
 			&::before {
 				border-color: _colours.theme-color('foreground', 'dark', 0.5);
 			}
+			&:hover {
+				@include _colours.gradient(
+					to top,
+					_colours.theme-color('hoverground', 'dark', 1),
+					_colours.theme-color('hoverground', 'dark', 0.95)
+				);
+			}
 		}
-
 	}
 	&__tab {
 		position: relative;
 		padding: 0.2em;
-		&.--is-dark{
-			&:hover {
-				@include _colours.gradient(
-					to top,
-					_colours.theme-color('hoverground', 'dark', 0.2),
-					_colours.theme-color('hoverground', 'dark', 0.01)
-				);
-			}
-		}
+
 		&:hover {
 			@include _colours.gradient(
 				to top,
-				_colours.theme-color('hoverground', 'base', 0.1),
-				_colours.theme-color('hoverground', 'base', 0.01)
+				_colours.theme-color('hoverground', 'base', 1),
+				_colours.theme-color('hoverground', 'base', 0.95)
 			);
 		}
 
