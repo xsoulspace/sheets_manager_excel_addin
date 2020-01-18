@@ -38,7 +38,7 @@
 						'--is-dark': isDarkTheme,
 					}"
 				>
-					<span class="icon">
+					<span class="icon__refresh">
 						<i class="fa fa-refresh"></i>
 					</span>
 				</div>

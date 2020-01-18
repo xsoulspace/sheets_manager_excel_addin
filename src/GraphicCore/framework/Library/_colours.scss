@@ -8,7 +8,7 @@ $theme_colors: (
 		'dark': #2cc99a,
 	),
 	'accent': (
-		'base': #d98328,
+		'base': #000000,
 		'dark': #c57623,
 	),
 	'secondary': (
@@ -23,6 +23,10 @@ $theme_colors: (
 	'background': (
 		'base': #ffffff,
 		'dark': #2f3640,
+	),
+	'hoverground': (
+		'base': #d1d1d1,
+		'dark': #cccccc,
 	),
 );
 
@@ -58,4 +62,7 @@ $theme_opacity: (
 	}
 
 	@return $color;
+}
+@mixin gradient($direction, $color-stops...) { 
+	background: linear-gradient($direction, $color-stops);
 }

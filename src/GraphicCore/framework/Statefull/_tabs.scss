@@ -16,10 +16,27 @@
 				border-color: _colours.theme-color('foreground', 'dark', 0.5);
 			}
 		}
+
 	}
 	&__tab {
 		position: relative;
-		padding: 1em;
+		padding: 0.2em;
+		&.--is-dark{
+			&:hover {
+				@include _colours.gradient(
+					to top,
+					_colours.theme-color('hoverground', 'dark', 0.2),
+					_colours.theme-color('hoverground', 'dark', 0.01)
+				);
+			}
+		}
+		&:hover {
+			@include _colours.gradient(
+				to top,
+				_colours.theme-color('hoverground', 'base', 0.1),
+				_colours.theme-color('hoverground', 'base', 0.01)
+			);
+		}
 
 		// vue transitions
 		transition-property: width;
@@ -37,7 +54,7 @@
 			opacity: 0;
 		}
 		// modificators
-		
+
 		// relations
 
 		+ .tabs__tab {
@@ -52,7 +69,6 @@
 				border-bottom: 0px;
 				border-color: _colours.theme-color('foreground', 'base', 0.1);
 				border-style: solid;
-
 			}
 		}
 		&:last-of-type {

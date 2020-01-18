@@ -1,7 +1,7 @@
 @use '../Library/_colours.scss';
 %button {
 	position: relative;
-	background: _colours.theme-color('background','base');
+	background: none;
 	min-width: 40px;
 	height: 40px;
 	padding: 10px;
@@ -13,7 +13,6 @@
     color: _colours.theme-color('primary', 'base');
 	cursor: pointer;
     &.--is-dark {
-        background: _colours.theme-color('background', 'dark');
         color: _colours.theme-color('primary', 'dark');
     }
 }
