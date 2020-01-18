@@ -1,0 +1,61 @@
+//https://scotch.io/tutorials/aesthetic-sass-2-colors
+$theme-color-key: 'base' !default;
+
+$theme_colors: (
+	// texts
+	'primary': (
+		'base': #181818,
+		'dark': #2cc99a,
+	),
+	'accent': (
+		'base': #d98328,
+		'dark': #c57623,
+	),
+	'secondary': (
+		'base': #5a1321,
+		'dark': #51111e,
+	),
+	//borders
+	'foreground': (
+		'base': #191919,
+		'dark': #2f3640,
+	),
+	'background': (
+		'base': #ffffff,
+		'dark': #2f3640,
+	),
+);
+
+$theme_opacity: (
+	dark: 0.2,
+);
+
+@function theme-color(
+	$name: 'primary',
+	$variant: $theme-color-key,
+	$opacity: 1
+) {
+	$color: null;
+
+	// Get the color spectrum
+	$color-spectrum: map-get($theme-colors, $name);
+
+	// Get the color variant
+	@if $color-spectrum {
+		$color: map-get($color-spectrum, $variant);
+	}
+
+	// Get the alpha setting
+	$alpha: if(
+		type-of($opacity) == 'number',
+		$opacity,
+		map-get($theme-opacity, $opacity)
+	);
+
+	// Set the alpha of the color
+	@if $alpha {
+		$color: rgba($color, $alpha);
+	}
+
+	@return $color;
+}

@@ -1,0 +1,29 @@
+@use '../Library/_colours.scss';
+%button {
+	position: relative;
+	background: _colours.theme-color('background','base');
+	min-width: 40px;
+	height: 40px;
+	padding: 10px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+    border: 0;
+    color: _colours.theme-color('primary', 'base');
+	cursor: pointer;
+    &.--is-dark {
+        background: _colours.theme-color('background', 'dark');
+        color: _colours.theme-color('primary', 'dark');
+    }
+}
+.button {
+	@extend %button;
+	&__circle {
+		@extend %button;
+		width: 40px;
+		border-radius: 40px;
+		box-shadow: 0px 4px 6px -5px _colours.theme-color('foreground', 'base', 0.75);
+
+	}
+}

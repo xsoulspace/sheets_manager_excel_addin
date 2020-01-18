@@ -1,0 +1,64 @@
+@use '../Library/_colours.scss';
+
+.tabs {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: stretch;
+	background: _colours.theme-color('background', 'base');
+	color: _colours.theme-color('primary', 'base');
+
+	&.--is-dark {
+		background: _colours.theme-color('background', 'dark');
+		color: _colours.theme-color('primary', 'dark');
+		+ .tabs__tab {
+			&::before {
+				border-color: _colours.theme-color('foreground', 'dark', 0.5);
+			}
+		}
+	}
+	&__tab {
+		position: relative;
+		padding: 1em;
+
+		// vue transitions
+		transition-property: width;
+		transition-duration: 0.6s;
+		transition-timing-function: ease-in;
+
+		&.fade-enter-active {
+			transition: opacity 1s;
+			transition-delay: 0.5s;
+		}
+		&.fade-leave-active {
+			transition: opacity 0.1s;
+		}
+		&.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+			opacity: 0;
+		}
+		// modificators
+		
+		// relations
+
+		+ .tabs__tab {
+			&::before {
+				content: '';
+				position: absolute;
+				right: 0;
+				top: 20%;
+				height: 60%;
+				border-top: 0px;
+				border-left: 0px;
+				border-bottom: 0px;
+				border-color: _colours.theme-color('foreground', 'base', 0.1);
+				border-style: solid;
+
+			}
+		}
+		&:last-of-type {
+			&::before {
+				content: none;
+			}
+		}
+	}
+}
