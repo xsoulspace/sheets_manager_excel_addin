@@ -107,7 +107,6 @@ export default {
 			// ****************
 		/** dispatch context to store */
 		const elements = getModule(Sheets,this.$store)
-		console.log('this.sourceApp',this.sourceApp)
 		await elements.initializeStore(this.sourceApp)
 		// const elements = localStorage.getItem("elements")
 		// if(typeof elements != "undefined"){

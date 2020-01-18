@@ -56,7 +56,6 @@ export default class Sheets extends VuexModule {
 			let elementsMap: SheetElementsInterface.SheetElementsMap
 			let sheets: SheetElementsInterface.sheetsSource
 			let options: SheetElementsInterface.SheetElementsMapConstructor
-			console.log('sourceApp', sourceApp)
 
 			switch (sourceApp) {
 				case 'browser':

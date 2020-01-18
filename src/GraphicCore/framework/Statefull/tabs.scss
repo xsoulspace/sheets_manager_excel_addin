@@ -1,0 +1,7 @@
+.tabs{
+    display: flex;
+    flex-direction: row;
+    &__tab{
+        padding: 1em;
+    }
+}
