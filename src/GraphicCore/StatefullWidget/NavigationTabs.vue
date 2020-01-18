@@ -1,13 +1,15 @@
 <template>
-	<div class="tabs">
+	<div
+		class="tabs"
+		:class="{
+			'--is-dark': isDarkTheme,
+		}"
+	>
 		<div
 			class="tabs__tab"
 			@mouseover="changeIsSearchActive(true)"
 			@mouseleave="changeIsSearchActive(false)"
-			@click="changeIsSearchActive(true, true)"				
-			:class="{
-				'--is-dark': isDarkTheme,
-			}"
+			@click="changeIsSearchActive(true, true)"
 		>
 			<div
 				class="search"
@@ -44,9 +46,12 @@
 		</transition>
 		<transition name="fade">
 			<div class="tabs__tab" @click="turnOnSettings">
-				<div class="button" 				:class="{
-					'--is-dark': isDarkTheme,
-				}">
+				<div
+					class="button"
+					:class="{
+						'--is-dark': isDarkTheme,
+					}"
+				>
 					<span class="icon">
 						<i class="fas fa-sliders-h"></i>
 					</span>
@@ -55,9 +60,12 @@
 		</transition>
 		<transition name="fade">
 			<div class="tabs__tab" @click="turnOnTutorial">
-				<div class="button" 				:class="{
-					'--is-dark': isDarkTheme,
-				}">
+				<div
+					class="button"
+					:class="{
+						'--is-dark': isDarkTheme,
+					}"
+				>
 					<span class="icon">
 						<i class="fas fa-question"></i>
 					</span>
@@ -66,9 +74,12 @@
 		</transition>
 		<transition name="fade">
 			<div class="tabs__tab" @click="turnOnInfo">
-				<div class="button" 				:class="{
-					'--is-dark': isDarkTheme,
-				}">
+				<div
+					class="button"
+					:class="{
+						'--is-dark': isDarkTheme,
+					}"
+				>
 					<span class="icon">
 						<i class="fas fa-info"></i>
 					</span>
@@ -84,6 +95,7 @@ import { Component, Vue } from 'vue-property-decorator'
 	components: {},
 })
 export default class NavigationTabs extends Vue {
+	isDarkTheme: boolean = false
 	isSearchActive: boolean = false
 	searchingWord: string = ''
 	turnOnInfo() {}
