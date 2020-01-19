@@ -14,8 +14,8 @@
     &.--is-dark{
         .form__field{
             &:hover {
-                background-color: darken(_colours.theme-color('hoverground', 'dark', 0.2),30);
-                box-shadow: 0px 4px 6px -5px _colours.theme-color('foreground', 'dark', 0.1);
+                background-color: darken(_colours.theme-color('foreground', 'dark',0.2),10);
+                box-shadow: 0px 4px 6px -5px _colours.theme-color('background', 'dark', 0.1);
             }
         }
     }
