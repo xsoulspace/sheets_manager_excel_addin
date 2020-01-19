@@ -11,41 +11,74 @@
 			:class="{ '--is-dark': isDarkTheme }"
 		>
 			<header class="modal__card-head">
-				<p class="modal-card-title">Настройки</p>
+				<p class="modal-card-title --has-accent">Настройки</p>
 				<div class="modal__card-close" @click="turnOffSettings">
-					<span class="icon">
+					<span
+						class="icon --has-accent"
+						:class="{ '--is-dark': isDarkTheme }"
+					>
 						<i class="fas fa-times"></i>
 					</span>
 				</div>
 				<div class="modal__card-save" @click="turnOffSettings">
-					<span class="icon">
+					<span
+						class="icon --has-accent"
+						:class="{ '--is-dark': isDarkTheme }"
+					>
 						<i class="fas fa-save"></i>
 					</span>
 				</div>
 			</header>
 			<section class="modal__card-body">
-				<div class="field">
-					<label class="checkbox">
-						<input type="checkbox" v-model="isNumerated" />
-						Группировка листов (все листы будут пронумерованы)
-					</label>
-				</div>
-				<div class="field">
-					<label class="checkbox">
-						<input v-model="isTouchDevice" type="checkbox" />
-						Адаптировать интерфейс под тач
-					</label>
-				</div>
-				<div class="field">
-					<button class="button" @click="clearNumeration">
-						Очистить нумерацию листов (все цифры будут удалены)
-					</button>
-				</div>
-				<div class="field">
-					<label class="checkbox">
-						<input type="checkbox" v-model="isDarkTheme" />
-						Темная тема
-					</label>
+				<div class="form">
+					<div class="form__field">
+						<label
+							class="checkbox"
+							:class="{ '--is-dark': isDarkTheme }"
+						>
+							<input
+								class="checkbox__input"
+								type="checkbox"
+								v-model="isNumerated"
+							/>
+							Группировка листов (все листы будут пронумерованы)
+						</label>
+					</div>
+					<div class="form__field">
+						<label
+							class="checkbox"
+							:class="{ '--is-dark': isDarkTheme }"
+						>
+							<input
+								class="checkbox__input"
+								v-model="isTouchDevice"
+								type="checkbox"
+							/>
+							Адаптировать интерфейс под тач
+						</label>
+					</div>
+					<div class="form__field">
+						<label
+							class="checkbox"
+							:class="{ '--is-dark': isDarkTheme }"
+						>
+							<input
+								class="checkbox__input"
+								type="checkbox"
+								v-model="isDarkTheme"
+							/>
+							Темная тема
+						</label>
+					</div>
+					<div class="form__field">
+						<button
+							class="button"
+							:class="{ '--is-dark': isDarkTheme }"
+							@click="clearNumeration"
+						>
+							Очистить нумерацию листов (все цифры будут удалены)
+						</button>
+					</div>
 				</div>
 			</section>
 		</div>

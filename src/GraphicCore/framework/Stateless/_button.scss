@@ -1,4 +1,5 @@
 @use '../Library/_colours.scss';
+@use '../Library/fonts';
 %button {
 	position: relative;
 	background: none;
@@ -10,11 +11,18 @@
 	align-items: center;
 	justify-content: center;
     border: 0;
-    color: _colours.theme-color('primary', 'base');
+	color: _colours.theme-color('primary', 'base');
+	@include fonts.font('primary');
 	cursor: pointer;
     &.--is-dark {
-        color: _colours.theme-color('primary', 'dark');
-    }
+		color: _colours.theme-color('primary', 'dark');
+		&.--has-accent{
+			color: _colours.theme-color('accent', 'dark');
+		}
+	}
+	&.--accent{
+        color: _colours.theme-color('accent', 'base');
+	}
 }
 .button {
 	@extend %button;

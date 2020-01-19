@@ -24,16 +24,23 @@
 	transition: 0.4s;
 	color: _colours.theme-color('primary','base');
 	background: _colours.theme-color('background','base');
-
+	&.--has-accent{
+		color: _colours.theme-color('accent', 'base');
+	}
 	&.--is-dark {
 		background: _colours.theme-color('background','dark');
+		color: _colours.theme-color('primary','dark');
 		> .search__input {
-			color: _colours.theme-color('primary','dark');
 			border-bottom: 1px solid _colours.theme-color('foreground','dark');
 		}
 		> .search__icon {
-			color: _colours.theme-color('primary','dark');
 			background:  _colours.theme-color('background','dark');			
+		}
+		&.--has-accent{
+			color: _colours.theme-color('accent', 'dark');
+			> .search__input {
+				color: _colours.theme-color('accent', 'dark');
+			}
 		}
 	}
 	// &:hover {

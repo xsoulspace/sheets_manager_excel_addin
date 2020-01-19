@@ -1,0 +1,13 @@
+.checkbox{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &__input{
+        margin: 0 7px 0 0;
+        width: 20px;
+        height: 20px;
+    }
+    &.--is-dark{
+        
+    }
+}

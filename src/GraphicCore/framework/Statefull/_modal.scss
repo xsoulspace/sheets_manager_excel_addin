@@ -67,6 +67,11 @@
 		&.--is-dark {
 			color: _colours.theme-color('primary', 'dark');
 			background-color: _colours.theme-color('background', 'dark');
+			.modal__card-head{
+				>.--has-accent{
+					color: _colours.theme-color('accent', 'dark');
+				}
+			}
 		}
 		&-head {
 			text-align: center;
@@ -74,6 +79,9 @@
 			min-height: 2em;
 			border-bottom: 1px solid
 				_colours.theme-color('foreground', 'base', 0.5);
+			&.--has-accent{
+				color: _colours.theme-color('accent', 'base');
+			}
 		}
 		&-close {
 			@include action-button(

@@ -12,7 +12,7 @@
 			@click="changeIsSearchActive(true, true)"
 		>
 			<div
-				class="search"
+				class="search --has-accent"
 				:class="{
 					'--is-open': isSearchActive,
 					'--is-dark': isDarkTheme,
@@ -33,7 +33,7 @@
 		<transition name="fade">
 			<div class="tabs__tab" @click="turnOnInfo">
 				<div
-					class="button"
+					class="button --has-accent"
 					:class="{
 						'--is-dark': isDarkTheme,
 					}"
@@ -47,7 +47,7 @@
 		<transition name="fade">
 			<div class="tabs__tab" @click="turnOnSettings">
 				<div
-					class="button"
+					class="button --has-accent"
 					:class="{
 						'--is-dark': isDarkTheme,
 					}"
@@ -61,7 +61,7 @@
 		<transition name="fade">
 			<div class="tabs__tab" @click="turnOnTutorial">
 				<div
-					class="button"
+					class="button --has-accent"
 					:class="{
 						'--is-dark': isDarkTheme,
 					}"
@@ -75,7 +75,7 @@
 		<transition name="fade">
 			<div class="tabs__tab" @click="turnOnInfo">
 				<div
-					class="button"
+					class="button --has-accent"
 					:class="{
 						'--is-dark': isDarkTheme,
 					}"
