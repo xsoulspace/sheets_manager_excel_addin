@@ -24,6 +24,9 @@
         fill: none;
         stroke: colours.theme-color('accent', 'base');
         stroke-width: 1px;
+        stroke-dasharray: 10;
+        stroke-dashoffset: 10;
+        animation: dash 0.2s linear forwards;
     }
     &:hover{
         > .checkbox__input {
@@ -36,13 +39,20 @@
 			background-color: colours.theme-color('primary', 'dark',1);
         }
         > .checkbox__svg{
-            fill: none;
             stroke: colours.theme-color('accent', 'dark');
         }
         &:hover{
             > .checkbox__input{
                 background-color: colours.theme-color('hoverground', 'base',0.5);
             }
+            > .checkbox__svg{
+
+            }
         }
-	}
+    }
+    @keyframes dash {
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
 }
