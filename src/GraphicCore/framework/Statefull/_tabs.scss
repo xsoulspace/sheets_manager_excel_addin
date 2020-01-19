@@ -29,6 +29,7 @@
 		transition: 0.3s linear;
 		&:hover {
 			background-color: _colours.theme-color('hoverground', 'base', 1);
+			box-shadow: 0px 4px 6px -5px _colours.theme-color('foreground', 'base', 0.75);
 		}
 
 		// modificators

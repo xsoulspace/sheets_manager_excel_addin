@@ -30,7 +30,7 @@
 				</div>
 			</header>
 			<section class="modal__card-body">
-				<div class="form">
+				<div class="form" :class="{ '--is-dark': isDarkTheme }">
 					<div class="form__field">
 						<checkbox
 							:text="
@@ -57,7 +57,7 @@
 					</div>
 					<div class="form__field">
 						<button
-							class="button"
+							class="button__box"
 							:class="{ '--is-dark': isDarkTheme }"
 							@click="clearNumeration"
 						>
