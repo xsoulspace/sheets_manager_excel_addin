@@ -9,6 +9,12 @@ import './registerServiceWorker'
 import router from '@/GraphicCore/Router'
 import {store} from '@/StorageCore/Index'
 import '@/GraphicCore/framework/style.scss'
+//https://github.com/hejianxian/vddl
+import Vddl from 'vddl';
+//https://github.com/timruffles/mobile-drag-drop
+import {polyfill} from "mobile-drag-drop";
+
+Vue.use(Vddl);
 
 Vue.config.productionTip = false
 let vm: Vue | undefined = undefined

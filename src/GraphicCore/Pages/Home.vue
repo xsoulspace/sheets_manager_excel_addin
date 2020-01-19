@@ -40,7 +40,7 @@ import Sheets from '@/StorageCore/Sheets'
 	}
 })
 export default class Home extends Vue {
-	isSettingsActive: boolean = true
+	isSettingsActive: boolean = false
 	public get elements(): SheetElementsInterface.EMap {
 		const sheetsModule = getModule(Sheets, this.$store)
 		return sheetsModule.getSheets
@@ -66,8 +66,4 @@ export default class Home extends Vue {
 }
 </script>
 <style lang="scss">
-.draganddrop-parent-container {
-	display: flex;
-	flex-flow: column nowrap;
-}
 </style>

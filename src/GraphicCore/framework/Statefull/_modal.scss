@@ -64,7 +64,7 @@
 		background-color: _colours.theme-color('background', 'base');
 		color: _colours.theme-color('primary', 'base');
 		box-shadow: 0px -1px 15px 0px _colours.theme-color('foreground', 'base',0.2);
-		transition-duration: 0.6s;
+		transition-duration: 0.1s;
 		transition-timing-function: ease-in-out;
 		&.--is-dark {
 			color: _colours.theme-color('primary', 'dark');
