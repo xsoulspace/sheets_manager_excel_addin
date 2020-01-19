@@ -55,9 +55,9 @@
 							@click="changeIsDarkTheme"
 						/>
 					</div>
-					<div class="form__field">
+					<div class="form__field --is-mobile">
 						<button
-							class="button__box"
+							class="button__box --has-border"
 							:class="{ '--is-dark': isDarkTheme }"
 							@click="clearNumeration"
 						>

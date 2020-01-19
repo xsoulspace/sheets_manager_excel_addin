@@ -2,7 +2,6 @@
 @use '../Library/fonts';
 %button {
 	position: relative;
-	outline-color: none;
 	background: none;
 	min-width: 40px;
 	height: 40px;
@@ -14,15 +13,36 @@
     border: 0;
 	color: _colours.theme-color('primary', 'base');
 	@include fonts.font('primary');
+	transition: 0.3s linear;
 	cursor: pointer;
     &.--is-dark {
 		color: _colours.theme-color('primary', 'dark');
 		&.--has-accent{
 			color: _colours.theme-color('accent', 'dark');
 		}
+		&.--has-border{
+			border: 1px solid _colours.theme-color('accent', 'dark', 0.1);
+			&:focus{
+				outline: none;
+				border: 1px solid _colours.theme-color('accent', 'dark', 0.4);
+			}
+			&:active{
+				background-color: darken(_colours.theme-color('background', 'dark', 0.2),20);
+			}
+		}
 	}
-	&.--accent{
+	&.--has-accent{
         color: _colours.theme-color('accent', 'base');
+	}
+	&.--has-border{
+		border: 1px solid _colours.theme-color('accent', 'base', 0.1);
+		&:focus{
+			outline: none;
+			border: 1px solid _colours.theme-color('accent', 'base', 0.4);
+		}
+		&:active{
+			background-color: _colours.theme-color('accent', 'base', 0.2);
+		}
 	}
 }
 .button {
@@ -35,6 +55,6 @@
 	&__box{
 		@extend %button;
 		@include _colours.corner-radius;
-		
+
 	}
 }

@@ -50,11 +50,13 @@
 		margin-top: 8vh;
 		margin-left: 2vh;
 		margin-right: 2vh;
+		margin-bottom: 8vh;
 		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		height: 84vh;
+		min-height: 84vh;
+		height: auto;
 		@include _colours.corner-radius;
 		border-style: solid;
 		border-width: 1px;
