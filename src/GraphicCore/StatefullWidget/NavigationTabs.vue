@@ -105,7 +105,9 @@ export default class NavigationTabs extends Vue {
 	isSearchActive: boolean = false
 	searchingWord: string = ''
 	turnOnInfo() {}
-	turnOnSettings() {}
+	turnOnSettings() {
+		this.$emit('turn-on-settings')
+	}
 	turnOnTutorial() {}
 	async refreshSheets() {}
 	changeIsSearchActive(value: boolean, useItExplicitly?: boolean) {

@@ -35,9 +35,18 @@
 	right: 0;
 	left: 0;
 	bottom: 0;
-    background-color: _colours.theme-color('foreground', 'base', 0.5);
-
+	background-color: _colours.theme-color('foreground', 'base', 0.5);
+	visibility: hidden;
+	visibility: hidden;
+	opacity: 0;
+	transition: visibility 0s, opacity 0.3s ease-in-out;
+	transition-duration: 0.3s;
+	&.--is-active{
+		visibility: visible;
+		opacity: 1;
+	}
 	&__card {
+		padding: 0.2em;
 		margin-top: 8vh;
 		margin-left: 2vh;
 		margin-right: 2vh;
@@ -53,11 +62,14 @@
 		background-color: _colours.theme-color('background', 'base');
 		color: _colours.theme-color('primary', 'base');
 		box-shadow: 0px -1px 15px 0px rgba(71, 71, 71, 0.67);
+		transition-duration: 0.6s;
+		transition-timing-function: ease-in-out;
 		&.--is-dark {
 			color: _colours.theme-color('primary', 'dark');
 			background-color: _colours.theme-color('background', 'dark');
 		}
 		&-head {
+			text-align: center;
 			position: relative;
 			min-height: 2em;
 			border-bottom: 1px solid
@@ -76,6 +88,7 @@
 			);
 		}
 		&-body {
+			padding: 0.2em;
 		}
 		&-foot {
 			margin-top: auto;

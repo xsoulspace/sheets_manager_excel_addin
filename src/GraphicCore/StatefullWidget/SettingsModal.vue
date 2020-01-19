@@ -1,20 +1,24 @@
 <template>
-	<div :class="{ 'is-active': isSettingsActive }" class="modal">
-		<div @click="turnOffSettings" class="modal-background"></div>
+	<div
+		:class="{ '--is-active': isSettingsActive }"
+		class="modal"
+		@click="turnOffSettings"
+	>
 		<div
+			ref="card"
 			@click.stop
 			class="modal__card"
 			:class="{ '--is-dark': isDarkTheme }"
 		>
 			<header class="modal__card-head">
 				<p class="modal-card-title">Настройки</p>
-				<div class="modal__card-close">
-					<span class="icon" @click="turnOffSettings">
+				<div class="modal__card-close" @click="turnOffSettings">
+					<span class="icon">
 						<i class="fas fa-times"></i>
 					</span>
 				</div>
-				<div class="modal__card-save">
-					<span class="icon" @click="turnOffSettings">
+				<div class="modal__card-save" @click="turnOffSettings">
+					<span class="icon">
 						<i class="fas fa-save"></i>
 					</span>
 				</div>
@@ -37,12 +41,18 @@
 						Очистить нумерацию листов (все цифры будут удалены)
 					</button>
 				</div>
+				<div class="field">
+					<label class="checkbox">
+						<input type="checkbox" v-model="isDarkTheme" />
+						Темная тема
+					</label>
+				</div>
 			</section>
 		</div>
 	</div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Log } from '../../LogicCore/Debug/Log'
 import { getModule } from 'vuex-module-decorators'
 import AppSettings from '@/StorageCore/AppSettings'
@@ -58,9 +68,17 @@ import AppSettings from '@/StorageCore/AppSettings'
 	components: {},
 })
 export default class SettingsModal extends Vue {
-	_isSettingsActive: boolean = false
 	_isTouchDevice: boolean = false
 	_isNumerated: boolean = false
+	public set isDarkTheme(value: boolean) {
+		const module = getModule(AppSettings, this.$store)
+		const oldValue = module.getIsDarkTheme
+		if (oldValue == true) {
+			module.setTheme('base')
+		} else {
+			module.setTheme('dark')
+		}
+	}
 	public get isDarkTheme() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getIsDarkTheme
@@ -86,8 +104,7 @@ export default class SettingsModal extends Vue {
 		return this.$data._isNumerated
 	}
 	turnOffSettings() {
-		this.$data._isSettingsActive = false
-		this.$emit('settings-modal-state-changed', false)
+		this.$emit('turn-off-settings-state')
 	}
 	async clearNumeration() {}
 }

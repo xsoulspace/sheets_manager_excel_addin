@@ -1,13 +1,14 @@
+/// <reference path='../types/SheetManager.d.ts'/>
+
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { Log } from '@/LogicCore/Debug/Log'
-/// <reference path='../types/SheetManager.d.ts'/>
 
 @Module({ name: 'AppSettings', namespaced: true })
 export default class AppSettings extends VuexModule {
-	themeName: SheetManager.AppSettingsThemeName = 'base'
+	themeName: SheetManager.AppSettingsThemeName = 'dark'
 	get getIsDarkTheme() {
-        // TODO: there is a problem with enum!
-		return true //this.themeName == SheetManager.enumAppSettingsThemeName['dark']
+		const dark: SheetManager.AppSettingsThemeName = 'dark'
+		return this.themeName == dark
 	}
 	@Mutation
 	setTheme(themeName: SheetManager.AppSettingsThemeName) {

@@ -1,19 +1,16 @@
 <template>
 	<div
 		class="home"
-		:class="{
-			'--is-dark': isDarkTheme,
-		}"
 	>
 		<header class="header">
 			<navigation-tabs
-				@tab-settings-clicked="isSettingsActive = $event"
+				@turn-on-settings='changeSettingsState(true)'
 				:isSettingsActive="isSettingsActive"
 			/>
 		</header>
 		<settings-modal
 			:isSettingsActive="isSettingsActive"
-			@settings-modal-state-changed="isSettingsActive = $event"
+			@turn-off-settings-state="changeSettingsState(false)"
 		/>
 		<!-- <root-nested-items 
     :isParent="true" v-model="elements" 
@@ -30,7 +27,7 @@ import NavigationTabs from '@/GraphicCore/StatefullWidget/NavigationTabs.vue'
 import { Component, Vue } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import AppSettings from "@/StorageCore/AppSettings";
-
+import outsideClick from "@/GraphicCore/Directives/outside-click";
 import Sheets from '@/StorageCore/Sheets'
 @Component({
 	components: {
@@ -38,6 +35,9 @@ import Sheets from '@/StorageCore/Sheets'
 		SettingsModal,
 		'root-nested-items': NestedItems,
 	},
+	directives:{
+		outsideClick
+	}
 })
 export default class Home extends Vue {
 	isSettingsActive: boolean = true
@@ -48,6 +48,9 @@ export default class Home extends Vue {
 	public get isDarkTheme(){
 		const module = getModule(AppSettings,this.$store)
 		return module.getIsDarkTheme
+	}
+	changeSettingsState(value: boolean = false){
+		this.$data.isSettingsActive = value
 	}
 	// public set elements(value: Array<Object>) {
 	//   async() => {

@@ -1,6 +1,5 @@
 <template>
-	<div id="app" >
-
+	<div id="app" :class="{'--is-dark': isDarkTheme}">
 		<router-view />
 	</div>
 </template>
@@ -9,6 +8,7 @@
 import { ExcelContextBuilder } from './LogicCore/APIExcel/ExcelContextBuilder'
 import { getModule } from 'vuex-module-decorators'
 import Sheets from './StorageCore/Sheets'
+import AppSettings from '@/StorageCore/AppSettings'
 
 export default {
 	name: 'App',
@@ -16,7 +16,7 @@ export default {
 		return {
 			StoreAppSettings: 'appSettings',
 			hostInfo: undefined,
-			sourceApp: 'browser'
+			sourceApp: 'browser',
 		}
 	},
 	computed: {
@@ -28,8 +28,12 @@ export default {
 				//this.$store.commit(this.StoreAppSettings, value)
 			},
 			get: function() {
-				return ''//this.$store.getters[this.StoreAppSettings]
+				return '' //this.$store.getters[this.StoreAppSettings]
 			},
+		},
+		isDarkTheme() {
+			const module = getModule(AppSettings, this.$store)
+			return module.getIsDarkTheme
 		},
 	},
 	watch: {
@@ -102,11 +106,11 @@ export default {
 		// sheets.onDeleted.add(this.eventHandler)
 		// sheets.onChanged.add(this.eventHandler)
 		// await context.sync()
-			// ****************
-			// Excel Events end
-			// ****************
+		// ****************
+		// Excel Events end
+		// ****************
 		/** dispatch context to store */
-		const elements = getModule(Sheets,this.$store)
+		const elements = getModule(Sheets, this.$store)
 		await elements.initializeStore(this.sourceApp)
 		// const elements = localStorage.getItem("elements")
 		// if(typeof elements != "undefined"){
@@ -124,25 +128,4 @@ export default {
 	},
 }
 </script>
-<style lang="scss">
-#app {
-	font-family: 'Avenir', Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
-	color: #2c3e50;
-}
-
-#nav {
-	padding: 30px;
-
-	a {
-		font-weight: bold;
-		color: #2c3e50;
-
-		&.router-link-exact-active {
-			color: #42b983;
-		}
-	}
-}
-</style>
+<style lang="scss"></style>
