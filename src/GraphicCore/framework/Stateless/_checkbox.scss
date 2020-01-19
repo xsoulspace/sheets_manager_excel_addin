@@ -12,7 +12,7 @@
         height: 20px;
         transform: translateY(-50%);
 		color: colours.theme-color('accent', 'base');
-        background-color: colours.theme-color('primary', 'base');
+        background-color: colours.theme-color('foreground', 'base',0.1);
         border-radius: 4px;
         transition: 0.1s linear;
     }
@@ -20,15 +20,24 @@
         margin: 0 0 0 25px;
 
     }
+    &__svg{
+        fill: none;
+        stroke: colours.theme-color('accent', 'base');
+        stroke-width: 1px;
+    }
     &:hover{
         > .checkbox__input {
-            background-color: colours.theme-color('hoverground', 'base');
+            background-color: colours.theme-color('foreground', 'base',0.2);
         }
     }
 	&.--is-dark {
 		> .checkbox__input {
 			color: colours.theme-color('accent', 'dark');
-			background-color: colours.theme-color('primary', 'dark');
+			background-color: colours.theme-color('primary', 'dark',1);
+        }
+        > .checkbox__svg{
+            fill: none;
+            stroke: colours.theme-color('accent', 'dark');
         }
         &:hover{
             > .checkbox__input{

@@ -88,12 +88,14 @@
 				_colours.theme-color('secondary', 'base'),
 				right
 			);
+			cursor: pointer;
 		}
 		&-save {
 			@include action-button(
 				_colours.theme-color('foreground', 'base', 0.2),
 				left
 			);
+			cursor: pointer;
 		}
 		&-body {
 			padding: 0.2em;

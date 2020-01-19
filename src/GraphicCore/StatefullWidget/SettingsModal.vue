@@ -42,30 +42,18 @@
 						/>
 					</div>
 					<div class="form__field">
-						<label
-							class="checkbox"
-							:class="{ '--is-dark': isDarkTheme }"
-						>
-							<input
-								class="checkbox__input"
-								v-model="isTouchDevice"
-								type="checkbox"
-							/>
-							Адаптировать интерфейс под тач
-						</label>
+						<checkbox
+							:text="`Адаптировать интерфейс под тач`"
+							:value="isTouchDevice"
+							@click="changeIsTouchDevice"
+						/>
 					</div>
 					<div class="form__field">
-						<label
-							class="checkbox"
-							:class="{ '--is-dark': isDarkTheme }"
-						>
-							<input
-								class="checkbox__input"
-								type="checkbox"
-								v-model="isDarkTheme"
-							/>
-							Темная тема
-						</label>
+						<checkbox
+							:text="`Темная тема`"
+							:value="isDarkTheme"
+							@click="changeIsDarkTheme"
+						/>
 					</div>
 					<div class="form__field">
 						<button
@@ -100,7 +88,7 @@ import Checkbox from '@/GraphicCore/StatelessWidget/Checkbox.vue'
 export default class SettingsModal extends Vue {
 	_isTouchDevice: boolean = false
 	_isNumerated: boolean = false
-	public set isDarkTheme(value: boolean) {
+	public changeIsDarkTheme() {
 		const module = getModule(AppSettings, this.$store)
 		const oldValue = module.getIsDarkTheme
 		if (oldValue == true) {
@@ -113,24 +101,13 @@ export default class SettingsModal extends Vue {
 		const module = getModule(AppSettings, this.$store)
 		return module.getIsDarkTheme
 	}
-	set isTouchDevice(val: boolean) {
-		try {
-			this.$data._isTouchDevice = val
-		} catch (error) {
-			throw Log.error('', error)
-		}
+	changeIsTouchDevice() {
+		this.$data._isTouchDevice = !this.$data._isTouchDevice
 	}
 	get isTouchDevice() {
-		try {
-			return this.$data._isTouchDevice
-		} catch (error) {
-			throw Log.error('', error)
-		}
+		return this.$data._isTouchDevice
 	}
-	set isNumerated(val: boolean) {
-		this.$data._isNumerated = val
-	}
-	changeIsNumerated(){
+	changeIsNumerated() {
 		this.$data._isNumerated = !this.$data._isNumerated
 	}
 	get isNumerated() {
