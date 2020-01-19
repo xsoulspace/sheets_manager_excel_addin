@@ -1,13 +1,39 @@
-.checkbox{
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    &__input{
-        margin: 0 7px 0 0;
+@use '../Library/colours';
+.checkbox {
+    position: relative;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	&__input {
+        position: absolute;
+		top: 50%;
+        left: 0;
         width: 20px;
         height: 20px;
+        transform: translateY(-50%);
+		color: colours.theme-color('accent', 'base');
+        background-color: colours.theme-color('primary', 'base');
+        border-radius: 4px;
+        transition: 0.1s linear;
     }
-    &.--is-dark{
-        
+    &__label{
+        margin: 0 0 0 25px;
+
     }
+    &:hover{
+        > .checkbox__input {
+            background-color: colours.theme-color('hoverground', 'base');
+        }
+    }
+	&.--is-dark {
+		> .checkbox__input {
+			color: colours.theme-color('accent', 'dark');
+			background-color: colours.theme-color('primary', 'dark');
+        }
+        &:hover{
+            > .checkbox__input{
+                background-color: colours.theme-color('hoverground', 'base',0.5);
+            }
+        }
+	}
 }

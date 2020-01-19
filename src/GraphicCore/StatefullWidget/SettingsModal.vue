@@ -32,17 +32,14 @@
 			<section class="modal__card-body">
 				<div class="form">
 					<div class="form__field">
-						<label
-							class="checkbox"
-							:class="{ '--is-dark': isDarkTheme }"
-						>
-							<input
-								class="checkbox__input"
-								type="checkbox"
-								v-model="isNumerated"
-							/>
-							Группировка листов (все листы будут пронумерованы)
-						</label>
+						<checkbox
+							:text="
+								`Группировка листов (все листы будут
+								пронумерованы)`
+							"
+							:value="isNumerated"
+							@click="changeIsNumerated"
+						/>
 					</div>
 					<div class="form__field">
 						<label
@@ -89,7 +86,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Log } from '../../LogicCore/Debug/Log'
 import { getModule } from 'vuex-module-decorators'
 import AppSettings from '@/StorageCore/AppSettings'
-
+import Checkbox from '@/GraphicCore/StatelessWidget/Checkbox.vue'
 @Component({
 	props: {
 		isSettingsActive: {
@@ -98,7 +95,7 @@ import AppSettings from '@/StorageCore/AppSettings'
 			default: false,
 		},
 	},
-	components: {},
+	components: { Checkbox },
 })
 export default class SettingsModal extends Vue {
 	_isTouchDevice: boolean = false
@@ -132,6 +129,9 @@ export default class SettingsModal extends Vue {
 	}
 	set isNumerated(val: boolean) {
 		this.$data._isNumerated = val
+	}
+	changeIsNumerated(){
+		this.$data._isNumerated = !this.$data._isNumerated
 	}
 	get isNumerated() {
 		return this.$data._isNumerated
