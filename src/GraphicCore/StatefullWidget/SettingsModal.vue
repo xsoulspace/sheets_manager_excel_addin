@@ -1,15 +1,21 @@
 <template>
-	<div
-		:class="{ 'is-active': isSettingsActive }"
-		class="modal"
-	>
+	<div :class="{ 'is-active': isSettingsActive }" class="modal">
 		<div @click="turnOffSettings" class="modal-background"></div>
-		<div @click.stop class="modal__card" :class="{'--is-dark': isDarkTheme}">
+		<div
+			@click.stop
+			class="modal__card"
+			:class="{ '--is-dark': isDarkTheme }"
+		>
 			<header class="modal__card-head">
 				<p class="modal-card-title">Настройки</p>
 				<div class="modal__card-close">
 					<span class="icon" @click="turnOffSettings">
 						<i class="fas fa-times"></i>
+					</span>
+				</div>
+				<div class="modal__card-save">
+					<span class="icon" @click="turnOffSettings">
+						<i class="fas fa-save"></i>
 					</span>
 				</div>
 			</header>
@@ -32,14 +38,6 @@
 					</button>
 				</div>
 			</section>
-			<footer class="modal__card-foot">
-				<button @click="turnOffSettings" class="button is-success">
-					Применить
-				</button>
-				<button @click="turnOffSettings" class="button">
-					Отменить
-				</button>
-			</footer>
 		</div>
 	</div>
 </template>

@@ -8,11 +8,11 @@ $theme_colors: (
 		'dark': #2cc99a,
 	),
 	'accent': (
-		'base': #000000,
+		'base': #181818,
 		'dark': #c57623,
 	),
 	'secondary': (
-		'base': #5a1321,
+		'base': #d33554,
 		'dark': #51111e,
 	),
 	//borders
@@ -65,4 +65,8 @@ $theme_opacity: (
 }
 @mixin gradient($direction, $color-stops...) { 
 	background: linear-gradient($direction, $color-stops);
+}
+@mixin corner-radius(){
+	$corner-radius: 10px;
+	border-radius: $corner-radius;
 }

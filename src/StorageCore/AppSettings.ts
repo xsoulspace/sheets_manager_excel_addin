@@ -7,7 +7,7 @@ export default class AppSettings extends VuexModule {
 	themeName: SheetManager.AppSettingsThemeName = 'base'
 	get getIsDarkTheme() {
         // TODO: there is a problem with enum!
-		return false //this.themeName == SheetManager.enumAppSettingsThemeName['dark']
+		return true //this.themeName == SheetManager.enumAppSettingsThemeName['dark']
 	}
 	@Mutation
 	setTheme(themeName: SheetManager.AppSettingsThemeName) {

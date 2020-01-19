@@ -27,7 +27,7 @@
 	&__tab {
 		position: relative;
 		padding: 0.2em;
-
+		transition: 0.3s linear;
 		&:hover {
 			@include _colours.gradient(
 				to top,

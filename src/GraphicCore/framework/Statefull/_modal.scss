@@ -1,56 +1,85 @@
 @use '../Library/_colours.scss';
 
-.modal{
-    position: absolute;
-    z-index: 3;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background-color: _colours.theme-color('foreground','base',0.5);
-    
-    &__card{
-        margin-top: 8vh;
-        margin-left: 2vh;
-        margin-right: 2vh;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: stretch;
-        height: 84vh;
-        border-radius: 10px;
-        border-style: solid;
-        border-width: 1px;
-        border-color: _colours.theme-color('foreground','base',0.9);
-        background-color: _colours.theme-color('background','base');
-        color: _colours.theme-color('primary','base');
-        box-shadow: 0px -1px 15px 0px rgba(71,71,71,0.67);
-        &.--is-dark{
-            color: _colours.theme-color('primary','dark');
-            background-color: _colours.theme-color('background','dark');
-        }
-        &-head{
-            min-height: 2em;
-            border-bottom: 1px solid _colours.theme-color('foreground','base',0.5);
-        }
-        &-close{
-            position: absolute;
-            right: 1em;
-            top: 1em;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        &-body{
-            
-        }
-        &-foot{
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
-            justify-content: space-evenly;
-        }
-        
-    }
+@mixin action-button(
+	$color: _colours.theme-color('foreground', 'base'),
+	$position: left
+) {
+	position: absolute;
+	#{$position}: 0;
+	top: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 5em;
+	transform: translate(0%, -50%);
+	transition: 0.3s linear;
+	@include _colours.corner-radius;
+	@if ($position == left) {
+		border-bottom-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+	@if ($position == right) {
+		border-bottom-right-radius: 0;
+		border-top-left-radius: 0;
+	}
+	&:hover {
+		// color: #fff;
+		background-color: $color;
+	}
+}
+.modal {
+	position: absolute;
+	z-index: 5;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+    background-color: _colours.theme-color('foreground', 'base', 0.5);
+
+	&__card {
+		margin-top: 8vh;
+		margin-left: 2vh;
+		margin-right: 2vh;
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		height: 84vh;
+		@include _colours.corner-radius;
+		border-style: solid;
+		border-width: 1px;
+		border-color: _colours.theme-color('foreground', 'base', 0.9);
+		background-color: _colours.theme-color('background', 'base');
+		color: _colours.theme-color('primary', 'base');
+		box-shadow: 0px -1px 15px 0px rgba(71, 71, 71, 0.67);
+		&.--is-dark {
+			color: _colours.theme-color('primary', 'dark');
+			background-color: _colours.theme-color('background', 'dark');
+		}
+		&-head {
+			position: relative;
+			min-height: 2em;
+			border-bottom: 1px solid
+				_colours.theme-color('foreground', 'base', 0.5);
+		}
+		&-close {
+			@include action-button(
+				_colours.theme-color('secondary', 'base'),
+				right
+			);
+		}
+		&-save {
+			@include action-button(
+				_colours.theme-color('foreground', 'base', 0.2),
+				left
+			);
+		}
+		&-body {
+		}
+		&-foot {
+			margin-top: auto;
+			padding: 1em;
+		}
+	}
 }
