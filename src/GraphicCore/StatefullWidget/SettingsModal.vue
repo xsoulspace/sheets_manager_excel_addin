@@ -1,16 +1,19 @@
 <template>
-	<div :class="{ 'is-active': isSettingsActive }" class="modal">
+	<div
+		:class="{ 'is-active': isSettingsActive }"
+		class="modal"
+	>
 		<div @click="turnOffSettings" class="modal-background"></div>
-		<div @click.stop class="modal-card">
-			<header class="modal-card-head">
+		<div @click.stop class="modal__card" :class="{'--is-dark': isDarkTheme}">
+			<header class="modal__card-head">
 				<p class="modal-card-title">Настройки</p>
-				<button
-					@click="turnOffSettings"
-					class="delete"
-					aria-label="close"
-				></button>
+				<div class="modal__card-close">
+					<span class="icon" @click="turnOffSettings">
+						<i class="fas fa-times"></i>
+					</span>
+				</div>
 			</header>
-			<section class="modal-card-body">
+			<section class="modal__card-body">
 				<div class="field">
 					<label class="checkbox">
 						<input type="checkbox" v-model="isNumerated" />
@@ -29,7 +32,7 @@
 					</button>
 				</div>
 			</section>
-			<footer class="modal-card-foot">
+			<footer class="modal__card-foot">
 				<button @click="turnOffSettings" class="button is-success">
 					Применить
 				</button>
@@ -43,6 +46,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Log } from '../../LogicCore/Debug/Log'
+import { getModule } from 'vuex-module-decorators'
+import AppSettings from '@/StorageCore/AppSettings'
+
 @Component({
 	props: {
 		isSettingsActive: {
@@ -57,6 +63,10 @@ export default class SettingsModal extends Vue {
 	_isSettingsActive: boolean = false
 	_isTouchDevice: boolean = false
 	_isNumerated: boolean = false
+	public get isDarkTheme() {
+		const module = getModule(AppSettings, this.$store)
+		return module.getIsDarkTheme
+	}
 	set isTouchDevice(val: boolean) {
 		try {
 			this.$data._isTouchDevice = val
@@ -83,5 +93,4 @@ export default class SettingsModal extends Vue {
 	}
 	async clearNumeration() {}
 }
-
 </script>

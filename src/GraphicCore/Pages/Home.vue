@@ -29,8 +29,9 @@ import NavigationTabs from '@/GraphicCore/StatefullWidget/NavigationTabs.vue'
 
 import { Component, Vue } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
-import Sheets from '@/StorageCore/Sheets'
 import AppSettings from "@/StorageCore/AppSettings";
+
+import Sheets from '@/StorageCore/Sheets'
 @Component({
 	components: {
 		NavigationTabs,
