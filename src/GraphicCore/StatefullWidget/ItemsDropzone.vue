@@ -21,8 +21,14 @@ import { Log } from '../../LogicCore/Debug/Log'
 export default class ItemsDropzone extends Vue {
 	drop(e: any) {
 		const cardId = e.dataTransfer.getData('cardId')
-		const card = document.getElementById(cardId)
-		if (e.target.className == 'item__dropzone' || e.target.className == 'item__dropzone --is-child') {
+        const card = document.getElementById(cardId)
+        if(!card || !card.parentNode) return
+        console.log('card target',e.target.className)
+		if (e.target.className.includes('item__dropzone')) {
+			card.parentNode.removeChild(card)
+			e.target.appendChild(card)
+        }
+        if (e.target.className == 'item') {
 			card.parentNode.removeChild(card)
 			e.target.appendChild(card)
 		}
