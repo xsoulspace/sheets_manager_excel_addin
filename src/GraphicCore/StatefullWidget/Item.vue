@@ -46,9 +46,5 @@ export default class Item extends Vue {
 </script>
 
 <style lang='scss'>
-.item{
-  min-height: 20px;
-  min-width: 15px;
-  border: 1px solid;
-}
+
 </style>

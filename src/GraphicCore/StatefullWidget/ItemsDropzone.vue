@@ -34,15 +34,4 @@ export default class ItemsDropzone extends Vue {
 </script>
 
 <style lang="scss">
-.item__dropzone {
-	margin: 10px;
-	min-height: 200px;
-	min-width: 150px;
-	height: auto;
-	border: 1px solid;
-	&.--is-child {
-		height: auto;
-		min-height: 10px;
-	}
-}
 </style>

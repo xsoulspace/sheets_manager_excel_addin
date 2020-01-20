@@ -1,0 +1,19 @@
+.item{
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 20px;
+    min-width: 15px;
+    border: 1px solid;
+    &__dropzone{
+        margin: 10px;
+        min-height: 200px;
+        min-width: 150px;
+        height: auto;
+        border: 1px solid;
+        &.--is-child {
+            height: auto;
+            min-height: 10px;
+        }
+    }
+}

@@ -10,14 +10,18 @@
 			:isSettingsActive="isSettingsActive"
 			@turn-off-settings-state="changeSettingsState(false)"
 		/>
-		<ItemsDropzone id='dropzone1'>
-			<Item id='item1' draggable="true">
+		<ItemsDropzone id="dropzone1">
+			<Item id="item1" draggable="true">
 				<p>Card one</p>
 			</Item>
-		</ItemsDropzone>
-		<ItemsDropzone id='dropzone2'>
 			<Item id="item2" draggable="true">
 				<p>Card two</p>
+			</Item>
+			<Item id="item3" draggable="true">
+				<p>Card 3</p>
+			</Item>
+			<Item id="item4" draggable="true">
+				<p>Card 4</p>
 			</Item>
 		</ItemsDropzone>
 		<!-- <root-nested-items 
@@ -30,8 +34,8 @@
 // @ is an alias to /src
 import SettingsModal from '@/GraphicCore/StatefullWidget/SettingsModal.vue'
 import NavigationTabs from '@/GraphicCore/StatefullWidget/NavigationTabs.vue'
-import ItemsDropzone from "@/GraphicCore/StatefullWidget/ItemsDropzone.vue";
-import Item from "@/GraphicCore/StatefullWidget/Item.vue";
+import ItemsDropzone from '@/GraphicCore/StatefullWidget/ItemsDropzone.vue'
+import Item from '@/GraphicCore/StatefullWidget/Item.vue'
 import { Component, Vue } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import AppSettings from '@/StorageCore/AppSettings'
@@ -41,19 +45,20 @@ import Sheets from '@/StorageCore/Sheets'
 		NavigationTabs,
 		SettingsModal,
 		ItemsDropzone,
-		Item
+		Item,
 	},
 })
 export default class Home extends Vue {
 	isSettingsActive: boolean = false
 	people: any = ['woman', 'man', 'child']
 	options: any = {
-  dropzoneSelector: 'ul',
-  draggableSelector: 'li',
-  handlerSelector: null,
-  reactivityEnabled: true,
-  multipleDropzonesItemsDraggingEnabled: true,
-  showDropzoneAreas: true,}
+		dropzoneSelector: 'ul',
+		draggableSelector: 'li',
+		handlerSelector: null,
+		reactivityEnabled: true,
+		multipleDropzonesItemsDraggingEnabled: true,
+		showDropzoneAreas: true,
+	}
 	public get elements(): SheetElementsInterface.EMap {
 		const sheetsModule = getModule(Sheets, this.$store)
 		return sheetsModule.getSheets
