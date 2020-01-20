@@ -15,9 +15,7 @@
     "bulma": "^0.8.0",
     "core-js": "^3.6.1",
     "hex-to-rgba": "^2.0.1",
-    "mobile-drag-drop": "^2.3.0-rc.2",
     "register-service-worker": "^1.6.2",
-    "vddl": "^0.7.1",
     "vue": "^2.6.11",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.3.0",
@@ -29,6 +27,7 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.25",
+    "@types/sortablejs": "^1.10.2",
     "@vue/cli-plugin-babel": "^4.1.2",
     "@vue/cli-plugin-pwa": "^4.1.2",
     "@vue/cli-plugin-router": "^4.1.2",
