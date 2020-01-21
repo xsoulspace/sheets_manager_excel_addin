@@ -1,14 +1,18 @@
 import { checkAndTry } from './CheckPositionAndTryNew'
-export const getKeysAndSort = (
-	oldMap: SheetElementsInterface.EMap
-): SheetElementsInterface.EMap => {
-	const tempMap: SheetElementsInterface.EMap = new Map()
+const sortKeys = (oldMap: SheetElementsInterface.EMap)=>{
 	const oldKeys = [...oldMap.keys()]
 	const keys: SheetElementsInterface.SheetElement['id'][] = oldKeys.sort(
 		(a, b) => {
 			return Number(a) - Number(b)
 		}
 	)
+	return keys
+}
+export const getKeysAndSort = (
+	oldMap: SheetElementsInterface.EMap
+): SheetElementsInterface.EMap => {
+	const tempMap: SheetElementsInterface.EMap = new Map()
+	const keys: SheetElementsInterface.SheetElement['id'][] =sortKeys(oldMap)
 	for (let [i, key] of Object.entries(keys)) {
 		const element:
 			| SheetElementsInterface.SheetElement
@@ -22,12 +26,13 @@ export const getKeysAndSort = (
 	return tempMap
 }
 
+
+
 export const getPositionsAndSortEMap = ({
 	oldMap,
 	requereToCorrectType,
 	typeOfName,
-}: SheetElementsInterface.getPositionsAndSortEMapOptions
-): SheetElementsInterface.EMap => {
+}: SheetElementsInterface.getPositionsAndSortEMapOptions): SheetElementsInterface.EMap => {
 	let tempMap = new Map()
 	for (let [key, sheet] of oldMap.entries()) {
 		if (requereToCorrectType) sheet.typeOfName = typeOfName
@@ -53,4 +58,13 @@ export const getPositionsAndSortEMap = ({
 		}
 	}
 	return tempMap
+}
+export const getSortedArray = (emap: SheetElementsInterface.EMap) => {
+	let arr: SheetElementsInterface.SheetElement[] = []
+	const keys = sortKeys(emap)
+	for(let key of keys){
+		const el = emap.get(key)
+		if(el) arr.push(el)
+	}
+	return arr
 }

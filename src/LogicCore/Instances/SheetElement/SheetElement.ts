@@ -66,7 +66,9 @@ export class SheetElement extends Basic
       throw this.log.error("name set", error);
     }
   }
-
+  public get isInFirstLine(): boolean{
+    return this.positions.second == 0
+  }
   // #endregion Public Accessors (2)
 
   // #region Private Accessors (4)

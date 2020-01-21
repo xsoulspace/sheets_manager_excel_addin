@@ -1,12 +1,13 @@
 import { Basic } from './Basic'
-import { checkAndTry } from '@/LogicCore/Instances/SheetElementFunctions/CheckPositionAndTryNew'
-import { getKeysAndSort, getPositionsAndSortEMap } from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'
+import { getKeysAndSort,getSortedArray, getPositionsAndSortEMap } from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'
 export class SheetElementsMap extends Basic
 	implements SheetElementsInterface.SheetElementsMap {
 	// #region Properties (2)
 
 	private _map: SheetElementsInterface.EMap = new Map()
-	public arrElements: SheetElementsInterface.EArr = []
+	public get arrElements(): SheetElementsInterface.EArr{
+		return getSortedArray(this._map)
+	}
 	public maintainerStatuses = {
 		areSheetsHaveNumeration: false,
 		isNumerationBroken: false,
