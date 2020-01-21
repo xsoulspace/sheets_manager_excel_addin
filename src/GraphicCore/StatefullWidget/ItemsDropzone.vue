@@ -23,15 +23,10 @@ export default class ItemsDropzone extends Vue {
 		const cardId = e.dataTransfer.getData('cardId')
         const card = document.getElementById(cardId)
         if(!card || !card.parentNode) return
-        console.log('card target',e.target.className)
 		if (e.target.className.includes('item__dropzone')) {
 			card.parentNode.removeChild(card)
 			e.target.appendChild(card)
         }
-        if (e.target.className == 'item') {
-			card.parentNode.removeChild(card)
-			e.target.appendChild(card)
-		}
     }
     get isIChild(){
         return this.$props.isChild ? true : false

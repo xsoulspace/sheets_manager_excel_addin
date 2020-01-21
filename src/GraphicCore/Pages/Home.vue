@@ -12,16 +12,16 @@
 		/>
 		<ItemsDropzone id="dropzone1">
 			<Item id="item1" draggable="true">
-				<p>Card one</p>
+				<p class="item__label">Card one</p>
 			</Item>
 			<Item id="item2" draggable="true">
-				<p>Card two</p>
+				<p class="item__label">Card two</p>
 			</Item>
 			<Item id="item3" draggable="true">
-				<p>Card 3</p>
+				<p class="item__label">Card 3</p>
 			</Item>
 			<Item id="item4" draggable="true">
-				<p>Card 4</p>
+				<p class="item__label">Card 4</p>
 			</Item>
 		</ItemsDropzone>
 		<!-- <root-nested-items 

@@ -41,17 +41,19 @@ export default class Item extends Vue {
 		const cardId = e.dataTransfer.getData('cardId')
 		const card = document.getElementById(cardId)
 		if (!card || !card.parentNode) return
+
+		if(card.id == e.target.id) return
+		let c: number = 0
 		const checkAndPush = (el: any) => {
 			if (el.className == 'item') {
-        card.parentNode!.removeChild(card)
-        console.log(el.className)
-        const elParent = el.parentNode
-				elParent.insertBefore(card,el)
+				card.parentNode!.removeChild(card)
+				el.parentNode.insertBefore(card,el)
 			} else {
-        checkAndPush(el.parentNode)
-      }
-    }
-    checkAndPush(e.target)
+				c++
+				checkAndPush(el.parentNode)
+			}
+		}
+		checkAndPush(e.target)
 	}
 }
 </script>
