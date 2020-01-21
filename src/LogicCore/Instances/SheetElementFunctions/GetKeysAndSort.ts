@@ -1,4 +1,5 @@
 import { checkAndTry } from './CheckPositionAndTryNew'
+import { Log } from '@/LogicCore/Debug/Log'
 const sortKeys = (oldMap: SheetElementsInterface.EMap)=>{
 	const oldKeys = [...oldMap.keys()]
 	const keys: SheetElementsInterface.SheetElement['id'][] = oldKeys.sort(
@@ -33,31 +34,37 @@ export const getPositionsAndSortEMap = ({
 	requereToCorrectType,
 	typeOfName,
 }: SheetElementsInterface.getPositionsAndSortEMapOptions): SheetElementsInterface.EMap => {
-	let tempMap = new Map()
-	for (let [key, sheet] of oldMap.entries()) {
-		if (requereToCorrectType) sheet.typeOfName = typeOfName
-		if (sheet.positions.second > 0) {
-			let max: number = sheet.elements.size == 0 ? 1 : sheet.elements.size
-			const el = tempMap.get(String(sheet.positions.second))
-			const newElement = el
-				? el
-				: ({} as SheetElementsInterface.SheetElement)
-			const pos = checkAndTry(
-				sheet.positions.second,
-				newElement.elements,
-				max
-			)
-			sheet.positions.second = pos
-			newElement.elements.set(String(sheet.positions.second), sheet)
-			tempMap.set(String(newElement.positions.first), newElement)
-		} else {
-			let max: number = tempMap.size
-			const pos = checkAndTry(sheet.positions.first, tempMap, max)
-			sheet.positions.first = pos
-			tempMap.set(String(sheet.positions.first), sheet)
+	try {
+		// TODO: method is not working
+		let tempMap = new Map()
+		for (let [key, sheet] of oldMap.entries()) {
+			if (requereToCorrectType) sheet.typeOfName = typeOfName
+			if (sheet.positions.second > 0) {
+				let max: number = sheet.elements.size == 0 ? 1 : sheet.elements.size
+				const el = tempMap.get(String(sheet.positions.second))
+				const newElement = el
+					? el
+					: ({} as SheetElementsInterface.SheetElement)
+				const pos = checkAndTry(
+					sheet.positions.second,
+					newElement.elements,
+					max
+				)
+				sheet.positions.second = pos
+				newElement.elements.set(String(sheet.positions.second), sheet)
+				tempMap.set(String(newElement.positions.first), newElement)
+			} else {
+				let max: number = tempMap.size
+				const pos = checkAndTry(sheet.positions.first, tempMap, max)
+				sheet.positions.first = pos
+				tempMap.set(String(sheet.positions.first), sheet)
+			}
 		}
+		return tempMap
+	} catch (error) {
+		throw Log.error('getPositionsAndSortEMap',error)
 	}
-	return tempMap
+
 }
 export const getSortedArray = (emap: SheetElementsInterface.EMap) => {
 	let arr: SheetElementsInterface.SheetElement[] = []

@@ -11,7 +11,7 @@ export class SheetElementsMap extends Basic
 	public maintainerStatuses = {
 		areSheetsHaveNumeration: false,
 		isNumerationBroken: false,
-		shouldWeRestoreNumeration: false,
+		shouldWeRestoreNumeration: true,
 	}
 
 	// #endregion Properties (2)
@@ -63,11 +63,11 @@ export class SheetElementsMap extends Basic
 	): Promise<void> {
 		try {
 			/** firstly we conevert all sheets to elements map */
-			// console.log('simple sheet loading starts', this._map)
+			// console.log('simple sheet loading starts', excelSheets)
 			await this._simpleSheetsLoading(excelSheets)
 			// console.log('sheet numeration maint starts', this._map)
 			await this._sheetsNumerationMaintainer()
-			// console.log('sheet numeration maint ends', this._map)
+			console.log('sheet numeration maint ends', this._map)
 			const {
 				areSheetsHaveNumeration,
 				isNumerationBroken,
@@ -78,6 +78,7 @@ export class SheetElementsMap extends Basic
 				await this.sheetsNumerationRepairer()
 			} else if (areSheetsHaveNumeration && isNumerationBroken) {
 				/** we need to show ui messgae to user do we need to restore  */
+				await this.sheetsNumerationRepairer()
 			} else {
 				// console.log('numeration is exists and not broken')
 				/** we will reorder all sheets accordingly to type */
@@ -97,7 +98,7 @@ export class SheetElementsMap extends Basic
 			if (this.maintainerStatuses.shouldWeRestoreNumeration) {
 				/** switch global type to numeration */
 				this.typeOfName = '_encodedName'
-				/** TODO:call some method to reorder sheets */
+				/** call method to reorder sheets */
 				await this.reorderSheets({ requereToCorrectType: true })
 			}
 		} catch (error) {
@@ -196,9 +197,13 @@ export class SheetElementsMap extends Basic
 			this.maintainerStatuses.areSheetsHaveNumeration = ((): boolean => {
 				let hasNumeration: boolean = false
 				for (let sheet of this._map.values()) {
-					if (!hasNumeration) {
+					if (hasNumeration === false) {
 						hasNumeration = sheet._doesNameIncludesNumerationPattern()
+						console.log('sheet',hasNumeration)
+
 					} else if (hasNumeration) {
+						console.log('hasNumeration',hasNumeration)
+
 						/** if one sheet will have numeration,
 						 * then every sheet after it will be checked
 						 * for borken numeration condition
@@ -209,6 +214,7 @@ export class SheetElementsMap extends Basic
 						}
 					}
 				}
+				console.log(hasNumeration)
 				return hasNumeration
 			})()
 		} catch (error) {
@@ -217,23 +223,21 @@ export class SheetElementsMap extends Basic
 	}
 
 	private async _simpleSheetsLoading(
-		excelSheets: SheetElementsInterface.sheetsSource
+		sheets: SheetElementsInterface.sheetsSource
 	): Promise<void> {
 		try {
 			const { SheetElement } = await import('./SheetElement')
 			let allElements: SheetElementsInterface.EMap = new Map()
-			for (const [index, excelSheet] of Object.entries(excelSheets)) {
-				const positions: SheetElementsInterface.Positions = {
-					first: Number(index),
-					second: 0,
-				}
+			for (let [index, sheet] of Object.entries(sheets)) {
+				const {first,second} = ('positions' in sheet) ? sheet.positions : {first: Number(index), second: 0}  
 				const options: SheetElementsInterface.SheetElementConstructor = {
-					color: excelSheet.tabColor,
-					name: excelSheet.name,
+					color: sheet.tabColor,
+					name: sheet.name,
 					typeOfName: this.typeOfName,
-					positions,
-					id: excelSheet.id,
-					visibility: excelSheet.visibility,
+					first: first,
+					second: second,
+					id: sheet.id,
+					visibility: sheet.visibility,
 					delimiter: this.delimiter,
 					elements: undefined,
 					_classTitle: undefined,

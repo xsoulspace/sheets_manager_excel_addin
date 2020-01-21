@@ -27,7 +27,7 @@ export class SheetElement extends Basic
     visibility,
     color,
     typeOfName,
-    positions,
+    first,second,
     delimiter,
     elements,
     _classTitle
@@ -38,7 +38,7 @@ export class SheetElement extends Basic
       _classTitle: _classTitle ? _classTitle : "SheetElement"
     });
     this._excelSheetName = name;
-    this.positions = positions;
+    this.positions = {first,second};
     this.elements = elements ? elements : new Map();
     this.id = id;
     this.name = name;

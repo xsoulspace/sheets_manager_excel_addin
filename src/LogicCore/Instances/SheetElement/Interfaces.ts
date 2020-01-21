@@ -1,10 +1,6 @@
 /// <reference path="../index.d.ts"/>
 
 namespace SheetElementsInterface {
-	export interface Positions {
-		first: number
-		second: number
-	}
 	export type outsideApp = 'browser' | 'excelDesktop'
 	export type sheetsSource = Excel.Worksheet[] | any[]
 	export type ClassTitle = 'Basic' | 'SheetElement' | 'SheetElementsMap'
@@ -13,6 +9,10 @@ namespace SheetElementsInterface {
 		typeOfName: NameType
 		log: LogInterface
 		delimiter: string
+	}
+	export interface Positions{
+		first: number
+		second: number
 	}
 	export interface BasicConstructor {
 		_classTitle: ClassTitle | undefined
@@ -41,7 +41,8 @@ namespace SheetElementsInterface {
 		visibility: SheetVisibility
 		color: string
 		elements: EMap | undefined
-		positions: Positions
+		first: number
+		second: number
 	}
 	export interface EMap extends Map<SheetElement['id'], SheetElement> {}
 	export interface EArr extends Array<SheetElement> {}
