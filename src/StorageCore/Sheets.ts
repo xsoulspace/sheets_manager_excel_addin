@@ -18,7 +18,7 @@ export default class Sheets extends VuexModule {
 	appContext: Excel.RequestContext | undefined = undefined
 
 	get getSheets() {
-		return this.elementsMap.eMap
+		return [...this.elementsMap.eMap.values()]
 	}
 
 	/** function to assign updated elements to state */
@@ -86,8 +86,8 @@ export default class Sheets extends VuexModule {
 				default:
 					throw Error('source is not defined')
 			}
-			console.log(sheets)
 			await elementsMap.firstOpenScenarioCreateSheetElements(sheets)
+			console.log('ini sheets',sheets)
 			this.initializeStoreMutation(elementsMap)
 		} catch (error) {
 			throw Log.error('initializeStore', error)

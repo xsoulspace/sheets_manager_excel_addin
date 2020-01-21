@@ -10,18 +10,9 @@
 			:isSettingsActive="isSettingsActive"
 			@turn-off-settings-state="changeSettingsState(false)"
 		/>
-		<ItemsDropzone id="dropzone1">
-			<Item id="item1" draggable="true">
-				<p class="item__label">Card one</p>
-			</Item>
-			<Item id="item2" draggable="true">
-				<p class="item__label">Card two</p>
-			</Item>
-			<Item id="item3" draggable="true">
-				<p class="item__label">Card 3</p>
-			</Item>
-			<Item id="item4" draggable="true">
-				<p class="item__label">Card 4</p>
+		<ItemsDropzone id="dropzone1" >
+			<Item  draggable="true" v-for="(el) in elements" :key="el.id">
+				<p class="item__label">{{el.name}}</p>
 			</Item>
 		</ItemsDropzone>
 		<!-- <root-nested-items 
@@ -50,16 +41,7 @@ import Sheets from '@/StorageCore/Sheets'
 })
 export default class Home extends Vue {
 	isSettingsActive: boolean = false
-	people: any = ['woman', 'man', 'child']
-	options: any = {
-		dropzoneSelector: 'ul',
-		draggableSelector: 'li',
-		handlerSelector: null,
-		reactivityEnabled: true,
-		multipleDropzonesItemsDraggingEnabled: true,
-		showDropzoneAreas: true,
-	}
-	public get elements(): SheetElementsInterface.EMap {
+	public get elements(): SheetElementsInterface.EArr{
 		const sheetsModule = getModule(Sheets, this.$store)
 		return sheetsModule.getSheets
 	}

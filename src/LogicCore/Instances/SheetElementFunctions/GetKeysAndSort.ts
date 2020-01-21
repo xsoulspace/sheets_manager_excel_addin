@@ -2,9 +2,9 @@ export const getKeysAndSort = (
   oldMap: SheetElementsInterface.EMap
 ): SheetElementsInterface.EMap => {
   const tempMap: SheetElementsInterface.EMap = new Map();
-  const keys: SheetElementsInterface.SheetElement["id"][] = Object.values(
-    oldMap.keys()
-  ).sort((a, b) => {
+  const oldKeys = [...oldMap.keys()]
+  const keys: SheetElementsInterface.SheetElement["id"][] = 
+    (oldKeys).sort((a, b) => {
     return Number(a) - Number(b);
   });
   for (let [i, key] of Object.entries(keys)) {
@@ -14,7 +14,7 @@ export const getKeysAndSort = (
     if (element) {
       const elementMap = element.elements;
       element.elements = getKeysAndSort(elementMap);
-      tempMap.set(i, element);
+      tempMap.set(key, element);
     }
   }
   return tempMap;

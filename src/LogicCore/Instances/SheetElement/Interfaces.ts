@@ -43,6 +43,8 @@ namespace SheetElementsInterface {
     positions: Positions;
   }
   export interface EMap extends Map<SheetElement["id"], SheetElement> {}
+  export interface EArr extends Array<SheetElement> {}
+
   export interface SheetElementsMap extends Basic {
     maintainerStatuses: {
       areSheetsHaveNumeration: boolean;

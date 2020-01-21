@@ -30,67 +30,59 @@
 				</div>
 			</div>
 		</div>
-		<transition name="fade">
-			<div class="tabs__tab" @click="turnOnInfo">
-				<div
-					class="button --has-accent"
-					:class="{
-						'--is-dark': isDarkTheme,
-					}"
-				>
-					<span class="icon__refresh">
-						<i class="fa fa-refresh"></i>
-					</span>
-				</div>
+		<div class="tabs__tab" @click="turnOnInfo">
+			<div
+				class="button --has-accent"
+				:class="{
+					'--is-dark': isDarkTheme,
+				}"
+			>
+				<span class="icon__refresh">
+					<i class="fa fa-refresh"></i>
+				</span>
 			</div>
-		</transition>
-		<transition name="fade">
-			<div class="tabs__tab" @click="turnOnSettings">
-				<div
-					class="button --has-accent"
-					:class="{
-						'--is-dark': isDarkTheme,
-					}"
-				>
-					<span class="icon">
-						<i class="fas fa-sliders-h"></i>
-					</span>
-				</div>
+		</div>
+		<div class="tabs__tab" @click="turnOnSettings">
+			<div
+				class="button --has-accent"
+				:class="{
+					'--is-dark': isDarkTheme,
+				}"
+			>
+				<span class="icon">
+					<i class="fas fa-sliders-h"></i>
+				</span>
 			</div>
-		</transition>
-		<transition name="fade">
-			<div class="tabs__tab" @click="turnOnTutorial">
-				<div
-					class="button --has-accent"
-					:class="{
-						'--is-dark': isDarkTheme,
-					}"
-				>
-					<span class="icon">
-						<i class="fas fa-question"></i>
-					</span>
-				</div>
+		</div>
+		<div class="tabs__tab" @click="turnOnTutorial">
+			<div
+				class="button --has-accent"
+				:class="{
+					'--is-dark': isDarkTheme,
+				}"
+			>
+				<span class="icon">
+					<i class="fas fa-question"></i>
+				</span>
 			</div>
-		</transition>
-		<transition name="fade">
-			<div class="tabs__tab" @click="turnOnInfo">
-				<div
-					class="button --has-accent"
-					:class="{
-						'--is-dark': isDarkTheme,
-					}"
-				>
-					<span class="icon">
-						<i class="fas fa-info"></i>
-					</span>
-				</div>
+		</div>
+		<div class="tabs__tab" @click="turnOnInfo">
+			<div
+				class="button --has-accent"
+				:class="{
+					'--is-dark': isDarkTheme,
+				}"
+			>
+				<span class="icon">
+					<i class="fas fa-info"></i>
+				</span>
 			</div>
-		</transition>
+		</div>
 	</div>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import AppSettings from "@/StorageCore/AppSettings";
+import AppSettings from '@/StorageCore/AppSettings'
 import { getModule } from 'vuex-module-decorators'
 
 @Component({
@@ -98,8 +90,8 @@ import { getModule } from 'vuex-module-decorators'
 	components: {},
 })
 export default class NavigationTabs extends Vue {
-	public get isDarkTheme(){
-		const module = getModule(AppSettings,this.$store)
+	public get isDarkTheme() {
+		const module = getModule(AppSettings, this.$store)
 		return module.getIsDarkTheme
 	}
 	isSearchActive: boolean = false
