@@ -19,7 +19,14 @@ const getMockSheets = async function(): Promise<SheetElementsInterface.sheetsSou
 
 	const element = new SheetElement(options)
 	const copyObject = new SheetElement(options)
+	const copyObject1 = new SheetElement(options)
+	const copyObject2 = new SheetElement(options)
 	copyObject.id = 'testing2'
-	return [element,copyObject]
+	copyObject1.id = 'testing3'
+	copyObject1.positions.first=2
+	copyObject2.id = 'testing4'
+	copyObject2.positions.first = 1
+	copyObject2.positions.second = 2
+	return [element,copyObject, copyObject1, copyObject2]
 }
 export default getMockSheets

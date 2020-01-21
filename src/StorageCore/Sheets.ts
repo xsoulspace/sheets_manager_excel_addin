@@ -18,7 +18,7 @@ export default class Sheets extends VuexModule {
 	appContext: Excel.RequestContext | undefined = undefined
 
 	get getSheets() {
-		return [...this.elementsMap.eMap.values()]
+		return this.elementsMap.arrElements
 	}
 
 	/** function to assign updated elements to state */

@@ -56,6 +56,7 @@ namespace SheetElementsInterface {
 			isNumerationBroken: boolean
 			shouldWeRestoreNumeration: boolean
 		}
+		arrElements: EArr
 		firstOpenScenarioCreateSheetElements(
 			excelSheets: sheetsSource
 		): Promise<void>
