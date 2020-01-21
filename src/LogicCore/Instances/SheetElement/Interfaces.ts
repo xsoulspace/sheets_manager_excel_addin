@@ -44,7 +44,11 @@ namespace SheetElementsInterface {
   }
   export interface EMap extends Map<SheetElement["id"], SheetElement> {}
   export interface EArr extends Array<SheetElement> {}
-
+  export interface getPositionsAndSortEMapOptions {
+    oldMap: SheetElementsInterface.EMap
+    requereToCorrectType: boolean
+    typeOfName: SheetElementsInterface.NameType
+  }
   export interface SheetElementsMap extends Basic {
     maintainerStatuses: {
       areSheetsHaveNumeration: boolean;

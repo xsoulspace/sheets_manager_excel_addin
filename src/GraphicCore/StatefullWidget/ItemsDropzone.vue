@@ -16,23 +16,23 @@ import { Log } from '../../LogicCore/Debug/Log'
 // TODO: study it
 //https://developer.mozilla.org/en-US/docs/Web/API/DragEvent
 @Component({
-	props: ['id','isChild'],
+	props: ['id', 'isChild'],
 })
 export default class ItemsDropzone extends Vue {
 	drop(e: any) {
+		console.log('drop dropzone',e)
 		const cardId = e.dataTransfer.getData('cardId')
-        const card = document.getElementById(cardId)
-        if(!card || !card.parentNode) return
+		const card = document.getElementById(cardId)
+		if (!card || !card.parentNode) return
 		if (e.target.className.includes('item__dropzone')) {
 			card.parentNode.removeChild(card)
 			e.target.appendChild(card)
-        }
-    }
-    get isIChild(){
-        return this.$props.isChild ? true : false
-    }
+		}
+	}
+	get isIChild() {
+		return this.$props.isChild ? true : false
+	}
 }
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

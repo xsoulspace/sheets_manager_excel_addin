@@ -1,12 +1,12 @@
 import { Basic } from './Basic'
 import { checkAndTry } from '@/LogicCore/Instances/SheetElementFunctions/CheckPositionAndTryNew'
-import { getKeysAndSort } from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'
+import { getKeysAndSort, getPositionsAndSortEMap } from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'
 export class SheetElementsMap extends Basic
 	implements SheetElementsInterface.SheetElementsMap {
 	// #region Properties (2)
 
 	private _map: SheetElementsInterface.EMap = new Map()
-
+	public arrElements: SheetElementsInterface.EArr = []
 	public maintainerStatuses = {
 		areSheetsHaveNumeration: false,
 		isNumerationBroken: false,
@@ -116,48 +116,12 @@ export class SheetElementsMap extends Basic
 			switch (this.typeOfName) {
 				case '_encodedName':
 					/** numeration loading */
-					const tempMap: SheetElementsInterface.EMap = new Map()
-					for (let sheet of this._map.values()) {
-						if (requereToCorrectType)
-							sheet.typeOfName = this.typeOfName
-						// const el = {} as SheetElementsInterface.SheetElement;
-						/** chec if elements exists */
-						if (sheet.positions.second > 0) {
-							let max: number =
-								sheet.elements.size == 0
-									? 1
-									: sheet.elements.size
-							const el = tempMap.get(
-								String(sheet.positions.second)
-							)
-							const newElement = el
-								? el
-								: ({} as SheetElementsInterface.SheetElement)
-							const pos = checkAndTry(
-								sheet.positions.second,
-								newElement.elements,
-								max
-							)
-							sheet.positions.second = pos
-							newElement.elements.set(
-								String(sheet.positions.second),
-								sheet
-							)
-							tempMap.set(
-								String(newElement.positions.first),
-								newElement
-							)
-						} else {
-							let max: number = tempMap.size
-							const pos = checkAndTry(
-								sheet.positions.first,
-								tempMap,
-								max
-							)
-							sheet.positions.first = pos
-							tempMap.set(String(sheet.positions.first), sheet)
-						}
+					const options: SheetElementsInterface.getPositionsAndSortEMapOptions={
+						requereToCorrectType,
+						oldMap: this._map,
+						typeOfName: this.typeOfName
 					}
+					const tempMap: SheetElementsInterface.EMap = await getPositionsAndSortEMap(options)
 					/** resort elements */
 					await this.writeSheets(getKeysAndSort(tempMap))
 					break;
@@ -166,7 +130,7 @@ export class SheetElementsMap extends Basic
 					// console.log('reorder simple loading starts', this._map)
 					await this.correctDoubles()
 					// console.log('reorder correct doubles ends', this._map)
-					await this.writeSheets(getKeysAndSort(this._map))
+					await this.writeSheets(this._map)
 					// console.log('write sheets ends', this._map)
 
 				}
