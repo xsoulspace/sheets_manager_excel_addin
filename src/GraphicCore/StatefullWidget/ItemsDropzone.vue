@@ -4,7 +4,7 @@
 		class="item__dropzone"
 		@dragover.prevent
 		@drop.prevent="drop"
-		:class="{ '--is-child': isIChild }"
+		:class="{ '--is-child': isIChild, '--has-children':hasItems}"
 	>
 		<ItemChild
 			draggable="true"
@@ -43,6 +43,9 @@ export default class ItemsDropzone extends Vue {
 	}
 	get items() {
 		return this.$props.children ? [...this.$props.children.values()] : []
+	}
+	get hasItems(){
+		return this.items.length > 0
 	}
 }
 </script>

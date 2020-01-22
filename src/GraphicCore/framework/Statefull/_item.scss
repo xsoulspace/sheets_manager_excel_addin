@@ -4,20 +4,69 @@
     flex-direction: row;
     align-items: stretch;
     justify-content: space-between;
-    min-height: 20px;
+    flex-wrap: nowrap;
+    min-height: 1.5em;
     min-width: 15px;
-    border: 1px solid;
-    background-color: colours.theme-color('foreground','base');
+    padding-left: 10px;
+    border-radius: 0.4em;
+    box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 0 rgba(10,10,10,.1);
+    border: 1px solid colours.theme-color('foreground','base',0.1);
+    transition: 0.3s;
+    &.--is-dark{
+        background-color: lighten(colours.theme-color('background','dark'),5);
+        border: 1px solid colours.theme-color('foreground','dark',0.3);
+        > .item__dropzone{
+            &.--is-child{
+                border-color: colours.theme-color('foreground','dark',0.3);
+                border-style: solid;
+                background-color: colours.theme-color('background','dark') ;
+                &.--has-children{
+                    border: 0;
+                }
+            }
+        } 
+    }
+    + .item{
+        margin-top: 0.1em;
+        margin-bottom: 0.1em;
+    }
     &__dropzone{
+        transition: 0.3s;
         margin: 10px;
-        min-height: 200px;
-        min-width: 150px;
+        min-height: 20px;
+        min-width: 5em;
         height: auto;
-        border: 1px solid;
+        border-bottom-right-radius: inherit;
+        border-top-right-radius: inherit;
         &.--is-child {
-            margin: 4px;
+            border-width: 0 1px 0 1px;
+            border-style: dashed;
+            border-color: colours.theme-color('foreground','base',0.3);
+            margin: 0 0 0 10px;
             height: auto;
             min-height: 10px;
         }
+        &__debug{
+            margin: 10px;
+            min-height: 200px;
+            min-width: 150px;
+            height: auto;
+            border: 1px solid;
+            &.--is-child {
+                margin: 4px;
+                height: auto;
+                min-height: 10px;
+            }
+        }
+    }
+    &__debug{
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: space-between;
+        min-height: 20px;
+        min-width: 15px;
+        border: 1px solid;
+        background-color: colours.theme-color('foreground','base');
     }
 }

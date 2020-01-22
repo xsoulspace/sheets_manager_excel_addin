@@ -8,6 +8,7 @@
 		@dragover.stop
 		@dragover.prevent
 		@drop.prevent="drop"
+		:class="{'--is-dark':isDarkTheme}"
 	>
 		<p class="item__label">{{name}}</p>
 		<ItemDropzone :children='elements' id="dropzoneId" :is-child="true" />
@@ -19,6 +20,7 @@ import { getModule } from 'vuex-module-decorators'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Log } from '@/LogicCore/Debug/Log'
 import Sheets from '@/StorageCore/Sheets'
+import AppSettings from '@/StorageCore/AppSettings'
 
 @Component({
 	props: ['id', 'draggable', 'el'],
@@ -28,6 +30,10 @@ import Sheets from '@/StorageCore/Sheets'
 	},
 })
 export default class Item extends Vue {
+	public get isDarkTheme() {
+		const module = getModule(AppSettings, this.$store)
+		return module.getIsDarkTheme
+	}
 	dragstart(e: any) {
 		console.log('dragstart')
 		const target = e.target
@@ -62,7 +68,7 @@ export default class Item extends Vue {
 		const checkAndPush = (el: any) => {
 			const parentNode = el.parentElement
 			if(parentNode === null) return
-			if (el.className == 'item') {
+			if (el.className == 'item' || el.className == 'item --is-dark') {
 				card.parentNode!.removeChild(card)
 				/** count all elements and find el*/
 				const children: any[] = [...parentNode.children]
