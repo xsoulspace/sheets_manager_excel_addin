@@ -12,9 +12,7 @@
 			:key="el.id"
 			:id="el.id"
 			:el='el'
-		>
-			<p class="item__label">{{ el.name }}</p>
-		</ItemChild>
+		/>
 	</div>
 </template>
 
@@ -32,7 +30,7 @@ import { Log } from '@/LogicCore/Debug/Log'
 export default class ItemsDropzone extends Vue {
 	drop(e: any) {
 		console.log('drop dropzone', e)
-		const cardId = e.dataTransfer.getData('cardId')
+		const {cardId, elId} = JSON.parse(e.dataTransfer.getData('cardId'))
 		const card = document.getElementById(cardId)
 		if (!card || !card.parentNode) return
 		if (e.target.className.includes('item__dropzone')) {

@@ -9,8 +9,8 @@
 		@dragover.prevent
 		@drop.prevent="drop"
 	>
-		<p>{{name}}</p>
-		<ItemDropzone :children='elements' id="dropzoneIdchild" :is-child="true" />
+		<p class="item__label">{{name}}</p>
+		<ItemDropzone :children='elements' id="dropzoneId" :is-child="true" />
 	</div>
 </template>
 
