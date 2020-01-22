@@ -17,21 +17,21 @@
 <script lang="ts">
 import { getModule } from 'vuex-module-decorators'
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { Log } from '../../LogicCore/Debug/Log'
+import { Log } from '@/LogicCore/Debug/Log'
 import Sheets from '@/StorageCore/Sheets'
 
 @Component({
 	props: ['id', 'draggable', 'el'],
 	components: {
 		ItemDropzone: () =>
-			import('@/GraphicCore/StatefullWidget/ItemsDropzoneChild.vue'),
+			import('@/GraphicCore/StatefullWidget/ItemsDropzone.vue'),
 	},
 })
 export default class Item extends Vue {
 	dragstart(e: any) {
 		console.log('dragstart')
 		const target = e.target
-		e.dataTransfer.setData('cardId', target.id)
+		e.dataTransfer.setData('cardId', JSON.stringify({cardId:target.id, elId: this.$props.el.id}))
 		target.style.opacity = '0.5'
 	}
 	dragend(e: any) {
@@ -50,7 +50,7 @@ export default class Item extends Vue {
 	}
 	drop(e: any) {
 		console.log('drop item')
-		const cardId = e.dataTransfer.getData('cardId')
+		const {cardId, elId} = JSON.parse(e.dataTransfer.getData('cardId'))
 		const card = document.getElementById(cardId)
 		if (card === null || card.parentNode === null) return
 		if(card.id == e.target.id) return
@@ -74,6 +74,8 @@ export default class Item extends Vue {
 					})
 					return index
 				})()
+				console.log({elIndex, elId})
+				console.log(this.$props.el)
 				parentNode.insertBefore(card,el)
 			} else {
 				c++
