@@ -9,7 +9,7 @@
 		@dragover.prevent
 		@drop.prevent="drop"
 	>
-		<slot />
+		<p>{{name}}</p>
 		<ItemDropzone :children='elements' id="dropzoneIdchild" :is-child="true" />
 	</div>
 </template>
@@ -44,6 +44,9 @@ export default class Item extends Vue {
 	}
 	get element(){
 		return this.$props.el
+	}
+	get name(){
+		return this.element.name
 	}
 	get elements(): SheetElementsInterface.EMap{
 		return this.element ? this.element.elements : new Map()
