@@ -70,9 +70,12 @@ export class SheetElement extends Basic
     return this.positions.second == 0
   }
   // #endregion Public Accessors (2)
+  public get decodedName(): string{
+    return this._decodedName
+  }
 
   // #region Private Accessors (4)
-
+  
   private get _decodedName(): string {
     try {
       const sentence = this._excelSheetName;

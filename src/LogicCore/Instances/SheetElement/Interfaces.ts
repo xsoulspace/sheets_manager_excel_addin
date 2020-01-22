@@ -34,6 +34,7 @@ namespace SheetElementsInterface {
 		positions: Positions
 		_doesNameIncludesNumerationPattern(): boolean
 		isInFirstLine: boolean
+		decodedName: string
 	}
 	export interface SheetElementConstructor extends BasicConstructor {
 		id: string

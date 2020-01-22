@@ -1,5 +1,5 @@
 import { Basic } from './Basic'
-import { getKeysAndSort,getSortedArray, getPositionsAndSortEMap } from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'
+import { getKeysAndSort,getSortedArray, getPositionsAndGroupEMap } from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'
 export class SheetElementsMap extends Basic
 	implements SheetElementsInterface.SheetElementsMap {
 	// #region Properties (2)
@@ -123,7 +123,7 @@ export class SheetElementsMap extends Basic
 						oldMap: this._map,
 						typeOfName: this.typeOfName
 					}
-					const tempMap: SheetElementsInterface.EMap = await getPositionsAndSortEMap(options)
+					const tempMap: SheetElementsInterface.EMap = await getPositionsAndGroupEMap(options)
 					/** resort elements */
 					await this.writeSheets(getKeysAndSort(tempMap))
 					break;
