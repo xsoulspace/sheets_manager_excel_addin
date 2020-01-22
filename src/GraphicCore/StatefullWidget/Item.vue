@@ -74,7 +74,7 @@ export default class Item extends Vue {
 					})
 					return index
 				})()
-				console.log({elIndex, elId})
+				console.log({elIndex, cardId})
 				console.log(this.$props.el)
 				parentNode.insertBefore(card,el)
 			} else {
