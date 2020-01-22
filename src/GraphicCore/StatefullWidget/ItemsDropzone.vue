@@ -7,6 +7,15 @@
 		:class="{ '--is-child': isIChild }"
 	>
 		<slot />
+		<Item
+			draggable="true"
+			v-for="el in items"
+			:key="el.id"
+			:id="el.id"
+			:position="el.positions.first"
+		>
+			<p class="item__label">{{ el.name }}</p>
+		</Item>
 	</div>
 </template>
 
@@ -16,11 +25,11 @@ import { Log } from '../../LogicCore/Debug/Log'
 // TODO: study it
 //https://developer.mozilla.org/en-US/docs/Web/API/DragEvent
 @Component({
-	props: ['id', 'isChild'],
+	props: ['id', 'isChild', 'children'],
 })
 export default class ItemsDropzone extends Vue {
 	drop(e: any) {
-		console.log('drop dropzone',e)
+		console.log('drop dropzone', e)
 		const cardId = e.dataTransfer.getData('cardId')
 		const card = document.getElementById(cardId)
 		if (!card || !card.parentNode) return
@@ -31,6 +40,9 @@ export default class ItemsDropzone extends Vue {
 	}
 	get isIChild() {
 		return this.$props.isChild ? true : false
+	}
+	get items() {
+		return this.$props.children ? [...this.$props.children.values()] : []
 	}
 }
 </script>

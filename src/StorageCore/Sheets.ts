@@ -20,6 +20,11 @@ export default class Sheets extends VuexModule {
 	get getSheets() {
 		return this.elementsMap.arrElements
 	}
+	get getSheet(){
+		return (pos: number)=>{
+			return this.elementsMap.eMap.get(String(pos))			
+		}
+	}
 
 	/** function to assign updated elements to state */
 	@Mutation
