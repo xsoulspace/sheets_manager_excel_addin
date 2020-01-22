@@ -24,7 +24,7 @@ import Sheets from '@/StorageCore/Sheets'
 	props: ['id', 'draggable', 'position'],
 	components: {
 		ItemDropzone: () =>
-			import('@/GraphicCore/StatefullWidget/ItemsDropzone.vue'),
+			import('@/GraphicCore/StatefullWidget/ItemsDropzoneChild.vue'),
 	},
 })
 export default class Item extends Vue {

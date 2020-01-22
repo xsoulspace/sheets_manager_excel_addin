@@ -10,11 +10,8 @@
 			:isSettingsActive="isSettingsActive"
 			@turn-off-settings-state="changeSettingsState(false)"
 		/>
-		<ItemsDropzone id="dropzone1" >
-			<Item draggable="true" v-for="(el) in elements" :key="el.id" :id='el.id' :position='el.positions.first'>
-				<p class="item__label">{{el.name}}</p>
-			</Item>
-		</ItemsDropzone>
+		<ItemsDropzone id="dropzone1" :children='elements'/>
+		
 		<!-- <root-nested-items 
     :isParent="true" v-model="elements" 
   /> -->
