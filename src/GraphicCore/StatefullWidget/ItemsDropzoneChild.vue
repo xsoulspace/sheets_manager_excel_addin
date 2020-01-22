@@ -11,7 +11,7 @@
 			v-for="el in items"
 			:key="el.id"
 			:id="el.id"
-			:position="el.position.second"
+			:el="el"
 		>
 			<p class="item__label">{{ el.name }}</p>
 		</ItemChild>
@@ -24,15 +24,12 @@ import { Log } from '@/LogicCore/Debug/Log'
 // TODO: study it
 //https://developer.mozilla.org/en-US/docs/Web/API/DragEvent
 @Component({
-	props: ['id', 'isChild', 'children','isFirst'],
+	props: ['id', 'isChild', 'children'],
 	components: {
 		ItemChild: ()=>import('@/GraphicCore/StatefullWidget/Item.vue')
 	}
 })
 export default class ItemsDropzoneChild extends Vue {
-	get isFirstLevel(){
-		return this.$props.isFirst
-	}
 	drop(e: any) {
 		console.log('drop dropzone', e)
 		const cardId = e.dataTransfer.getData('cardId')

@@ -10,7 +10,7 @@
 		@drop.prevent="drop"
 	>
 		<slot />
-		<ItemDropzone :children='elements' id="dropzoneId" :is-child="true" />
+		<ItemDropzone :children='elements' id="dropzoneIdchild" :is-child="true" />
 	</div>
 </template>
 
@@ -21,7 +21,7 @@ import { Log } from '../../LogicCore/Debug/Log'
 import Sheets from '@/StorageCore/Sheets'
 
 @Component({
-	props: ['id', 'draggable', 'position'],
+	props: ['id', 'draggable', 'el'],
 	components: {
 		ItemDropzone: () =>
 			import('@/GraphicCore/StatefullWidget/ItemsDropzoneChild.vue'),
@@ -43,8 +43,7 @@ export default class Item extends Vue {
 		return 'dropzone' + this.$props.id
 	}
 	get element(){
-		const sheetsModule = getModule(Sheets, this.$store)
-		return sheetsModule.getSheet(this.$props.position)
+		return this.$props.el
 	}
 	get elements(): SheetElementsInterface.EMap{
 		return this.element ? this.element.elements : new Map()

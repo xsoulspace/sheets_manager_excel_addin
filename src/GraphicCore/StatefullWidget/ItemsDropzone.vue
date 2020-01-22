@@ -11,7 +11,7 @@
 			v-for="el in items"
 			:key="el.id"
 			:id="el.id"
-			:position="el.position.first"
+			:el='el'
 		>
 			<p class="item__label">{{ el.name }}</p>
 		</ItemChild>
