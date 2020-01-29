@@ -73,6 +73,6 @@ export class ExcelWorksheets {
 		return this.context.workbook.worksheets
 	}
 	private async sync() {
-		this.context.sync()
+		await this.context.sync()
 	}
 }

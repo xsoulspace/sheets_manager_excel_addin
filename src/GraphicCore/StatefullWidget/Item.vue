@@ -8,10 +8,18 @@
 		@dragover.stop
 		@dragover.prevent
 		@drop.prevent="drop"
-		:class="{'--is-dark':isDarkTheme}"
+		:class="{ '--is-dark': isDarkTheme }"
 	>
-		<p class="item__label">{{name}}</p>
-		<ItemDropzone :children='elements' id="dropzoneId" :is-child="true" />
+		<p
+			v-outsideClick="{ exclude: ['input'], handler: 'closeInput' }"
+			v-show="!isInputActive"
+			class="item__label"
+			@click="showInput"
+		>
+			{{ name }}
+		</p>
+		<input ref="input" v-show="isInputActive" type="text" v-model="name" />
+		<ItemDropzone :children="elements" id="dropzoneId" :is-child="true" />
 	</div>
 </template>
 
@@ -21,15 +29,34 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Log } from '@/LogicCore/Debug/Log'
 import Sheets from '@/StorageCore/Sheets'
 import AppSettings from '@/StorageCore/AppSettings'
-
+import outsideClick from '@/GraphicCore/Directives/outside-click'
 @Component({
 	props: ['id', 'draggable', 'el'],
 	components: {
 		ItemDropzone: () =>
 			import('@/GraphicCore/StatefullWidget/ItemsDropzone.vue'),
 	},
+	directives: {
+		outsideClick,
+	},
 })
 export default class Item extends Vue {
+	mounted() {
+		this.changeElement(this.$props.el)
+	}
+
+	isInputActive: boolean = false
+	showInput() {
+		this.$data.isInputActive = true
+	}
+	closeInput() {
+		this.$data.isInputActive = false
+	}
+	element: SheetElementsInterface.SheetElement = {} as SheetElementsInterface.SheetElement
+	@Watch('el')
+	changeElement(value: SheetElementsInterface.SheetElement) {
+		this.$data.element = value
+	}
 	public get isDarkTheme() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getIsDarkTheme
@@ -37,7 +64,10 @@ export default class Item extends Vue {
 	dragstart(e: any) {
 		console.log('dragstart')
 		const target = e.target
-		e.dataTransfer.setData('cardId', JSON.stringify({cardId:target.id, elId: this.$props.el.id}))
+		e.dataTransfer.setData(
+			'cardId',
+			JSON.stringify({ cardId: target.id, elId: this.$props.el.id })
+		)
 		target.style.opacity = '0.5'
 	}
 	dragend(e: any) {
@@ -48,48 +78,48 @@ export default class Item extends Vue {
 	get dropzoneId() {
 		return 'dropzone' + this.$props.id
 	}
-	get element(){
-		return this.$props.el
+	set name(value: string) {
+		this.$data.element.name = value
 	}
-	get name(){
-		return this.element.name
+	get name() {
+		return this.$data.element.name
 	}
-	get elements(): SheetElementsInterface.EMap{
-		return this.element ? this.element.elements : new Map()
+	get elements(): SheetElementsInterface.EMap {
+		return this.$data.element ? this.$data.element.elements : new Map()
 	}
 	drop(e: any) {
 		console.log('drop item')
-		const {cardId, elId} = JSON.parse(e.dataTransfer.getData('cardId'))
+		const { cardId, elId } = JSON.parse(e.dataTransfer.getData('cardId'))
 		const card = document.getElementById(cardId)
 		if (card === null || card.parentNode === null) return
-		if(card.id == e.target.id) return
+		if (card.id == e.target.id) return
 
 		let c: number = 0
 		const checkAndPush = (el: any) => {
 			const parentNode = el.parentElement
-			if(parentNode === null) return
+			if (parentNode === null) return
 			if (el.className == 'item' || el.className == 'item --is-dark') {
 				card.parentNode!.removeChild(card)
 				/** count all elements and find el*/
 				const children: any[] = [...parentNode.children]
 				// children.findIndex()
-				const elIndex: number = (()=>{
+				const elIndex: number = (() => {
 					let index: number = 0
-					children.forEach((child, i)=>{
-						if(child.id == el.id) {
+					children.forEach((child, i) => {
+						if (child.id == el.id) {
 							index = i
 							return
-						} 
+						}
 					})
 					return index
 				})()
-				console.log({elIndex, cardId})
+				console.log({ elIndex, cardId })
 				console.log(this.$props.el)
-				parentNode.insertBefore(card,el)
+				parentNode.insertBefore(card, el)
 			} else {
 				c++
 				checkAndPush(parentNode)
-			} 
+			}
 		}
 		checkAndPush(e.target)
 	}
