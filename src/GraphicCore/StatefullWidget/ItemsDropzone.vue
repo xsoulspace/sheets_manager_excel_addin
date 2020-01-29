@@ -8,10 +8,12 @@
 	>
 		<ItemChild
 			draggable="true"
-			v-for="el in items"
+			v-for="(el,index) in items"
 			:key="el.id"
 			:id="el.id"
 			:el='el'
+			:pos='index'
+			@change-element='changeElement'
 		/>
 	</div>
 </template>
@@ -28,6 +30,10 @@ import { Log } from '@/LogicCore/Debug/Log'
 	}
 })
 export default class ItemsDropzone extends Vue {
+	mounted(){
+		this.changeChildren()
+	}
+	items: SheetElementsInterface.SheetElement[] = []
 	drop(e: any) {
 		console.log('drop dropzone', e)
 		const {cardId, elId} = JSON.parse(e.dataTransfer.getData('cardId'))
@@ -41,11 +47,19 @@ export default class ItemsDropzone extends Vue {
 	get isIChild() {
 		return this.$props.isChild ? true : false
 	}
-	get items() {
-		return this.$props.children ? [...this.$props.children.values()] : []
+	@Watch('children')
+	changeChildren() {
+		this.$data.items= this.$props.children ? [...this.$props.children.values()] : []
+	}
+	@Watch('items',{deep: true})
+	changeItems(items: SheetElementsInterface.SheetElement[]) {
+		this.$emit('change-items',items)
 	}
 	get hasItems(){
-		return this.items.length > 0
+		return this.$data.items.length > 0
+	}
+	changeElement({el,pos}:{el: SheetElementsInterface.SheetElement,pos: number}){
+		this.$data.items[pos]=el
 	}
 }
 </script>

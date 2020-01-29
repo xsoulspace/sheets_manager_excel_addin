@@ -19,7 +19,7 @@
 			{{ name }}
 		</p>
 		<input ref="input" v-show="isInputActive" type="text" v-model="name" />
-		<ItemDropzone :children="elements" id="dropzoneId" :is-child="true" />
+		<ItemDropzone @changeItems='changeItems' :children="elements" id="dropzoneId" :is-child="true" />
 	</div>
 </template>
 
@@ -31,7 +31,7 @@ import Sheets from '@/StorageCore/Sheets'
 import AppSettings from '@/StorageCore/AppSettings'
 import outsideClick from '@/GraphicCore/Directives/outside-click'
 @Component({
-	props: ['id', 'draggable', 'el'],
+	props: ['id', 'draggable', 'el', 'pos'],
 	components: {
 		ItemDropzone: () =>
 			import('@/GraphicCore/StatefullWidget/ItemsDropzone.vue'),
@@ -42,7 +42,7 @@ import outsideClick from '@/GraphicCore/Directives/outside-click'
 })
 export default class Item extends Vue {
 	mounted() {
-		this.changeElement(this.$props.el)
+		this.changeEl(this.$props.el)
 	}
 
 	isInputActive: boolean = false
@@ -54,8 +54,15 @@ export default class Item extends Vue {
 	}
 	element: SheetElementsInterface.SheetElement = {} as SheetElementsInterface.SheetElement
 	@Watch('el')
-	changeElement(value: SheetElementsInterface.SheetElement) {
+	changeEl(value: SheetElementsInterface.SheetElement) {
 		this.$data.element = value
+	}
+	@Watch('element', { deep: true })
+	changeElement(el: SheetElementsInterface.SheetElement) {
+		this.$emit('change-element', { el, pos: this.$props.pos })
+	}
+	changeItems(){
+		// this.$data.el.elements = 
 	}
 	public get isDarkTheme() {
 		const module = getModule(AppSettings, this.$store)

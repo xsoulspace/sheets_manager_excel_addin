@@ -37,14 +37,6 @@ export default class Sheets extends VuexModule {
 	}
 	/** function to assign updated elements to state */
 	@Mutation
-	setNameMutation(element: SheetElementsInterface.SheetElement) {
-		this.elementsMap.eMap.set(String(element.positions.first),element)
-	}
-	@Action
-	async setName(element: SheetElementsInterface.SheetElement): Promise<void> {
-		this.setNameMutation(element)
-	}
-	@Mutation
 	setExcelContextMutation(context: Excel.RequestContext) {
 		this.appContext = context
 	}

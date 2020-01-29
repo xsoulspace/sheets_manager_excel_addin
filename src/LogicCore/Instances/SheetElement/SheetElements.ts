@@ -8,6 +8,9 @@ export class SheetElementsMap extends Basic
 	public get arrElements(): SheetElementsInterface.EArr{
 		return getSortedArray(this._map)
 	}
+	public set arrElements(arr: SheetElementsInterface.EArr){
+		this.firstOpenScenarioCreateSheetElements(arr)
+	}
 	public maintainerStatuses = {
 		areSheetsHaveNumeration: false,
 		isNumerationBroken: false,
