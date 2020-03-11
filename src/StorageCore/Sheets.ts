@@ -20,9 +20,9 @@ export default class Sheets extends VuexModule {
 	get getSheets() {
 		return this.elementsMap.arrElements
 	}
-	get getSheet(){
-		return (pos: number)=>{
-			return this.elementsMap.eMap.get(String(pos))			
+	get getSheet() {
+		return (pos: number) => {
+			return this.elementsMap.eMap.get(String(pos))
 		}
 	}
 
@@ -51,6 +51,26 @@ export default class Sheets extends VuexModule {
 	) {
 		this.elementsMap = elementsMap
 	}
+	@Mutation
+	async changeSheetPositionMutation(
+		elementsMap: SheetElementsInterface.SheetElementsMap
+	): Promise<void> {
+		this.elementsMap = elementsMap
+	}
+
+	@Action
+	async changeSheetPosition({
+		el,
+		items,
+	}: {
+		el: SheetElementsInterface.SheetElement
+		items: SheetElementsInterface.SheetElement[]
+	}): Promise<void> {
+		const elementsMap = this.elementsMap
+		await elementsMap.changeSheetPosition(el,items)
+		this.changeSheetPositionMutation(elementsMap)
+	}
+
 	@Action
 	async initializeStore(
 		sourceApp: SheetElementsInterface.outsideApp
@@ -93,7 +113,7 @@ export default class Sheets extends VuexModule {
 					throw Error('source is not defined')
 			}
 			await elementsMap.firstOpenScenarioCreateSheetElements(sheets)
-			console.log('ini sheets',sheets)
+			console.log('ini sheets', sheets)
 			this.initializeStoreMutation(elementsMap)
 		} catch (error) {
 			throw Log.error('initializeStore', error)

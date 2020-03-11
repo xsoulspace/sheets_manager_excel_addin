@@ -7,6 +7,8 @@
 		:class="{ '--is-child': isIChild, '--has-children':hasItems}"
 	>
 		<ItemChild
+			@dragst='iDragstart'
+			@dragt='iDragend'
 			draggable="true"
 			v-for="(el,index) in items"
 			:key="el.id"
@@ -23,8 +25,11 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Log } from '@/LogicCore/Debug/Log'
 // TODO: study it
 //https://developer.mozilla.org/en-US/docs/Web/API/DragEvent
+import { getModule } from 'vuex-module-decorators'
+import Sheets from '@/StorageCore/Sheets'
+
 @Component({
-	props: ['id', 'isChild', 'children'],
+	props: ['id', 'isChild', 'children',  'parentEl'],
 	components: {
 		ItemChild: ()=>import('@/GraphicCore/StatefullWidget/Item.vue')
 	}
@@ -60,6 +65,19 @@ export default class ItemsDropzone extends Vue {
 	}
 	changeElement({el,pos}:{el: SheetElementsInterface.SheetElement,pos: number}){
 		this.$data.items[pos]=el
+	}
+	iDragstart(el: SheetElementsInterface.SheetElement){
+		console.log(this.$props.children)
+		console.log({iDragstart:'iDragstart',el})
+
+	}
+	async iDragend(el: any){
+		// this.items.push(el)
+		console.log({iDragend:'iDragend',el})
+		
+		const module = getModule(Sheets, this.$store)
+
+		await module.changeSheetPosition({el, items:this.$data.items})
 	}
 }
 </script>

@@ -10,7 +10,7 @@ namespace SheetElementsInterface {
 		log: LogInterface
 		delimiter: string
 	}
-	export interface Positions{
+	export interface Positions {
 		first: number
 		second: number
 	}
@@ -61,6 +61,10 @@ namespace SheetElementsInterface {
 		arrElements: EArr
 		firstOpenScenarioCreateSheetElements(
 			excelSheets: sheetsSource
+		): Promise<void>
+		changeSheetPosition(
+			el: SheetElementsInterface.SheetElement,
+			items: SheetElementsInterface.SheetElement[]
 		): Promise<void>
 		sheetsNumerationRepairer(): Promise<void>
 		reorderSheets({

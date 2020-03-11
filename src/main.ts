@@ -10,6 +10,10 @@ import router from '@/GraphicCore/Router'
 import {store} from '@/StorageCore/Index'
 import '@/GraphicCore/framework/style.scss'
 import "@/GraphicCore/Directives/DragDropTouch.js";
+import VueNestable from 'vue-nestable'
+
+Vue.use(VueNestable)
+
 Vue.config.productionTip = false
 let vm: Vue | undefined = undefined
 /**for custom type definitions need to add to types in tsconfig "./src/types", 
