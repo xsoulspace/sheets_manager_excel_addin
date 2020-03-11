@@ -1,22 +1,30 @@
-import { Basic } from './Basic'
-import { getKeysAndSort, getPositionsAndGroupEMap, getSortedArray } from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'
-export class SheetElementsMap extends Basic
-	implements SheetElementsInterface.SheetElementsMap {
+import { Basic } from '@/LogicCore/Instances/SheetElement/Basic'
+import {
+	getKeysAndSort,
+	getPositionsAndGroupEMap,
+	getPositionsAndGroupEArr,
+} from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'
+export class MatrixController extends Basic
+	implements MatrixElementInterface.MatrixController {
 	// #region Properties (2)
 
-	private _map: SheetElementsInterface.EMap = new Map()
-	public get arrElements(): SheetElementsInterface.EArr{
-		return getSortedArray(this._map)
+	private _arr: MatrixElementInterface.MEArr = []
+	public get arrElements(): MatrixElementInterface.MEArr {
+		return this._arr
 	}
-	public set arrElements(arr: SheetElementsInterface.EArr){
-		this.firstOpenScenarioCreateSheetElements(arr)
+	public set arrElements(arr: MatrixElementInterface.MEArr) {
+		this.firstOpenScenarioCreateMatrixElements(arr)
 	}
 	public maintainerStatuses = {
 		areSheetsHaveNumeration: false,
 		isNumerationBroken: false,
 		shouldWeRestoreNumeration: true,
 	}
-
+	async changeSheetPosition(
+		items: MatrixElementInterface.MEArr
+	): Promise<void> {
+		await this.writeSheets(items)
+	}
 	// #endregion Properties (2)
 
 	// #region Constructors (1)
@@ -25,29 +33,16 @@ export class SheetElementsMap extends Basic
 		typeOfName,
 		delimiter,
 		_classTitle,
-	}: SheetElementsInterface.SheetElementsMapConstructor) {
+	}: MatrixElementInterface.MatrixControllerConstructor) {
 		super({
 			_classTitle: _classTitle ? _classTitle : 'SheetElementsMap',
 			typeOfName,
 			delimiter,
 		})
 	}
-	changeSheetPosition(el: SheetElementsInterface.SheetElement, items: SheetElementsInterface.SheetElement[]): Promise<void> {
-		throw new Error("Method not implemented.")
-	}
-
 	// #endregion Constructors (1)
 
 	// #region Public Methods (6)
-
-	public entries() {
-		try {
-			const entries = this._map.entries()
-			return entries
-		} catch (error) {
-			throw this.log.error('entries', error)
-		}
-	}
 
 	/**@description
 	 * We need to check:
@@ -64,16 +59,16 @@ export class SheetElementsMap extends Basic
 	 * 4. Reordering sheets
 	 * 2. --! Go simple: load original names
 	 */
-	public async firstOpenScenarioCreateSheetElements(
-		excelSheets: SheetElementsInterface.sheetsSource
+	public async firstOpenScenarioCreateMatrixElements(
+		excelSheets: MatrixElementInterface.sheetsSource
 	): Promise<void> {
 		try {
 			/** firstly we conevert all sheets to elements map */
 			// console.log('simple sheet loading starts', excelSheets)
 			await this._simpleSheetsLoading(excelSheets)
-			// console.log('sheet numeration maint starts', this._map)
+			// console.log('sheet numeration maint starts', this._arr)
 			await this._sheetsNumerationMaintainer()
-			console.log('sheet numeration maint ends', this._map)
+			console.log('sheet numeration maint ends', this._arr)
 			const {
 				areSheetsHaveNumeration,
 				isNumerationBroken,
@@ -90,7 +85,7 @@ export class SheetElementsMap extends Basic
 				/** we will reorder all sheets accordingly to type */
 				await this.reorderSheets({ requereToCorrectType: false })
 			}
-			// console.log('process end', this._map)
+			// console.log('process end', this._arr)
 		} catch (error) {
 			throw this.log.error('firstOpenScenarioCreateSheetElements', error)
 		}
@@ -124,24 +119,25 @@ export class SheetElementsMap extends Basic
 			switch (this.typeOfName) {
 				case '_encodedName':
 					/** numeration loading */
-					const options: SheetElementsInterface.getPositionsAndSortEMapOptions={
+					const options: MatrixElementInterface.getPositionsAndSortOptions = {
 						requereToCorrectType,
-						oldMap: this._map,
-						typeOfName: this.typeOfName
+						oldArr: this._arr,
+						typeOfName: this.typeOfName,
 					}
-					const tempMap: SheetElementsInterface.EMap = await getPositionsAndGroupEMap(options)
+					const tempArr: MatrixElementInterface.MEArr = await getPositionsAndGroupEArr(
+						options
+					)
 					/** resort elements */
-					await this.writeSheets(getKeysAndSort(tempMap))
-					break;
+					await this.writeSheets(tempArr)
+					break
 				default:
 					/** simple loading */
-					// console.log('reorder simple loading starts', this._map)
+					// console.log('reorder simple loading starts', this._arr)
 					await this.correctDoubles()
-					// console.log('reorder correct doubles ends', this._map)
-					await this.writeSheets(this._map)
-					// console.log('write sheets ends', this._map)
-
-				}
+					// console.log('reorder correct doubles ends', this._arr)
+					await this.writeSheets(this._arr)
+				// console.log('write sheets ends', this._arr)
+			}
 		} catch (error) {
 			throw this.log.error('reorderSheets', error)
 		}
@@ -155,16 +151,16 @@ export class SheetElementsMap extends Basic
 	 */
 	public async correctDoubles(): Promise<void> {
 		try {
-			let newSheets: SheetElementsInterface.EMap = new Map()
+			let newSheets: MatrixElementInterface.MEArr = []
 			let sheetNames: Map<string, string> = new Map()
 			let i: number = 1
-			const entries = this.entries()
+			const entries = this._arr
 			/** function to check and choose available name */
 			const { checkNameAndTryNew } = await import(
 				'../SheetElementFunctions/CheckNameAndTryNew'
 			)
 
-			for (const [sheetId, sheet] of entries) {
+			for (const sheet of entries) {
 				if (sheet === undefined)
 					throw 'correctDoubles has sheet === undefined'
 				const sheetName: string = checkNameAndTryNew(
@@ -174,7 +170,7 @@ export class SheetElementsMap extends Basic
 				)
 				sheet.name = sheetName
 				sheetNames.set(sheetName, sheetName)
-				newSheets.set(sheetId, sheet)
+				newSheets.push(sheet)
 			}
 
 			await this.writeSheets(newSheets)
@@ -182,12 +178,9 @@ export class SheetElementsMap extends Basic
 			throw this.log.error('correctDoubles', error)
 		}
 	}
-	public get eMap(): SheetElementsInterface.EMap {
-		return this._map
-	}
-	public writeSheets(sheetsEMap: SheetElementsInterface.EMap): void {
+	public writeSheets(sheetsEMap: MatrixElementInterface.MEArr): void {
 		try {
-			this._map = sheetsEMap
+			this._arr = sheetsEMap
 		} catch (error) {
 			throw this.log.error('writeSheets', error)
 		}
@@ -202,13 +195,12 @@ export class SheetElementsMap extends Basic
 			/** now we need to check every sheet - is it has encoded pattern */
 			this.maintainerStatuses.areSheetsHaveNumeration = ((): boolean => {
 				let hasNumeration: boolean = false
-				for (let sheet of this._map.values()) {
+				for (let sheet of this._arr) {
 					if (hasNumeration === false) {
 						hasNumeration = sheet._doesNameIncludesNumerationPattern()
-						console.log('sheet',hasNumeration)
-
+						console.log('sheet', hasNumeration)
 					} else if (hasNumeration) {
-						console.log('hasNumeration',hasNumeration)
+						console.log('hasNumeration', hasNumeration)
 
 						/** if one sheet will have numeration,
 						 * then every sheet after it will be checked
@@ -229,14 +221,17 @@ export class SheetElementsMap extends Basic
 	}
 
 	private async _simpleSheetsLoading(
-		sheets: SheetElementsInterface.sheetsSource
+		sheets: MatrixElementInterface.sheetsSource
 	): Promise<void> {
 		try {
-			const { SheetElement } = await import('./SheetElement')
-			let allElements: SheetElementsInterface.EMap = new Map()
+			const { MatrixElement } = await import('./MatrixElement')
+			let allElements: MatrixElementInterface.MEArr = []
 			for (let [index, sheet] of Object.entries(sheets)) {
-				const {first,second} = ('positions' in sheet) ? sheet.positions : {first: Number(index), second: 0}  
-				const options: SheetElementsInterface.SheetElementConstructor = {
+				const { first, second } =
+					'positions' in sheet
+						? sheet.positions
+						: { first: Number(index), second: 0 }
+				const options: MatrixElementInterface.MatrixElementConstructor = {
 					color: sheet.tabColor,
 					name: sheet.name,
 					typeOfName: this.typeOfName,
@@ -245,13 +240,13 @@ export class SheetElementsMap extends Basic
 					id: sheet.id,
 					visibility: sheet.visibility,
 					delimiter: this.delimiter,
-					elements: undefined,
+					elements: [],
 					_classTitle: undefined,
 				}
 
-				const element = new SheetElement(options)
+				const element = new MatrixElement(options)
 
-				allElements.set(element.id, element)
+				allElements.push(element)
 			}
 			await this.writeSheets(allElements)
 		} catch (error) {

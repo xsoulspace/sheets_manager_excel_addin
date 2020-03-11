@@ -11,37 +11,37 @@
 	align-items: center;
 	justify-content: center;
     border: 0;
-	color: _colours.theme-color('primary', 'base');
+	color: colours.theme-color('primary', 'base');
 	@include fonts.font('primary');
 	transition: 0.3s linear;
 	cursor: pointer;
     &.--is-dark {
-		color: _colours.theme-color('primary', 'dark');
+		color: colours.theme-color('primary', 'dark');
 		&.--has-accent{
-			color: _colours.theme-color('accent', 'dark');
+			color: colours.theme-color('accent', 'dark');
 		}
 		&.--has-border{
-			border: 1px solid _colours.theme-color('accent', 'dark', 0.1);
+			border: 1px solid colours.theme-color('accent', 'dark', 0.1);
 			&:focus{
 				outline: none;
-				border: 1px solid _colours.theme-color('accent', 'dark', 0.4);
+				border: 1px solid colours.theme-color('accent', 'dark', 0.4);
 			}
 			&:active{
-				background-color: darken(_colours.theme-color('background', 'dark', 0.2),20);
+				background-color: darken(colours.theme-color('background', 'dark', 0.2),20);
 			}
 		}
 	}
 	&.--has-accent{
-        color: _colours.theme-color('accent', 'base');
+        color: colours.theme-color('accent', 'base');
 	}
 	&.--has-border{
-		border: 1px solid _colours.theme-color('accent', 'base', 0.1);
+		border: 1px solid colours.theme-color('accent', 'base', 0.1);
 		&:focus{
 			outline: none;
-			border: 1px solid _colours.theme-color('accent', 'base', 0.4);
+			border: 1px solid colours.theme-color('accent', 'base', 0.4);
 		}
 		&:active{
-			background-color: _colours.theme-color('accent', 'base', 0.2);
+			background-color: colours.theme-color('accent', 'base', 0.2);
 		}
 	}
 }
@@ -54,7 +54,7 @@
 	}
 	&__box{
 		@extend %button;
-		@include _colours.corner-radius;
+		@include colours.corner-radius;
 
 	}
 }

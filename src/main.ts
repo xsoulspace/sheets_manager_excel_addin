@@ -11,7 +11,7 @@ import {store} from '@/StorageCore/Index'
 import '@/GraphicCore/framework/style.scss'
 import "@/GraphicCore/Directives/DragDropTouch.js";
 import VueNestable from 'vue-nestable'
-
+//https://github.com/rhwilr/vue-nestable#vue-nestable
 Vue.use(VueNestable)
 
 Vue.config.productionTip = false

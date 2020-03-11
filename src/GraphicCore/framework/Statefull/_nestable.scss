@@ -1,0 +1,94 @@
+@use '../Library/colours';
+
+/*
+* Style for nestable
+*/
+//https://github.com/rhwilr/vue-nestable/blob/master/example/assets/vue-nestable.css
+.nestable {
+	position: relative;
+	& [draggable='true'] {
+		cursor: move;
+	}
+	&-rtl {
+		direction: rtl;
+		.nestable-list {
+			padding: 0 40px 0 0;
+		}
+		& .nestable-drag-layer {
+			left: auto;
+			right: 0;
+			& > .nestable-list {
+				padding: 0;
+			}
+		}
+	}
+	& &-list {
+		margin: 0;
+		padding: 0 0 0 40px;
+		list-style-type: none;
+	}
+	& > &-list {
+		padding: 0;
+	}
+	&-item,
+	&-item-copy {
+		margin: 10px 0 0;
+	}
+	&-item {
+		position: relative;
+
+		&:first-child {
+			margin-top: 0;
+		}
+		&-copy {
+			&:first-child {
+				margin-top: 0;
+			}
+			& .nestable-list {
+				margin-top: 10px;
+			}
+		}
+		&.is-dragging{
+			&:before {
+				content: ' ';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background-color: rgba(106, 127, 233, 0.274);
+				border: 1px dashed rgb(73, 100, 241);
+				-webkit-border-radius: 5px;
+				border-radius: 5px;
+			}
+			* {
+				opacity: 0;
+				filter: alpha(opacity=0);
+			}
+			& .nestable-list {
+				pointer-events: none;
+			}
+		}
+		& .nestable-list {
+			margin-top: 10px;
+		}
+	}
+	&-drag-layer {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 100;
+		pointer-events: none;
+		& > .nestable-list {
+			position: absolute;
+			top: 0;
+			left: 0;
+			padding: 0;
+			background-color: rgba(106, 127, 233, 0.274);
+		}
+	}
+	&-handle {
+		display: inline;
+	}
+}
+

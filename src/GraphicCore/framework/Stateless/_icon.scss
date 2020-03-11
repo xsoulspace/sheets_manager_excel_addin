@@ -2,11 +2,11 @@
 
 .icon {
 	&.--has-accent {
-		color: _colours.theme-color('accent', 'base');
+		color: colours.theme-color('accent', 'base');
 	}
 	&.--is-dark {
 		&.--has-accent {
-			color: _colours.theme-color('accent', 'dark');
+			color: colours.theme-color('accent', 'dark');
 		}
 	}
 

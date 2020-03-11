@@ -10,8 +10,7 @@
 			:isSettingsActive="isSettingsActive"
 			@turn-off-settings-state="changeSettingsState(false)"
 		/>
-		<ItemsDropzone id="dropzone1" :children='elements'/>
-		
+		<NItems/>
 		<!-- <root-nested-items 
     :isParent="true" v-model="elements" 
   /> -->
@@ -28,12 +27,14 @@ import { Component, Vue } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import AppSettings from '@/StorageCore/AppSettings'
 import Sheets from '@/StorageCore/Sheets'
+import NItems from "@/GraphicCore/StatefullWidget/NItems.vue";
 @Component({
 	components: {
 		NavigationTabs,
 		SettingsModal,
 		ItemsDropzone,
 		Item,
+		NItems
 	},
 })
 export default class Home extends Vue {

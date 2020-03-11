@@ -24,11 +24,8 @@ import Sheets from '@/StorageCore/Sheets'
 import AppSettings from '@/StorageCore/AppSettings'
 import outsideClick from '@/GraphicCore/Directives/outside-click'
 @Component({
-	props: ['id', 'draggable', 'el', 'pos'],
-	components: {
-		ItemDropzone: () =>
-			import('@/GraphicCore/StatefullWidget/ItemsDropzone.vue'),
-	},
+	props: ['id', 'el', 'pos'],
+	components: {	},
 	directives: {
 		outsideClick,
 	},

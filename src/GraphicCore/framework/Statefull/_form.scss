@@ -15,15 +15,15 @@
             align-items: stretch;
         }
         &:hover {
-			background-color: _colours.theme-color('hoverground', 'base', 0.2);
-			box-shadow: 0px 4px 6px -5px _colours.theme-color('foreground', 'base', 0.1);
+			background-color: colours.theme-color('hoverground', 'base', 0.2);
+			box-shadow: 0px 4px 6px -5px colours.theme-color('foreground', 'base', 0.1);
 		}
     }
     &.--is-dark{
         .form__field{
             &:hover {
-                background-color: darken(_colours.theme-color('foreground', 'dark',0.2),10);
-                box-shadow: 0px 4px 6px -5px _colours.theme-color('background', 'dark', 0.1);
+                background-color: darken(colours.theme-color('foreground', 'dark',0.2),10);
+                box-shadow: 0px 4px 6px -5px colours.theme-color('background', 'dark', 0.1);
             }
         }
     }
