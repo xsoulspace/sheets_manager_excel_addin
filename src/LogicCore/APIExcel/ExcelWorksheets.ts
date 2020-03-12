@@ -29,12 +29,13 @@ export class ExcelWorksheets {
 	}
 	public async renameWorksheet(
 		id: Excel.Worksheet['id'],
-		name: Excel.Worksheet['name']
+		name: Excel.Worksheet['name'],
+		sync: boolean = true
 	): Promise<boolean> {
 		try {
 			const worksheet = this._getWorksheet(id)
 			worksheet.name = name
-			await this.sync()
+			if (sync) await this.sync()
 			return true
 		} catch (error) {
 			throw Log.error('ExcelWorksheets.renameWorksheet', error)
@@ -52,23 +53,24 @@ export class ExcelWorksheets {
 		} catch (error) {
 			throw Log.error('ExcelWorksheets.setWorksheetTabColor', error)
 		}
-    }
-    public async reorderWorksheet(
-        id: Excel.Worksheet['id'],
-        position: Excel.Worksheet['position']
-    ): Promise<boolean>{
-        try {
-            const worksheet = this._getWorksheet(id)
-            worksheet.position = position
-            this.sync()
-            return true
-        } catch (error) {
-			throw Log.error('ExcelWorksheets.reorderWorksheet', error)   
-        }
-    }
-    private _getWorksheet(id: Excel.Worksheet['id']){
-        return this._contextWorksheets().getItem(id)
-    }
+	}
+	public async reorderWorksheet(
+		id: Excel.Worksheet['id'],
+		position: Excel.Worksheet['position'],
+		sync: boolean = true
+	): Promise<boolean> {
+		try {
+			const worksheet = this._getWorksheet(id)
+			worksheet.position = position
+			if (sync) await this.sync()
+			return true
+		} catch (error) {
+			throw Log.error('ExcelWorksheets.reorderWorksheet', error)
+		}
+	}
+	private _getWorksheet(id: Excel.Worksheet['id']) {
+		return this._contextWorksheets().getItem(id)
+	}
 	private _contextWorksheets(): Excel.WorksheetCollection {
 		return this.context.workbook.worksheets
 	}

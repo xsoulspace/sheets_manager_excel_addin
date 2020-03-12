@@ -16,11 +16,13 @@ export default class Sheets extends VuexModule {
 		iniOptions
 	)
 	appContext: Excel.RequestContext | undefined = undefined
-
+	outsideApp: MatrixElementInterface.outsideApp = 'browser'
 	get getSheets() {
 		return this.elements.arrElements
 	}
-
+	get getExcelSheets() {
+		return this.elements.getExcelSheets()
+	}
 	/** function to assign updated elements to state */
 	@Mutation
 	setSheetsMutation(sheets: MatrixElementInterface.MEArr) {
@@ -41,9 +43,7 @@ export default class Sheets extends VuexModule {
 	}
 
 	@Mutation
-	initializeStoreMutation(
-		elements: MatrixElementInterface.MatrixController
-	) {
+	initializeStoreMutation(elements: MatrixElementInterface.MatrixController) {
 		this.elements = elements
 	}
 	@Mutation
@@ -52,20 +52,62 @@ export default class Sheets extends VuexModule {
 	): void {
 		this.elements = elements
 	}
-
+	@Action
+	async renameSheet() {
+		const sh = await WorksheetsBuilder.buildWorksheetsClass()
+		await sh.renameWorksheet('1', 'hola')
+	}
 	@Action
 	async changeSheetPosition({
 		items,
 	}: {
 		items: MatrixElementInterface.MEArr
 	}): Promise<void> {
-		if(items.length>0){
+		if (items.length > 0) {
 			const elements = this.elements
 			await elements.changeSheetPosition(items)
-			this.changeSheetPositionMutation(elements)	
+			this.changeSheetPositionMutation(elements)
+			switch (this.outsideApp) {
+				case 'browser':
+					//nothing to do
+					break
+				case 'excelDesktop':
+					const shts = elements.getExcelSheets()
+					await this.changeExcelPositions(shts)
+					await this.changeExcelNames(shts)
+
+					break
+			}
 		}
 	}
-
+	@Action
+	async changeExcelPositions(sheets: MatrixElementInterface.MEArr) {
+		const worksheetsClass = await WorksheetsBuilder.buildWorksheetsClass()
+		for (let [pos, sheet] of sheets.entries()) {
+			await worksheetsClass.reorderWorksheet(sheet.sourceId, pos, false)
+		}
+		await worksheetsClass.context.sync()
+	}
+	@Action
+	async changeExcelNames(sheets: MatrixElementInterface.MEArr) {
+		try {
+			const worksheetsClass = await WorksheetsBuilder.buildWorksheetsClass()
+			for (let [pos, sheet] of sheets.entries()) {
+				await worksheetsClass.renameWorksheet(
+					sheet.sourceId,
+					sheet.name,
+					false
+				)
+			}
+			await worksheetsClass.context.sync()
+		} catch (error) {
+			throw Log.error('changeExcelNames', error)
+		}
+	}
+	@Mutation
+	setOutsideApp(state: MatrixElementInterface.outsideApp) {
+		this.outsideApp = state
+	}
 	@Action
 	async initializeStore(
 		sourceApp: MatrixElementInterface.outsideApp
@@ -95,7 +137,7 @@ export default class Sheets extends VuexModule {
 					sheets = await worksheetsClass.getWorksheets()
 					/** getting context */
 					const context = worksheetsClass.context
-					await this.setExcelContext(context)
+					// await this.setExcelContext(context)
 					/** preparing and pushing sheets to store */
 					options = {
 						typeOfName: '_excelSheetName',
@@ -110,6 +152,16 @@ export default class Sheets extends VuexModule {
 			await elements.firstOpenScenarioCreateMatrixElements(sheets)
 			console.log('ini sheets', sheets)
 			this.initializeStoreMutation(elements)
+			this.setOutsideApp(sourceApp)
+			switch (sourceApp) {
+				case 'browser':
+					break
+				case 'excelDesktop':
+					const shts = elements.getExcelSheets()
+					await this.changeExcelPositions(shts)
+					await this.changeExcelNames(shts)
+					break
+			}
 		} catch (error) {
 			throw Log.error('initializeStore', error)
 		}

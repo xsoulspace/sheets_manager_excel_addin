@@ -15,6 +15,7 @@ namespace MatrixElementInterface {
 		| 'Hidden'
 		| 'VeryHidden'
 	export interface MatrixElement extends Basic {
+		sourceId: string
 		id: string
 		name: string
 		visibility: SheetVisibility
@@ -60,6 +61,7 @@ namespace MatrixElementInterface {
 		}): Promise<void>
 		correctDoubles(): Promise<void>
 		writeSheets(sheetsArr: MEArr): void
+		getExcelSheets(): MEArr
 	}
 	export interface MatrixControllerConstructor extends BasicConstructor {}
 }

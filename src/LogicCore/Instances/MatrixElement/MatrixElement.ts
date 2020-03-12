@@ -17,7 +17,7 @@ export class MatrixElement extends Basic
 	// #endregion Properties (7)
 
 	// #region Constructors (1)
-
+	public sourceId: string
 	constructor({
 		id,
 		name,
@@ -38,10 +38,11 @@ export class MatrixElement extends Basic
 		this._excelSheetName = name
 		this.positions = {first,second}
 		this.elements = elements ? elements : []
-		this.id = id
+		this.sourceId = id
 		this.name = name
 		this.color = color
 		this.visibility = visibility
+		this.id = String(Date.now())+name
 	}
 
 	// #endregion Constructors (1)

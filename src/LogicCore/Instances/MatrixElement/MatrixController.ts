@@ -263,14 +263,15 @@ export class MatrixController extends Basic
 			const { MatrixElement } = await import('./MatrixElement')
 			let allElements: MatrixElementInterface.MEArr = []
 			for (let [index, sheet] of Object.entries(sheets)) {
+				console.log('simple loading', sheet)
 				const { first, second } =
 					'positions' in sheet
 						? sheet.positions
 						: { first: Number(index), second: 0 }
-				const name = sheet.name
-				const color = sheet.tabColor
-				const visibility = sheet.visibility
-				const id = sheet.id
+				const name = (' ' + sheet.name).slice(1)
+				const color = (' ' + sheet.tabColor).slice(1)
+				const visibility =  <Excel.SheetVisibility>(' ' + sheet.visibility).slice(1)
+				const id = (' ' + sheet.id).slice(1)
 				const options: MatrixElementInterface.MatrixElementConstructor = {
 					color,
 					name,
@@ -294,5 +295,15 @@ export class MatrixController extends Basic
 		}
 	}
 
+	getExcelSheets(){
+		let arr: MatrixElementInterface.MEArr = []
+		for (let el of this._arr) {
+			arr.push(el)
+			if(el.elements.length > 0){
+				el.elements.forEach(child=>arr.push(child))
+			}
+		}
+		return arr
+	}
 	// #endregion Private Methods (2)
 }
