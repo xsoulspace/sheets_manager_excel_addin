@@ -46,7 +46,17 @@ export class MatrixController extends Basic
 			this.log.error('changeSheetPosition', error)
 		}
 	}
-
+	public async changeElement(el: MatrixElementInterface.MatrixElement){
+		/**find element position and split it */
+		const isSecond = el.positions.second> 0
+		if(isSecond){
+			const parent = this._arr[el.positions.first]
+			parent.elements[el.positions.second-1] = el
+			this._arr[el.positions.first] = parent
+		} else {
+			this._arr[el.positions.first] = el
+		}
+	}
 	public async usualSheetChange(arr: MatrixElementInterface.MEArr) {
 		const reorderedArr = await rewritePositions(arr)
 		this._arr = reorderedArr
@@ -55,7 +65,6 @@ export class MatrixController extends Basic
 			areSheetsHaveNumeration,
 			isNumerationBroken,
 		} = this.maintainerStatuses
-		console.log('xx', this.maintainerStatuses)
 		if (areSheetsHaveNumeration && !isNumerationBroken) {
 			/** if numeration is ok, then we need to switch numeration type */
 			// console.log('numeration is exists and not broken')
@@ -263,7 +272,6 @@ export class MatrixController extends Basic
 			const { MatrixElement } = await import('./MatrixElement')
 			let allElements: MatrixElementInterface.MEArr = []
 			for (let [index, sheet] of Object.entries(sheets)) {
-				console.log('simple loading', sheet)
 				const { first, second } =
 					'positions' in sheet
 						? sheet.positions

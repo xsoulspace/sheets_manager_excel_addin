@@ -1,18 +1,14 @@
 <template>
-	<div
-		:id="id"
-		draggable="true"
-	>
-		{{name}}
-		<!-- <p
+	<div :id="id" draggable="isDraggable">
+		<p
 			v-outsideClick="{ exclude: ['input'], handler: 'closeInput' }"
 			v-show="!isInputActive"
 			class="item__label"
 			@click="showInput"
 		>
 			{{ name }}
-		</p> -->
-		<!-- <input ref="input" v-show="isInputActive" type="text" v-model="name" /> -->
+		</p>
+		<input ref="input" v-show="isInputActive" type="text" v-model="name" />
 	</div>
 </template>
 
@@ -23,40 +19,61 @@ import { Log } from '@/LogicCore/Debug/Log'
 import Sheets from '@/StorageCore/Sheets'
 import AppSettings from '@/StorageCore/AppSettings'
 import outsideClick from '@/GraphicCore/Directives/outside-click'
+enum ActionTypes{
+	rename,
+	changeColor,
+	delete,
+	create,
+	nothing
+}
 @Component({
 	props: ['id', 'el'],
-	components: {	},
+	components: {},
 	directives: {
 		outsideClick,
 	},
 })
 export default class Item extends Vue {
+	actionType: ActionTypes = ActionTypes.nothing
+
 	mounted() {
 		this.changeEl(this.$props.el)
 	}
-
+	isDraggable: boolean = true
 	isInputActive: boolean = false
 	showInput() {
 		this.$data.isInputActive = true
+		this.$data.isDraggable = false
 	}
 	closeInput() {
 		this.$data.isInputActive = false
+		this.$data.isDraggable = true
 	}
-	element: SheetElementsInterface.SheetElement = {} as SheetElementsInterface.SheetElement
+	element: MatrixElementInterface.MatrixElement = {} as MatrixElementInterface.MatrixElement
 	@Watch('el')
-	changeEl(value: SheetElementsInterface.SheetElement) {
-		this.$data.element = value
+	changeEl(value: MatrixElementInterface.MatrixElement) {
+		this.element = value
 	}
 	@Watch('element', { deep: true })
-	changeElement(el: SheetElementsInterface.SheetElement) {
-		this.$emit('change-element', { el, pos: this.$props.pos })
+	async elementChange(el: MatrixElementInterface.MatrixElement) {
+		const sheetsModule = getModule(Sheets, this.$store)
+		switch (this.actionType) {
+			case ActionTypes.rename:
+				await sheetsModule.renameSheet(el)
+				break;
+		
+			default:
+				break;
+		}
+		this.actionType = ActionTypes.nothing
 	}
-	
+
 	set name(value: string) {
-		this.$data.element.name = value
+		this.element.encodedName = value
+		this.actionType = ActionTypes.rename
 	}
 	get name() {
-		return this.$data.element.name
+		return this.element.decodedName
 	}
 }
 </script>

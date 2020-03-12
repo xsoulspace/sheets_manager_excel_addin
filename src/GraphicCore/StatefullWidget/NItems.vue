@@ -34,11 +34,9 @@ export default class Item extends Vue {
 	changePElements(values: any[]) {
 		this.els = values
 	}
-
 	changeElements() {
 		this.$emit('elements-change', this.els)
 	}
-
 	set elements(values: any[]) {
 		this.els = values
 	}

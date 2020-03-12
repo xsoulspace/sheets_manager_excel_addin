@@ -16,8 +16,8 @@ export default {
 		return {
 			StoreAppSettings: 'appSettings',
 			hostInfo: undefined,
-			sourceApp: 'excelDesktop',//browser
-			// sourceApp: 'browser',//browser
+			// sourceApp: 'excelDesktop',//browser
+			sourceApp: 'browser',//browser
 
 		}
 	},

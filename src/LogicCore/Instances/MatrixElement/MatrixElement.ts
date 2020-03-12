@@ -1,5 +1,6 @@
 import { Basic } from '@/LogicCore/Instances/SheetElement/Basic'
-
+import { v4 as uuidv4 } from 'uuid';
+//https://www.npmjs.com/package/uuid
 export class MatrixElement extends Basic
 	implements MatrixElementInterface.MatrixElement {
 	// #region Properties (7)
@@ -24,8 +25,8 @@ export class MatrixElement extends Basic
 		visibility,
 		color,
 		typeOfName,
-        first,
-        second,
+		first,
+		second,
 		delimiter,
 		elements,
 		_classTitle,
@@ -36,13 +37,13 @@ export class MatrixElement extends Basic
 			_classTitle: _classTitle ? _classTitle : 'SheetElement',
 		})
 		this._excelSheetName = name
-		this.positions = {first,second}
+		this.positions = { first, second }
 		this.elements = elements ? elements : []
 		this.sourceId = id
 		this.name = name
 		this.color = color
 		this.visibility = visibility
-		this.id = String(Date.now())+name
+		this.id = uuidv4()
 	}
 
 	// #endregion Constructors (1)
@@ -71,6 +72,12 @@ export class MatrixElement extends Basic
 	}
 	public set decodedName(value: string) {
 		this._decodedName = value
+	}
+	public get encodedName(): string {
+		return this._encodedName
+	}
+	public set encodedName(value: string) {
+		this._encodedName = value
 	}
 
 	// #region Private Accessors (4)

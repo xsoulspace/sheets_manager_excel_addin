@@ -16,6 +16,7 @@
     "core-js": "^3.6.4",
     "hex-to-rgba": "^2.0.1",
     "register-service-worker": "^1.7.0",
+    "uuid": "^7.0.2",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-nestable": "^2.5.2",

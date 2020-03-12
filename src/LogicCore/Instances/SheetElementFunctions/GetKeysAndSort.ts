@@ -143,7 +143,6 @@ export const rewritePositions = async (
 ): Promise<MatrixElementInterface.MEArr> => {
 	let newArr: MatrixElementInterface.MEArr = []
 	for (const [i, el] of arr.entries()) {
-		console.log('rewrite', { i, el, level, upperLevel })
 		if (level == 0) {
 			el.positions.first = i
 			el.positions.second = 0

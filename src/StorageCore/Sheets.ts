@@ -3,6 +3,7 @@ import { WorksheetsBuilder } from '@/LogicCore/APIExcel/WorksheetsBuilder'
 import { Log } from '@/LogicCore/Debug/Log'
 import getMockSheets from './getMockSheets'
 import { MatrixController } from '@/LogicCore/Instances/MatrixElement/MatrixController'
+import { MatrixElement } from '@/LogicCore/Instances/MatrixElement/MatrixElement'
 
 const iniOptions: MatrixElementInterface.MatrixControllerConstructor = {
 	typeOfName: '_excelSheetName',
@@ -47,15 +48,25 @@ export default class Sheets extends VuexModule {
 		this.elements = elements
 	}
 	@Mutation
-	changeSheetPositionMutation(
+	changeElementsMutation(
 		elements: MatrixElementInterface.MatrixController
 	): void {
 		this.elements = elements
 	}
+
 	@Action
-	async renameSheet() {
-		const sh = await WorksheetsBuilder.buildWorksheetsClass()
-		await sh.renameWorksheet('1', 'hola')
+	async renameSheet(el: MatrixElementInterface.MatrixElement) {
+		const elements = this.elements
+		await elements.changeElement(el)
+		this.changeElementsMutation(elements)
+		switch (this.outsideApp) {
+			case 'browser':
+				break
+			case 'excelDesktop':
+				const sh = await WorksheetsBuilder.buildWorksheetsClass()
+				await sh.renameWorksheet(el.sourceId, el.name)
+				break
+		}
 	}
 	@Action
 	async changeSheetPosition({
@@ -66,7 +77,7 @@ export default class Sheets extends VuexModule {
 		if (items.length > 0) {
 			const elements = this.elements
 			await elements.changeSheetPosition(items)
-			this.changeSheetPositionMutation(elements)
+			this.changeElementsMutation(elements)
 			switch (this.outsideApp) {
 				case 'browser':
 					//nothing to do
@@ -150,7 +161,6 @@ export default class Sheets extends VuexModule {
 					throw Error('source is not defined')
 			}
 			await elements.firstOpenScenarioCreateMatrixElements(sheets)
-			console.log('ini sheets', sheets)
 			this.initializeStoreMutation(elements)
 			this.setOutsideApp(sourceApp)
 			switch (sourceApp) {

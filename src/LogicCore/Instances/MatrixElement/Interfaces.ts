@@ -24,6 +24,7 @@ namespace MatrixElementInterface {
 		positions: Positions
 		_doesNameIncludesNumerationPattern(): boolean
 		decodedName: string
+		encodedName: string
 	}
 	export interface MatrixElementConstructor extends BasicConstructor {
 		id: string
@@ -62,6 +63,7 @@ namespace MatrixElementInterface {
 		correctDoubles(): Promise<void>
 		writeSheets(sheetsArr: MEArr): void
 		getExcelSheets(): MEArr
+		changeElement(el: MatrixElement): Promise<void>
 	}
 	export interface MatrixControllerConstructor extends BasicConstructor {}
 }
