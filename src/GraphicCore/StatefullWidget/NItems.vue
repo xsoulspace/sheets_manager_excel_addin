@@ -1,13 +1,14 @@
 <template>
 	<div>
 		<vue-nestable
-			v-model="nestableItems"
+			v-model="elements"
 			:childrenProp="childrenProp"
-			:MaxDepth="2"
-			:threshold="4"
+			:maxDepth="2"
+			:threshold="50"
+			@change='changeElements'
 		>
 			<vue-nestable-handle slot-scope="{ item }" :item="item">
-				{{ item.text }}
+				<NItem :el='item' :id="item.id"/>
 			</vue-nestable-handle>
 		</vue-nestable>
 	</div>
@@ -20,30 +21,31 @@ import { Log } from '@/LogicCore/Debug/Log'
 import Sheets from '@/StorageCore/Sheets'
 import AppSettings from '@/StorageCore/AppSettings'
 import outsideClick from '@/GraphicCore/Directives/outside-click'
-
-@Component({})
+import NItem from "./NItem.vue";
+@Component({
+  props: ['pElements'],
+  components: {
+    NItem
+  }
+})
 export default class Item extends Vue {
+	els: any[] = []
+	@Watch('pElements')
+	changePElements(values: any[]){
+		this.els = values
+	}
+
+  changeElements(){
+    this.$emit('elements-change',this.els)
+  }
+
+  set elements(values: any[]){
+	  this.els = values
+  }
+  get elements(){
+    return this.els
+  }
 	childrenProp: string = 'elements'
-	nestableItems: any[] = [
-		{
-			id: 0,
-			text: 'Andy',
-		},
-		{
-			id: 1,
-			text: 'Harry',
-			elements: [
-				{
-					id: 2,
-					text: 'David',
-				},
-			],
-		},
-		{
-			id: 3,
-			text: 'Lisa',
-		},
-	]
 }
 </script>
 

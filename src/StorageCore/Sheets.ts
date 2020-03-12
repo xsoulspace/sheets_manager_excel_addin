@@ -1,10 +1,10 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { SheetElementsMap } from '@/LogicCore/Instances/SheetElement/SheetElements'
 import { WorksheetsBuilder } from '@/LogicCore/APIExcel/WorksheetsBuilder'
 import { Log } from '@/LogicCore/Debug/Log'
 import getMockSheets from './getMockSheets'
+import { MatrixController } from '@/LogicCore/Instances/MatrixElement/MatrixController'
 
-const iniOptions: SheetElementsInterface.SheetElementsMapConstructor = {
+const iniOptions: MatrixElementInterface.MatrixControllerConstructor = {
 	typeOfName: '_excelSheetName',
 	delimiter: '_',
 	_classTitle: 'SheetElementsMap',
@@ -12,27 +12,22 @@ const iniOptions: SheetElementsInterface.SheetElementsMapConstructor = {
 
 @Module({ name: 'Sheets', namespaced: true })
 export default class Sheets extends VuexModule {
-	elementsMap: SheetElementsInterface.SheetElementsMap = new SheetElementsMap(
+	elements: MatrixElementInterface.MatrixController = new MatrixController(
 		iniOptions
 	)
 	appContext: Excel.RequestContext | undefined = undefined
 
 	get getSheets() {
-		return this.elementsMap.arrElements
-	}
-	get getSheet() {
-		return (pos: number) => {
-			return this.elementsMap.eMap.get(String(pos))
-		}
+		return this.elements.arrElements
 	}
 
 	/** function to assign updated elements to state */
 	@Mutation
-	setSheetsMutation(sheets: SheetElementsInterface.EMap) {
-		this.elementsMap.writeSheets(sheets)
+	setSheetsMutation(sheets: MatrixElementInterface.MEArr) {
+		this.elements.writeSheets(sheets)
 	}
 	@Action
-	async setSheets(sheets: SheetElementsInterface.EMap): Promise<void> {
+	async setSheets(sheets: MatrixElementInterface.MEArr): Promise<void> {
 		this.setSheetsMutation(sheets)
 	}
 	/** function to assign updated elements to state */
@@ -47,41 +42,41 @@ export default class Sheets extends VuexModule {
 
 	@Mutation
 	initializeStoreMutation(
-		elementsMap: SheetElementsInterface.SheetElementsMap
+		elements: MatrixElementInterface.MatrixController
 	) {
-		this.elementsMap = elementsMap
+		this.elements = elements
 	}
 	@Mutation
-	async changeSheetPositionMutation(
-		elementsMap: SheetElementsInterface.SheetElementsMap
-	): Promise<void> {
-		this.elementsMap = elementsMap
+	changeSheetPositionMutation(
+		elements: MatrixElementInterface.MatrixController
+	): void {
+		this.elements = elements
 	}
 
 	@Action
 	async changeSheetPosition({
-		el,
 		items,
 	}: {
-		el: SheetElementsInterface.SheetElement
-		items: SheetElementsInterface.SheetElement[]
+		items: MatrixElementInterface.MEArr
 	}): Promise<void> {
-		const elementsMap = this.elementsMap
-		await elementsMap.changeSheetPosition(el,items)
-		this.changeSheetPositionMutation(elementsMap)
+		if(items.length>0){
+			const elements = this.elements
+			await elements.changeSheetPosition(items)
+			this.changeSheetPositionMutation(elements)	
+		}
 	}
 
 	@Action
 	async initializeStore(
-		sourceApp: SheetElementsInterface.outsideApp
+		sourceApp: MatrixElementInterface.outsideApp
 	): Promise<void> {
 		try {
 			/** first, we need to understand
 			 * what we will use as data source
 			 */
-			let elementsMap: SheetElementsInterface.SheetElementsMap
-			let sheets: SheetElementsInterface.sheetsSource
-			let options: SheetElementsInterface.SheetElementsMapConstructor
+			let elements: MatrixElementInterface.MatrixController
+			let sheets: MatrixElementInterface.sheetsSource
+			let options: MatrixElementInterface.MatrixControllerConstructor
 
 			switch (sourceApp) {
 				case 'browser':
@@ -91,7 +86,7 @@ export default class Sheets extends VuexModule {
 						delimiter: '_',
 						_classTitle: 'SheetElementsMap',
 					}
-					elementsMap = new SheetElementsMap(options)
+					elements = new MatrixController(options)
 					break
 
 				case 'excelDesktop':
@@ -107,14 +102,14 @@ export default class Sheets extends VuexModule {
 						delimiter: '_',
 						_classTitle: 'SheetElementsMap',
 					}
-					elementsMap = new SheetElementsMap(options)
+					elements = new MatrixController(options)
 					break
 				default:
 					throw Error('source is not defined')
 			}
-			await elementsMap.firstOpenScenarioCreateSheetElements(sheets)
+			await elements.firstOpenScenarioCreateMatrixElements(sheets)
 			console.log('ini sheets', sheets)
-			this.initializeStoreMutation(elementsMap)
+			this.initializeStoreMutation(elements)
 		} catch (error) {
 			throw Log.error('initializeStore', error)
 		}

@@ -1,18 +1,18 @@
 <template>
 	<div
 		:id="id"
-		class="item"
-		:class="{ '--is-dark': isDarkTheme }"
+		draggable="true"
 	>
-		<p
+		{{name}}
+		<!-- <p
 			v-outsideClick="{ exclude: ['input'], handler: 'closeInput' }"
 			v-show="!isInputActive"
 			class="item__label"
 			@click="showInput"
 		>
 			{{ name }}
-		</p>
-		<input ref="input" v-show="isInputActive" type="text" v-model="name" />
+		</p> -->
+		<!-- <input ref="input" v-show="isInputActive" type="text" v-model="name" /> -->
 	</div>
 </template>
 
@@ -24,7 +24,7 @@ import Sheets from '@/StorageCore/Sheets'
 import AppSettings from '@/StorageCore/AppSettings'
 import outsideClick from '@/GraphicCore/Directives/outside-click'
 @Component({
-	props: ['id', 'el', 'pos'],
+	props: ['id', 'el'],
 	components: {	},
 	directives: {
 		outsideClick,
@@ -51,19 +51,12 @@ export default class Item extends Vue {
 	changeElement(el: SheetElementsInterface.SheetElement) {
 		this.$emit('change-element', { el, pos: this.$props.pos })
 	}
-	public get isDarkTheme() {
-		const module = getModule(AppSettings, this.$store)
-		return module.getIsDarkTheme
-	}
 	
 	set name(value: string) {
 		this.$data.element.name = value
 	}
 	get name() {
 		return this.$data.element.name
-	}
-	get elements(): SheetElementsInterface.EMap {
-		return this.$data.element ? this.$data.element.elements : new Map()
 	}
 }
 </script>

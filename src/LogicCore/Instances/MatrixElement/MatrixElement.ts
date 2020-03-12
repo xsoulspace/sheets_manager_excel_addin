@@ -68,6 +68,9 @@ export class MatrixElement extends Basic
 	public get decodedName(): string {
 		return this._decodedName
 	}
+	public set decodedName(value: string) {
+		this._decodedName = value
+	}
 
 	// #region Private Accessors (4)
 

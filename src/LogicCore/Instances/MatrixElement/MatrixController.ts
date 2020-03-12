@@ -12,19 +12,15 @@ export class MatrixController extends Basic
 	public get arrElements(): MatrixElementInterface.MEArr {
 		return this._arr
 	}
-	public set arrElements(arr: MatrixElementInterface.MEArr) {
-		this.firstOpenScenarioCreateMatrixElements(arr)
-	}
+	// public set arrElements(arr: MatrixElementInterface.MEArr) {
+	// 	this.firstOpenScenarioCreateMatrixElements(arr)
+	// }
 	public maintainerStatuses = {
 		areSheetsHaveNumeration: false,
 		isNumerationBroken: false,
 		shouldWeRestoreNumeration: true,
 	}
-	async changeSheetPosition(
-		items: MatrixElementInterface.MEArr
-	): Promise<void> {
-		await this.writeSheets(items)
-	}
+
 	// #endregion Properties (2)
 
 	// #region Constructors (1)
@@ -43,6 +39,38 @@ export class MatrixController extends Basic
 	// #endregion Constructors (1)
 
 	// #region Public Methods (6)
+	public async changeSheetPosition(
+		items: MatrixElementInterface.MEArr
+	): Promise<void> {
+		try {
+			await this.writeSheets(items)
+			await this.usualSheetChange()
+		} catch (error) {
+			this.log.error('changeSheetPosition', error)
+		}
+	}
+
+	public async usualSheetChange() {
+		this._arr = await this.ReWriteNames(this._arr)
+		await this._sheetsNumerationMaintainer()
+		const {
+			areSheetsHaveNumeration,
+			isNumerationBroken,
+		} = this.maintainerStatuses
+		console.log('xx', this.maintainerStatuses)
+		if (areSheetsHaveNumeration && !isNumerationBroken) {
+			/** if numeration is ok, then we need to switch numeration type */
+			// console.log('numeration is exists and not broken')
+			await this.sheetsNumerationRepairer()
+		} else if (areSheetsHaveNumeration && isNumerationBroken) {
+			/** we need to show ui messgae to user do we need to restore  */
+			await this.sheetsNumerationRepairer()
+		} else {
+			// console.log('numeration is exists and not broken')
+			/** we will reorder all sheets accordingly to type */
+			await this.reorderSheets({ requereToCorrectType: false })
+		}
+	}
 
 	/**@description
 	 * We need to check:
@@ -212,14 +240,25 @@ export class MatrixController extends Basic
 						}
 					}
 				}
-				console.log(hasNumeration)
 				return hasNumeration
 			})()
 		} catch (error) {
 			throw this.log.error('_sheetsNumerationMaintainer', error)
 		}
 	}
-
+	async ReWriteNames(arr: any[]){
+		let newArr= []
+		for (const i of arr) {
+			console.log(i.name)
+			i.decodedName = i.name
+			console.log(i)
+			if(i.elements.length> 0){
+				i.elements = await this.ReWriteNames(i.elements)
+			}
+			newArr.push(i)
+		}
+		return newArr
+	}
 	private async _simpleSheetsLoading(
 		sheets: MatrixElementInterface.sheetsSource
 	): Promise<void> {
@@ -231,14 +270,18 @@ export class MatrixController extends Basic
 					'positions' in sheet
 						? sheet.positions
 						: { first: Number(index), second: 0 }
+				const name = sheet.name
+				const color = sheet.tabColor
+				const visibility = sheet.visibility
+				const id = sheet.id
 				const options: MatrixElementInterface.MatrixElementConstructor = {
-					color: sheet.tabColor,
-					name: sheet.name,
+					color,
+					name,
 					typeOfName: this.typeOfName,
-					first: first,
-					second: second,
-					id: sheet.id,
-					visibility: sheet.visibility,
+					first,
+					second,
+					id,
+					visibility,
 					delimiter: this.delimiter,
 					elements: [],
 					_classTitle: undefined,

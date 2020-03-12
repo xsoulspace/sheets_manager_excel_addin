@@ -77,7 +77,7 @@ export default class ItemsDropzone extends Vue {
 		
 		const module = getModule(Sheets, this.$store)
 
-		await module.changeSheetPosition({el, items:this.$data.items})
+		await module.changeSheetPosition({items:this.$data.items})
 	}
 }
 </script>
