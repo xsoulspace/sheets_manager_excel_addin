@@ -40,12 +40,13 @@ namespace MatrixElementInterface {
 		requereToCorrectType: boolean
 		typeOfName: NameType
 	}
+	export interface maintainerStatuses {
+		areSheetsHaveNumeration: boolean
+		isNumerationBroken: boolean
+		shouldWeRestoreNumeration: boolean
+	}
 	export interface MatrixController extends Basic {
-		maintainerStatuses: {
-			areSheetsHaveNumeration: boolean
-			isNumerationBroken: boolean
-			shouldWeRestoreNumeration: boolean
-		}
+		maintainerStatuses: maintainerStatuses
 		arrElements: MEArr
 		firstOpenScenarioCreateMatrixElements(
 			excelSheets: sheetsSource

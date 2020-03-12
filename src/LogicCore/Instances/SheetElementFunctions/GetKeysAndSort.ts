@@ -136,6 +136,35 @@ export const getPositionsAndGroupEMap = ({
 	}
 }
 
+export const rewritePositions = async (
+	arr: MatrixElementInterface.MEArr,
+	level: number = 0,
+	upperLevel: number = 0
+): Promise<MatrixElementInterface.MEArr> => {
+	let newArr: MatrixElementInterface.MEArr = []
+	for (const [i, el] of arr.entries()) {
+		console.log('rewrite', { i, el, level, upperLevel })
+		if (level == 0) {
+			el.positions.first = i
+			el.positions.second = 0
+		} else {
+			el.positions.first = upperLevel
+			el.positions.second = i + 1
+		}
+
+		el.decodedName = el.name
+		if (el.elements.length > 0) {
+			el.elements = await rewritePositions(
+				el.elements,
+				1,
+				el.positions.first
+			)
+		}
+		newArr.push(el)
+	}
+	return newArr
+}
+
 /**
  * Method to group all items
  * Returns position based key map with elements
@@ -148,7 +177,7 @@ export const getPositionsAndGroupEArr = ({
 }: MatrixElementInterface.getPositionsAndSortOptions): MatrixElementInterface.MEArr => {
 	try {
 		const NONEEXISTS = 'nonexists'
-		let tempMap: MatrixElementInterface.MEMap= new Map()
+		let tempMap: MatrixElementInterface.MEMap = new Map()
 		for (let sheet of oldArr) {
 			if (requereToCorrectType) sheet.typeOfName = typeOfName
 			if (sheet.positions.second > 0) {
@@ -174,20 +203,15 @@ export const getPositionsAndGroupEArr = ({
 				let finalElement = tempElement
 					? tempElement
 					: new MatrixElement(options)
-				let max: number =
+				let pos: number =
 					finalElement.elements.length == 0
 						? 1
 						: finalElement.elements.length
-				const pos = checkAndTryArr(
-					changingSheet.positions.second,
-					finalElement.elements.map(el=>el.positions.second),
-					max
-				)
 				changingSheet.positions.second = pos
 				/**
 				 * then we need to put new element in as an element
 				 */
-				finalElement.elements.splice(pos,0,changingSheet)
+				finalElement.elements.splice(pos, 0, changingSheet)
 				tempMap.set(String(finalElement.positions.first), finalElement)
 			} else {
 				let max: number = tempMap.size

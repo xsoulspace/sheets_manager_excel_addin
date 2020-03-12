@@ -3,7 +3,9 @@ import {
 	getKeysAndSort,
 	getPositionsAndGroupEMap,
 	getPositionsAndGroupEArr,
+	rewritePositions,
 } from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'
+import { MaintainerStatuses } from './Maintainer'
 export class MatrixController extends Basic
 	implements MatrixElementInterface.MatrixController {
 	// #region Properties (2)
@@ -15,11 +17,7 @@ export class MatrixController extends Basic
 	// public set arrElements(arr: MatrixElementInterface.MEArr) {
 	// 	this.firstOpenScenarioCreateMatrixElements(arr)
 	// }
-	public maintainerStatuses = {
-		areSheetsHaveNumeration: false,
-		isNumerationBroken: false,
-		shouldWeRestoreNumeration: true,
-	}
+	public maintainerStatuses = new MaintainerStatuses()
 
 	// #endregion Properties (2)
 
@@ -43,15 +41,15 @@ export class MatrixController extends Basic
 		items: MatrixElementInterface.MEArr
 	): Promise<void> {
 		try {
-			await this.writeSheets(items)
-			await this.usualSheetChange()
+			await this.usualSheetChange(items)
 		} catch (error) {
 			this.log.error('changeSheetPosition', error)
 		}
 	}
 
-	public async usualSheetChange() {
-		this._arr = await this.ReWriteNames(this._arr)
+	public async usualSheetChange(arr: MatrixElementInterface.MEArr) {
+		const reorderedArr = await rewritePositions(arr)
+		this._arr = reorderedArr
 		await this._sheetsNumerationMaintainer()
 		const {
 			areSheetsHaveNumeration,
@@ -61,7 +59,7 @@ export class MatrixController extends Basic
 		if (areSheetsHaveNumeration && !isNumerationBroken) {
 			/** if numeration is ok, then we need to switch numeration type */
 			// console.log('numeration is exists and not broken')
-			await this.sheetsNumerationRepairer()
+			await this.writeSheets(reorderedArr)
 		} else if (areSheetsHaveNumeration && isNumerationBroken) {
 			/** we need to show ui messgae to user do we need to restore  */
 			await this.sheetsNumerationRepairer()
@@ -206,8 +204,9 @@ export class MatrixController extends Basic
 			throw this.log.error('correctDoubles', error)
 		}
 	}
-	public writeSheets(sheetsEMap: MatrixElementInterface.MEArr): void {
+	public async writeSheets(sheetsEMap: MatrixElementInterface.MEArr) {
 		try {
+			this._arr = await this.ReWriteNames(this._arr)
 			this._arr = sheetsEMap
 		} catch (error) {
 			throw this.log.error('writeSheets', error)
@@ -220,16 +219,15 @@ export class MatrixController extends Basic
 
 	private async _sheetsNumerationMaintainer(): Promise<void> {
 		try {
+			/** Reset statuses */
+			this.maintainerStatuses.resetToDefault()
 			/** now we need to check every sheet - is it has encoded pattern */
 			this.maintainerStatuses.areSheetsHaveNumeration = ((): boolean => {
 				let hasNumeration: boolean = false
 				for (let sheet of this._arr) {
 					if (hasNumeration === false) {
 						hasNumeration = sheet._doesNameIncludesNumerationPattern()
-						console.log('sheet', hasNumeration)
 					} else if (hasNumeration) {
-						console.log('hasNumeration', hasNumeration)
-
 						/** if one sheet will have numeration,
 						 * then every sheet after it will be checked
 						 * for borken numeration condition
@@ -246,19 +244,18 @@ export class MatrixController extends Basic
 			throw this.log.error('_sheetsNumerationMaintainer', error)
 		}
 	}
-	async ReWriteNames(arr: any[]){
-		let newArr= []
-		for (const i of arr) {
-			console.log(i.name)
-			i.decodedName = i.name
-			console.log(i)
-			if(i.elements.length> 0){
-				i.elements = await this.ReWriteNames(i.elements)
+	async ReWriteNames(arr: MatrixElementInterface.MEArr) {
+		let newArr: MatrixElementInterface.MEArr = []
+		for (const el of arr) {
+			el.decodedName = el.name
+			if (el.elements.length > 0) {
+				el.elements = await this.ReWriteNames(el.elements)
 			}
-			newArr.push(i)
+			newArr.push(el)
 		}
 		return newArr
 	}
+
 	private async _simpleSheetsLoading(
 		sheets: MatrixElementInterface.sheetsSource
 	): Promise<void> {
