@@ -121,7 +121,7 @@ export default class Sheets extends VuexModule {
 	}
 	@Action
 	async initializeStore(
-		sourceApp: MatrixElementInterface.outsideApp
+		newSourceApp?: MatrixElementInterface.outsideApp
 	): Promise<void> {
 		try {
 			/** first, we need to understand
@@ -130,7 +130,7 @@ export default class Sheets extends VuexModule {
 			let elements: MatrixElementInterface.MatrixController
 			let sheets: MatrixElementInterface.sheetsSource
 			let options: MatrixElementInterface.MatrixControllerConstructor
-
+			const sourceApp = newSourceApp ? newSourceApp : this.outsideApp
 			switch (sourceApp) {
 				case 'browser':
 					sheets = await getMockSheets()

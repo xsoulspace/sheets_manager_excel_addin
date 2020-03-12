@@ -30,7 +30,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="tabs__tab" @click="turnOnInfo">
+		<div class="tabs__tab" @click="sync">
 			<div
 				class="button --has-accent"
 				:class="{
@@ -84,6 +84,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import AppSettings from '@/StorageCore/AppSettings'
 import { getModule } from 'vuex-module-decorators'
+import Sheets from '../../StorageCore/Sheets'
 
 @Component({
 	name: 'navigation-tabs',
@@ -111,6 +112,10 @@ export default class NavigationTabs extends Vue {
 			return
 		}
 		this.$data.isSearchActive = value
+	}
+	async sync() {
+		const module = getModule(Sheets, this.$store)
+		await module.initializeStore()
 	}
 }
 </script>
