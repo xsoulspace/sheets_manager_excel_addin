@@ -3,14 +3,15 @@ $color-mark-width: 6px;
 .item {
 	display: flex;
     flex-flow: row nowrap;
-    align-items: flex-start;
+    align-items: center;
     margin-right: 0.3em;
 	align-self: stretch;
 	height: 100%;
 	&.--on-edit {
 		padding: 0;
 		.item-input {
-			min-width: 100%;
+			min-width: 2em;
+			width: 100%;
 			word-wrap: break-word;
 			min-height: 3em;
 			border-radius: unset;
@@ -44,7 +45,7 @@ $color-mark-width: 6px;
 		}
 	}
 	&-color {
-		margin: 0 1em 0 0;
+		margin: 0 0.5em 0 0;
 		&.--has-corner {
 			border-style: solid;
 			border-left-width: $color-mark-width;
@@ -75,5 +76,8 @@ $color-mark-width: 6px;
 				box-shadow: 3px 4px 9px -4px rgba(31, 31, 31, 0.41);
 			}
 		}
+	}
+	&-icon{
+		margin-right: 0.5em;
 	}
 }

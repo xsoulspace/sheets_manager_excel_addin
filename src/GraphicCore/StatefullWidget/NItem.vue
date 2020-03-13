@@ -9,7 +9,9 @@
 		}"
 	>
 		<NColorMark :el="el" @click="openColors" />
-
+		<span class="item-icon">
+			<i class="fas fa-ellipsis-v"></i>
+		</span>
 		<NInput
 			:el="el"
 			:is-draggable="isDraggable"
