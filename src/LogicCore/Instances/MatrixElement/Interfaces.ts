@@ -46,6 +46,8 @@ namespace MatrixElementInterface {
 		areSheetsHaveNumeration: boolean
 		isNumerationBroken: boolean
 		shouldWeRestoreNumeration: boolean
+		resetToDefault(): void
+		default: maintainerStatuses
 	}
 	export interface MatrixController extends Basic {
 		maintainerStatuses: maintainerStatuses
@@ -65,5 +67,7 @@ namespace MatrixElementInterface {
 		getExcelSheets(): MEArr
 		changeElement(el: MatrixElement): Promise<void>
 	}
-	export interface MatrixControllerConstructor extends BasicConstructor {}
+	export interface MatrixControllerConstructor extends BasicConstructor {
+		maintainerStatuses: maintainerStatuses
+	}
 }

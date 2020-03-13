@@ -19,8 +19,6 @@
 // @ is an alias to /src
 import SettingsModal from '@/GraphicCore/StatefullWidget/SettingsModal.vue'
 import NavigationTabs from '@/GraphicCore/StatefullWidget/NavigationTabs.vue'
-import ItemsDropzone from '@/GraphicCore/StatefullWidget/ItemsDropzone.vue'
-import Item from '@/GraphicCore/StatefullWidget/Item.vue'
 import { Component, Vue } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import AppSettings from '@/StorageCore/AppSettings'
@@ -31,8 +29,6 @@ import { WorksheetsBuilder } from '../../LogicCore/APIExcel/WorksheetsBuilder'
 	components: {
 		NavigationTabs,
 		SettingsModal,
-		ItemsDropzone,
-		Item,
 		NItems,
 	},
 })

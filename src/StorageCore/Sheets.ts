@@ -3,73 +3,93 @@ import { WorksheetsBuilder } from '@/LogicCore/APIExcel/WorksheetsBuilder'
 import { Log } from '@/LogicCore/Debug/Log'
 import getMockSheets from './getMockSheets'
 import { MatrixController } from '@/LogicCore/Instances/MatrixElement/MatrixController'
-import { MatrixElement } from '@/LogicCore/Instances/MatrixElement/MatrixElement'
+import { MaintainerStatuses } from '@/LogicCore/Instances/MatrixElement/Maintainer'
 
 const iniOptions: MatrixElementInterface.MatrixControllerConstructor = {
 	typeOfName: '_excelSheetName',
 	delimiter: '_',
 	_classTitle: 'SheetElementsMap',
+	maintainerStatuses: {} as MaintainerStatuses,
 }
 
 @Module({ name: 'Sheets', namespaced: true })
 export default class Sheets extends VuexModule {
-	elements: MatrixElementInterface.MatrixController = new MatrixController(
+	// #region Properties (3)
+
+	public appContext: Excel.RequestContext | undefined = undefined
+	public elements: MatrixElementInterface.MatrixController = new MatrixController(
 		iniOptions
 	)
-	appContext: Excel.RequestContext | undefined = undefined
-	outsideApp: MatrixElementInterface.outsideApp = 'browser'
-	get getSheets() {
-		return this.elements.arrElements
-	}
-	get getExcelSheets() {
+	public outsideApp: MatrixElementInterface.outsideApp = 'browser'
+
+	// #endregion Properties (3)
+
+	// #region Public Accessors (2)
+
+	public get getExcelSheets() {
 		return this.elements.getExcelSheets()
 	}
-	/** function to assign updated elements to state */
-	@Mutation
-	setSheetsMutation(sheets: MatrixElementInterface.MEArr) {
-		this.elements.writeSheets(sheets)
-	}
-	@Action
-	async setSheets(sheets: MatrixElementInterface.MEArr): Promise<void> {
-		this.setSheetsMutation(sheets)
-	}
-	/** function to assign updated elements to state */
-	@Mutation
-	setExcelContextMutation(context: Excel.RequestContext) {
-		this.appContext = context
-	}
-	@Action
-	async setExcelContext(context: Excel.RequestContext) {
-		this.setExcelContextMutation(context)
+
+	public get getSheets() {
+		return this.elements.arrElements
 	}
 
+	// #endregion Public Accessors (2)
+
+	// #region Public Methods (13)
+
 	@Mutation
-	initializeStoreMutation(elements: MatrixElementInterface.MatrixController) {
-		this.elements = elements
-	}
-	@Mutation
-	changeElementsMutation(
+	public changeElementsMutation(
 		elements: MatrixElementInterface.MatrixController
 	): void {
 		this.elements = elements
 	}
 
 	@Action
-	async renameSheet(el: MatrixElementInterface.MatrixElement) {
-		const elements = this.elements
-		await elements.changeElement(el)
-		this.changeElementsMutation(elements)
-		switch (this.outsideApp) {
-			case 'browser':
-				break
-			case 'excelDesktop':
-				const sh = await WorksheetsBuilder.buildWorksheetsClass()
-				await sh.renameWorksheet(el.sourceId, el.name)
-				break
+	public async changeExcelNames(sheets: MatrixElementInterface.MEArr) {
+		try {
+			const worksheetsClass = await WorksheetsBuilder.buildWorksheetsClass()
+			const maintainerStatuses: MatrixElementInterface.maintainerStatuses = this.context
+				.rootGetters['AppSettings/getMaintainerStatuses']
+
+			if (maintainerStatuses.areSheetsHaveNumeration) {
+
+				for (let [pos, sheet] of sheets.entries()) {
+					console.log(sheet)
+					await worksheetsClass.renameWorksheet(
+						sheet.sourceId,
+						sheet.name,
+						false
+					)
+				}
+			} else {
+
+				for (let [pos, sheet] of sheets.entries()) {
+					await worksheetsClass.renameWorksheet(
+						sheet.sourceId,
+						sheet.decodedName,
+						false
+					)
+				}
+			}
+
+			await worksheetsClass.context.sync()
+		} catch (error) {
+			throw Log.error('changeExcelNames', error)
 		}
 	}
+
 	@Action
-	async changeSheetColor(el: MatrixElementInterface.MatrixElement){
+	public async changeExcelPositions(sheets: MatrixElementInterface.MEArr) {
+		const worksheetsClass = await WorksheetsBuilder.buildWorksheetsClass()
+		for (let [pos, sheet] of sheets.entries()) {
+			await worksheetsClass.reorderWorksheet(sheet.sourceId, pos, false)
+		}
+		await worksheetsClass.context.sync()
+	}
+
+	@Action
+	public async changeSheetColor(el: MatrixElementInterface.MatrixElement) {
 		const elements = this.elements
 		await elements.changeElement(el)
 		this.changeElementsMutation(elements)
@@ -82,8 +102,9 @@ export default class Sheets extends VuexModule {
 				break
 		}
 	}
+
 	@Action
-	async changeSheetPosition({
+	public async changeSheetPosition({
 		items,
 	}: {
 		items: MatrixElementInterface.MEArr
@@ -105,37 +126,9 @@ export default class Sheets extends VuexModule {
 			}
 		}
 	}
-	@Action
-	async changeExcelPositions(sheets: MatrixElementInterface.MEArr) {
-		const worksheetsClass = await WorksheetsBuilder.buildWorksheetsClass()
-		for (let [pos, sheet] of sheets.entries()) {
-			await worksheetsClass.reorderWorksheet(sheet.sourceId, pos, false)
-		}
-		await worksheetsClass.context.sync()
-	}
-	@Action
-	async changeExcelNames(sheets: MatrixElementInterface.MEArr) {
-		try {
-			const worksheetsClass = await WorksheetsBuilder.buildWorksheetsClass()
-			for (let [pos, sheet] of sheets.entries()) {
-				await worksheetsClass.renameWorksheet(
-					sheet.sourceId,
-					sheet.name,
-					false
-				)
-			}
-			await worksheetsClass.context.sync()
-		} catch (error) {
-			throw Log.error('changeExcelNames', error)
-		}
-	}
-	@Mutation
-	setOutsideApp(state: MatrixElementInterface.outsideApp) {
-		this.outsideApp = state
-	}
 
 	@Action
-	async initializeStore(
+	public async initializeStore(
 		newSourceApp?: MatrixElementInterface.outsideApp
 	): Promise<void> {
 		try {
@@ -144,16 +137,20 @@ export default class Sheets extends VuexModule {
 			 */
 			let elements: MatrixElementInterface.MatrixController
 			let sheets: MatrixElementInterface.sheetsSource
-			let options: MatrixElementInterface.MatrixControllerConstructor
+			const maintainerStatuses: MatrixElementInterface.maintainerStatuses = this.context.rootGetters[
+				'AppSettings/getMaintainerStatuses'
+			]
+			let options: MatrixElementInterface.MatrixControllerConstructor = {
+				typeOfName: '_excelSheetName',
+				delimiter: '_',
+				_classTitle: 'SheetElementsMap',
+				maintainerStatuses,
+			}
+
 			const sourceApp = newSourceApp ? newSourceApp : this.outsideApp
 			switch (sourceApp) {
 				case 'browser':
 					sheets = await getMockSheets()
-					options = {
-						typeOfName: '_excelSheetName',
-						delimiter: '_',
-						_classTitle: 'SheetElementsMap',
-					}
 					elements = new MatrixController(options)
 					break
 
@@ -165,11 +162,7 @@ export default class Sheets extends VuexModule {
 					const context = worksheetsClass.context
 					// await this.setExcelContext(context)
 					/** preparing and pushing sheets to store */
-					options = {
-						typeOfName: '_excelSheetName',
-						delimiter: '_',
-						_classTitle: 'SheetElementsMap',
-					}
+
 					elements = new MatrixController(options)
 					break
 				default:
@@ -182,13 +175,86 @@ export default class Sheets extends VuexModule {
 				case 'browser':
 					break
 				case 'excelDesktop':
+					if(maintainerStatuses.areSheetsHaveNumeration){
+						await elements.correctDoubles()
+					} 	
 					const shts = elements.getExcelSheets()
 					await this.changeExcelPositions(shts)
 					await this.changeExcelNames(shts)
 					break
 			}
+
 		} catch (error) {
 			throw Log.error('initializeStore', error)
 		}
 	}
+
+	@Mutation
+	public initializeStoreMutation(
+		elements: MatrixElementInterface.MatrixController
+	) {
+		this.elements = elements
+	}
+
+	@Action
+	public async renameSheet(el: MatrixElementInterface.MatrixElement) {
+		const elements = this.elements
+		await elements.changeElement(el)
+		this.changeElementsMutation(elements)
+		switch (this.outsideApp) {
+			case 'browser':
+				break
+			case 'excelDesktop':
+				const sheetsHasNumeration: MatrixElementInterface.maintainerStatuses['shouldWeRestoreNumeration'] = this
+					.context.rootGetters[
+					'AppSettings/shouldWeRestoreNumeration'
+				]
+				const sh = await WorksheetsBuilder.buildWorksheetsClass()
+				
+				if(sheetsHasNumeration){
+					await sh.renameWorksheet(
+						el.sourceId,
+						el.name
+					)
+				} else {					
+					await sh.renameWorksheet(
+						el.sourceId,
+						el.decodedName
+					)
+				}
+				
+				break
+		}
+	}
+
+	@Action
+	public async setExcelContext(context: Excel.RequestContext) {
+		this.setExcelContextMutation(context)
+	}
+
+	/** function to assign updated elements to state */
+	@Mutation
+	public setExcelContextMutation(context: Excel.RequestContext) {
+		this.appContext = context
+	}
+
+	@Mutation
+	public setOutsideApp(state: MatrixElementInterface.outsideApp) {
+		this.outsideApp = state
+	}
+
+	@Action
+	public async setSheets(
+		sheets: MatrixElementInterface.MEArr
+	): Promise<void> {
+		this.setSheetsMutation(sheets)
+	}
+
+	/** function to assign updated elements to state */
+	@Mutation
+	public setSheetsMutation(sheets: MatrixElementInterface.MEArr) {
+		this.elements.writeSheets(sheets)
+	}
+
+	// #endregion Public Methods (13)
 }

@@ -27,12 +27,18 @@ export class MatrixController extends Basic
 		typeOfName,
 		delimiter,
 		_classTitle,
+		maintainerStatuses,
 	}: MatrixElementInterface.MatrixControllerConstructor) {
 		super({
 			_classTitle: _classTitle ? _classTitle : 'SheetElementsMap',
 			typeOfName,
 			delimiter,
 		})
+		this.maintainerStatuses = new MaintainerStatuses(
+			maintainerStatuses.areSheetsHaveNumeration,
+			maintainerStatuses.isNumerationBroken,
+			maintainerStatuses.shouldWeRestoreNumeration
+		)
 	}
 	// #endregion Constructors (1)
 
@@ -46,12 +52,12 @@ export class MatrixController extends Basic
 			this.log.error('changeSheetPosition', error)
 		}
 	}
-	public async changeElement(el: MatrixElementInterface.MatrixElement){
+	public async changeElement(el: MatrixElementInterface.MatrixElement) {
 		/**find element position and split it */
-		const isSecond = el.positions.second> 0
-		if(isSecond){
+		const isSecond = el.positions.second > 0
+		if (isSecond) {
 			const parent = this._arr[el.positions.first]
-			parent.elements[el.positions.second-1] = el
+			parent.elements[el.positions.second - 1] = el
 			this._arr[el.positions.first] = parent
 		} else {
 			this._arr[el.positions.first] = el
@@ -103,17 +109,26 @@ export class MatrixController extends Basic
 			await this._simpleSheetsLoading(excelSheets)
 			// console.log('sheet numeration maint starts', this._arr)
 			await this._sheetsNumerationMaintainer()
-			console.log('sheet numeration maint ends', this._arr)
+			// console.log('sheet numeration maint ends', this._arr)
 			const {
 				areSheetsHaveNumeration,
 				isNumerationBroken,
+				shouldWeRestoreNumeration,
 			} = this.maintainerStatuses
+
 			if (areSheetsHaveNumeration && !isNumerationBroken) {
 				/** if numeration is ok, then we need to switch numeration type */
 				// console.log('numeration is exists and not broken')
 				await this.sheetsNumerationRepairer()
 			} else if (areSheetsHaveNumeration && isNumerationBroken) {
 				/** we need to show ui messgae to user do we need to restore  */
+				await this.sheetsNumerationRepairer()
+			} else if (
+				!areSheetsHaveNumeration &&
+				!isNumerationBroken &&
+				shouldWeRestoreNumeration
+			) {
+				/** if no one sheet has numeration, but we should restore it anyway */
 				await this.sheetsNumerationRepairer()
 			} else {
 				// console.log('numeration is exists and not broken')
@@ -162,6 +177,7 @@ export class MatrixController extends Basic
 					const tempArr: MatrixElementInterface.MEArr = await getPositionsAndGroupEArr(
 						options
 					)
+
 					/** resort elements */
 					await this.writeSheets(tempArr)
 					break
@@ -247,6 +263,7 @@ export class MatrixController extends Basic
 						}
 					}
 				}
+
 				return hasNumeration
 			})()
 		} catch (error) {
@@ -278,7 +295,9 @@ export class MatrixController extends Basic
 						: { first: Number(index), second: 0 }
 				const name = (' ' + sheet.name).slice(1)
 				const color = (' ' + sheet.tabColor).slice(1)
-				const visibility =  <Excel.SheetVisibility>(' ' + sheet.visibility).slice(1)
+				const visibility = <Excel.SheetVisibility>(
+					(' ' + sheet.visibility).slice(1)
+				)
 				const id = (' ' + sheet.id).slice(1)
 				const options: MatrixElementInterface.MatrixElementConstructor = {
 					color,
@@ -303,12 +322,12 @@ export class MatrixController extends Basic
 		}
 	}
 
-	getExcelSheets(){
+	getExcelSheets() {
 		let arr: MatrixElementInterface.MEArr = []
 		for (let el of this._arr) {
 			arr.push(el)
-			if(el.elements.length > 0){
-				el.elements.forEach(child=>arr.push(child))
+			if (el.elements.length > 0) {
+				el.elements.forEach(child => arr.push(child))
 			}
 		}
 		return arr

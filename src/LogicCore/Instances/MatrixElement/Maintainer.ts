@@ -1,15 +1,20 @@
 
 export class MaintainerStatuses implements MatrixElementInterface.maintainerStatuses{
-
+    default: MaintainerStatuses = {} as  MaintainerStatuses
     constructor(
         public areSheetsHaveNumeration: boolean = false,
         public isNumerationBroken: boolean = false,
-        public shouldWeRestoreNumeration: boolean = true
-    ){ }
+        public shouldWeRestoreNumeration: boolean = false
+    ){ 
+        this.default.areSheetsHaveNumeration = areSheetsHaveNumeration
+        this.default.isNumerationBroken = isNumerationBroken
+        this.default.shouldWeRestoreNumeration = shouldWeRestoreNumeration
+
+    }
 
     resetToDefault(){
-        this.areSheetsHaveNumeration = false
-        this.isNumerationBroken = false
-        this.shouldWeRestoreNumeration = true
+        this.areSheetsHaveNumeration = this.default.areSheetsHaveNumeration
+        this.isNumerationBroken = this.default.isNumerationBroken
+        this.shouldWeRestoreNumeration = this.default.shouldWeRestoreNumeration
     }
 }

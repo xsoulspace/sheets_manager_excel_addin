@@ -51,12 +51,12 @@ export default class Item extends Vue {
 	maxLength: number = 26
 	onEdit: boolean = false
 	@Watch('onEdit')
-	onEditChange(newValue: boolean, oldValue: boolean) {
+	async onEditChange(newValue: boolean, oldValue: boolean) {
 		if (newValue !== oldValue) {
 			if (newValue) {
 				this.showInput()
 			} else {
-				this.closeInput()
+				await this.closeInput()
 			}
 		}
 	}
@@ -74,8 +74,9 @@ export default class Item extends Vue {
 		this.$data.isInputActive = true
 		this.$emit('draggable-change', false)
 	}
-	closeInput() {
+	async closeInput() {
 		this.$data.isInputActive = false
+		await this.elementChange(this.element)
 		this.$emit('draggable-change', true)
 	}
 
@@ -84,7 +85,7 @@ export default class Item extends Vue {
 	changeEl(value: MatrixElementInterface.MatrixElement) {
 		this.element = value
 	}
-	@Watch('element', { deep: true })
+	// @Watch('element', { deep: true })
 	async elementChange(el: MatrixElementInterface.MatrixElement) {
 		const sheetsModule = getModule(Sheets, this.$store)
 		switch (this.actionType) {
@@ -105,7 +106,10 @@ export default class Item extends Vue {
 	get name() {
 		return this.element.decodedName
 	}
-	async selectWorksheet() {}
+	async selectWorksheet() {
+		const sheetsModule = getModule(Sheets, this.$store)
+		
+	}
 }
 </script>
 

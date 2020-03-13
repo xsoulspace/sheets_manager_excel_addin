@@ -41,13 +41,13 @@
 							@click="changeIsNumerated"
 						/>
 					</div>
-					<div class="form__field">
+					<!-- <div class="form__field">
 						<checkbox
 							:text="`Адаптировать интерфейс под тач`"
 							:value="isTouchDevice"
 							@click="changeIsTouchDevice"
 						/>
-					</div>
+					</div> -->
 					<div class="form__field">
 						<checkbox
 							:text="`Темная тема`"
@@ -55,7 +55,7 @@
 							@click="changeIsDarkTheme"
 						/>
 					</div>
-					<div class="form__field --is-mobile">
+					<!-- <div class="form__field --is-mobile">
 						<button
 							class="button__box --has-border"
 							:class="{ '--is-dark': isDarkTheme }"
@@ -63,7 +63,7 @@
 						>
 							Очистить нумерацию листов (все цифры будут удалены)
 						</button>
-					</div>
+					</div> -->
 				</div>
 			</section>
 		</div>
@@ -87,7 +87,6 @@ import Checkbox from '@/GraphicCore/StatelessWidget/Checkbox.vue'
 })
 export default class SettingsModal extends Vue {
 	_isTouchDevice: boolean = false
-	_isNumerated: boolean = false
 	public changeIsDarkTheme() {
 		const module = getModule(AppSettings, this.$store)
 		const oldValue = module.getIsDarkTheme
@@ -107,11 +106,13 @@ export default class SettingsModal extends Vue {
 	get isTouchDevice() {
 		return this.$data._isTouchDevice
 	}
-	changeIsNumerated() {
-		this.$data._isNumerated = !this.$data._isNumerated
+	async changeIsNumerated() {
+		const settings = getModule(AppSettings, this.$store)
+		await settings.switchSheetsNumeration()
 	}
 	get isNumerated() {
-		return this.$data._isNumerated
+		const settings = getModule(AppSettings, this.$store)
+		return settings.getMaintainerStatuses.areSheetsHaveNumeration
 	}
 	turnOffSettings() {
 		this.$emit('turn-off-settings-state')

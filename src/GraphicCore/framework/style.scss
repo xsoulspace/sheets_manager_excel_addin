@@ -3,9 +3,11 @@
 @forward './Pages/index';
 @use './Library/colours';
 @use './Library/fonts';
+
 body {
 	margin: 0;
 	padding: 0;
+	border: 0;
 	overflow-x: hidden;
 	@include fonts.font('primary');
 	color: colours.theme-color('primary', 'base');
@@ -19,10 +21,8 @@ body {
 }
 #app {
 	min-height: 100vh;
-	height: fit-content;
 	transition-duration: 0.3s;
 	transition-timing-function: ease-in-out;
-
 	&.--is-dark {
 		color: colours.theme-color('primary', 'dark');
 		background-color: colours.theme-color('background', 'dark');

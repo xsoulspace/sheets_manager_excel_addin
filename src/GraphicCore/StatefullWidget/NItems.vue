@@ -1,16 +1,26 @@
 <template>
 	<div>
-		<vue-nestable
-			v-model="elements"
+		<!-- <vue-nestable
+			v-model="els"
 			:childrenProp="childrenProp"
-			:maxDepth="2"
+			:maxDepth="depth"
 			:threshold="50"
 			@change="changeElements"
 		>
 			<vue-nestable-handle slot-scope="{ item }" :item="item">
-				<NItem :el="item" :id="item.id" @open-colors="openColors" />				
+				<NItem :el="item" :id="item.id" @open-colors="openColors" />
 			</vue-nestable-handle>
-		</vue-nestable>
+		</vue-nestable> -->
+		<draggable v-model="eels">
+			<NItem
+				v-for="item in eels"
+				:el="item"
+				:id="item.id"
+				:key="item.id"
+				@open-colors="openColors"
+			>
+			</NItem>
+		</draggable>
 		<NModal
 			:isActive="isColorsOpen"
 			@close="closeColors"
@@ -24,7 +34,7 @@
 					inline
 					show-fallback
 					popover-to="left"
-					@close='closeColors'
+					@close="closeColors"
 					:class="{
 						'--is-dark': isDarkTheme,
 					}"
@@ -47,28 +57,38 @@ import AppSettings from '@/StorageCore/AppSettings'
 import outsideClick from '@/GraphicCore/Directives/outside-click'
 import NItem from './NItem.vue'
 import { ActionTypes } from './NInput.vue'
+
+import draggable from 'vuedraggable'
+
 @Component({
 	props: ['pElements'],
 	components: {
 		NItem,
 		NModal,
 		Swatches,
+		draggable,
 	},
 })
 export default class Item extends Vue {
-	els: any[] = []
-	@Watch('pElements')
-	changePElements(values: any[]) {
-		this.els = values
-	}
-	changeElements() {
+	els: MatrixElementInterface.MEArr = []
+	// @Watch('pElements')
+	// changePElements(values: any[]) {
+	// 	this.els = values
+	// }
+	// @Watch('els')
+	changeElements(value: MatrixElementInterface.MatrixElement) {
 		this.$emit('elements-change', this.els)
 	}
-	set elements(values: any[]) {
-		this.els = values
+	set eels(value: any[]){
+		this.$emit('elements-change', value)
 	}
-	get elements() {
-		return this.els
+	get eels(){
+		return this.pElements
+	}
+	get depth() {
+		const settings = getModule(AppSettings, this.$store)
+
+		return settings.getMaintainerStatuses.areSheetsHaveNumeration ? 2 : 1
 	}
 	childrenProp: string = 'elements'
 	actionType: ActionTypes = ActionTypes.nothing
@@ -93,7 +113,7 @@ export default class Item extends Vue {
 	}
 	get color() {
 		let color = this.element.color
-		if(color && color != 'undefined'){
+		if (color && color != 'undefined') {
 			return color
 		}
 		return this.isDarkTheme ? '#e1e6e4' : '#4f4f4f'
