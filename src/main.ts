@@ -13,7 +13,10 @@ import "@/GraphicCore/Directives/DragDropTouch.js";
 import VueNestable from 'vue-nestable'
 //https://github.com/rhwilr/vue-nestable#vue-nestable
 Vue.use(VueNestable)
+import Vue2TouchEvents from 'vue2-touch-events'
+//https://www.npmjs.com/package/vue2-touch-events
 
+Vue.use(Vue2TouchEvents)
 Vue.config.productionTip = false
 let vm: Vue | undefined = undefined
 /**for custom type definitions need to add to types in tsconfig "./src/types", 

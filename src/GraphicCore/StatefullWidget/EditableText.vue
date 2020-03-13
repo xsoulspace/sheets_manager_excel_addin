@@ -4,7 +4,8 @@
   @dblclick.prevent="onEdit=true"
   @click.prevent="selectWorksheet" 
   v-hammer:press="handlePress"
-  v-hammer:tap="handleTouch"
+  v-touch:tap="handleTouch"
+  class="input__label"
 >
   {{sheetName}}
 </p>
@@ -20,7 +21,7 @@
     handler: 'editOff'
   }"
   type="text"
-  class="input has-simple-look on-edit"
+  class="input__label --on-edit"
   v-model="sheetName"
 >
 </template>
@@ -29,7 +30,7 @@
 <script>
 export default {
   name: "editable-text",
-  props: ['id','dragging'],
+  props: ['el',],
   data(){
     return {
       onEdit: false,
