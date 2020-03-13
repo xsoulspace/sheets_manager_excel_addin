@@ -69,6 +69,20 @@ export default class Sheets extends VuexModule {
 		}
 	}
 	@Action
+	async changeSheetColor(el: MatrixElementInterface.MatrixElement){
+		const elements = this.elements
+		await elements.changeElement(el)
+		this.changeElementsMutation(elements)
+		switch (this.outsideApp) {
+			case 'browser':
+				break
+			case 'excelDesktop':
+				const sh = await WorksheetsBuilder.buildWorksheetsClass()
+				await sh.setWorksheetTabColor(el.sourceId, el.color)
+				break
+		}
+	}
+	@Action
 	async changeSheetPosition({
 		items,
 	}: {
@@ -119,6 +133,7 @@ export default class Sheets extends VuexModule {
 	setOutsideApp(state: MatrixElementInterface.outsideApp) {
 		this.outsideApp = state
 	}
+
 	@Action
 	async initializeStore(
 		newSourceApp?: MatrixElementInterface.outsideApp

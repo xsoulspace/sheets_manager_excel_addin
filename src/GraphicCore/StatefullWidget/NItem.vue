@@ -5,9 +5,11 @@
 		class="item"
 		:class="{
 			'--is-dark': isDarkTheme,
-			'--on-edit': onEdit
+			'--on-edit': onEdit,
 		}"
 	>
+		<NColorMark :el="el" @click="openColors" />
+
 		<NInput
 			:el="el"
 			:is-draggable="isDraggable"
@@ -17,19 +19,22 @@
 </template>
 
 <script lang="ts">
+import NColorMark from './NColorMark.vue'
+
 import { getModule } from 'vuex-module-decorators'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Log } from '@/LogicCore/Debug/Log'
-import NInput from './NInput.vue'
+import NInput, { ActionTypes } from './NInput.vue'
 import AppSettings from '@/StorageCore/AppSettings'
+import Sheets from '../../StorageCore/Sheets'
 
 @Component({
 	props: ['id', 'el'],
-	components: { NInput },
+	components: { NInput,NColorMark},
 })
 export default class Item extends Vue {
 	isDraggable: boolean = true
-	get onEdit(){
+	get onEdit() {
 		return !this.isDraggable
 	}
 	changeDraggable(newValue: boolean) {
@@ -38,6 +43,9 @@ export default class Item extends Vue {
 	get isDarkTheme() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getIsDarkTheme
+	}
+	openColors() {
+		this.$emit('open-colors', this.$props.el)
 	}
 }
 </script>

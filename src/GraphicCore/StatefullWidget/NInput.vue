@@ -32,7 +32,7 @@ import { Log } from '@/LogicCore/Debug/Log'
 import Sheets from '@/StorageCore/Sheets'
 import AppSettings from '@/StorageCore/AppSettings'
 import outsideClick from '@/GraphicCore/Directives/outside-click'
-enum ActionTypes {
+export enum ActionTypes {
 	rename,
 	changeColor,
 	delete,
