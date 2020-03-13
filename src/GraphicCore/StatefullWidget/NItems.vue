@@ -92,7 +92,11 @@ export default class Item extends Vue {
 		this.actionType = ActionTypes.changeColor
 	}
 	get color() {
-		return this.element.color
+		let color = this.element.color
+		if(color && color != 'undefined'){
+			return color
+		}
+		return this.isDarkTheme ? '#e1e6e4' : '#4f4f4f'
 	}
 	isColorsOpen: boolean = false
 	openColors(el: MatrixElementInterface.MatrixElement) {

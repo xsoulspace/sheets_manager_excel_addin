@@ -15,6 +15,7 @@ import VueNestable from 'vue-nestable'
 Vue.use(VueNestable)
 import Vue2TouchEvents from 'vue2-touch-events'
 //https://www.npmjs.com/package/vue2-touch-events
+import "vue-swatches/dist/vue-swatches.min.css"
 
 Vue.use(Vue2TouchEvents)
 Vue.config.productionTip = false

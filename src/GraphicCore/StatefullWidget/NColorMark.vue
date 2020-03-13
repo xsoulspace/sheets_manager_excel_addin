@@ -23,9 +23,9 @@ import AppSettings from '@/StorageCore/AppSettings'
 })
 export default class NColorMark extends Vue {
 	get tabColor() {
-		let localColor = this.$props.el.color
+		let localColor: MatrixElementInterface.MatrixElement['color'] = this.$props.el.color
 		let color
-		localColor == '' ? (color = '#4f4f4f') : (color = localColor)
+		!localColor || localColor.length == 0 ? (color = '' ) : (color = localColor)
 		// let opacity;
 		// this.isTouchDevice ?
 		//   opacity = "0.8" :
