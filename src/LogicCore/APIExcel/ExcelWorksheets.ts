@@ -18,6 +18,16 @@ export class ExcelWorksheets {
 			throw Log.error('ExcelWorksheets.getWorksheets', error)
 		}
 	}
+	public async getWorksheet(idOrName: string): Promise<Excel.Worksheet> {
+		try {
+			const worksheets = this._contextWorksheets()
+			const item = worksheets.getItem(idOrName)
+			await this.sync()
+			return item
+		} catch (error) {
+			throw Log.error('ExcelWorksheets.getWorksheets', error)
+		}
+	}
 	public async getActiveWorksheet(): Promise<Excel.Worksheet> {
 		try {
 			const worksheet = this._contextWorksheets().getActiveWorksheet()

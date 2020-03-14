@@ -7,18 +7,9 @@ import { MaintainerStatuses } from '@/LogicCore/Instances/MatrixElement/Maintain
 @Module({ name: 'AppSettings', namespaced: true })
 export default class AppSettings extends VuexModule {
 	themeName: SheetManager.AppSettingsThemeName = 'dark'
-	maintainerStatuses: MatrixElementInterface.maintainerStatuses = new MaintainerStatuses()
 	get getIsDarkTheme() {
 		const dark: SheetManager.AppSettingsThemeName = 'dark'
 		return this.themeName == dark
-	}
-	get getMaintainerStatuses() {
-		const m = new MaintainerStatuses(
-			this.maintainerStatuses.areSheetsHaveNumeration,
-			this.maintainerStatuses.isNumerationBroken,
-			this.maintainerStatuses.shouldWeRestoreNumeration
-		)
-		return m
 	}
 	@Mutation
 	setTheme(themeName: SheetManager.AppSettingsThemeName) {
@@ -27,6 +18,26 @@ export default class AppSettings extends VuexModule {
 	@Action
 	async setThemeAct(themeName: SheetManager.AppSettingsThemeName) {
 		this.context.commit('setTheme', themeName)
+	}
+
+	isTouchDevice: boolean = false
+	get getIsTouchDevice(){
+		return this.isTouchDevice
+	}
+	@Mutation
+	setIsTouchDevice(value: boolean){
+		this.isTouchDevice = value
+	}
+
+
+	maintainerStatuses: MatrixElementInterface.maintainerStatuses = new MaintainerStatuses()
+	get getMaintainerStatuses() {
+		const m = new MaintainerStatuses(
+			this.maintainerStatuses.areSheetsHaveNumeration,
+			this.maintainerStatuses.isNumerationBroken,
+			this.maintainerStatuses.shouldWeRestoreNumeration
+		)
+		return m
 	}
 	@Mutation
 	switchSheetsNumerationMut(

@@ -66,6 +66,14 @@ namespace MatrixElementInterface {
 		writeSheets(sheetsArr: MEArr): void
 		getExcelSheets(): MEArr
 		changeElement(el: MatrixElement): Promise<void>
+		createNewSheetElement(
+			id: string,
+			name: string,
+			first: number,
+			second: number,
+			tabColor: string,
+			visibility: Excel.SheetVisibility
+		):Promise<MatrixElement>
 	}
 	export interface MatrixControllerConstructor extends BasicConstructor {
 		maintainerStatuses: maintainerStatuses

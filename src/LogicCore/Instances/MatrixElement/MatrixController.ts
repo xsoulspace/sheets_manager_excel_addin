@@ -6,6 +6,7 @@ import {
 	rewritePositions,
 } from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'
 import { MaintainerStatuses } from './Maintainer'
+import { MatrixElement } from './MatrixElement'
 export class MatrixController extends Basic
 	implements MatrixElementInterface.MatrixController {
 	// #region Properties (2)
@@ -115,7 +116,7 @@ export class MatrixController extends Basic
 				isNumerationBroken,
 				shouldWeRestoreNumeration,
 			} = this.maintainerStatuses
-			console.log(this.maintainerStatuses)
+			// console.log(this.maintainerStatuses)
 			if (
 				areSheetsHaveNumeration !=
 				this.maintainerStatuses.default.areSheetsHaveNumeration
@@ -290,6 +291,35 @@ export class MatrixController extends Basic
 		return newArr
 	}
 
+	public async createNewSheetElement(
+		id: string,
+		name: string,
+		first: number,
+		second: number,
+		tabColor: string,
+		visibility: Excel.SheetVisibility
+	) {
+		const fixName = (' ' + name).slice(1)
+		const fixColor = (' ' + tabColor).slice(1)
+		const fixVisibility = <Excel.SheetVisibility>(' ' + visibility).slice(1)
+		const fixId = (' ' + id).slice(1)
+		const options: MatrixElementInterface.MatrixElementConstructor = {
+			color: fixColor,
+			name: fixName,
+			typeOfName: this.typeOfName,
+			first,
+			second,
+			id: fixId,
+			visibility: fixVisibility,
+			delimiter: this.delimiter,
+			elements: [],
+			_classTitle: undefined,
+		}
+
+		const element = new MatrixElement(options)
+		return element
+	}
+
 	private async _simpleSheetsLoading(
 		sheets: MatrixElementInterface.sheetsSource
 	): Promise<void> {
@@ -297,30 +327,19 @@ export class MatrixController extends Basic
 			const { MatrixElement } = await import('./MatrixElement')
 			let allElements: MatrixElementInterface.MEArr = []
 			for (let [index, sheet] of Object.entries(sheets)) {
-				const { first, second } =
+				const { first, second }: MatrixElementInterface.Positions =
 					'positions' in sheet
 						? sheet.positions
 						: { first: Number(index), second: 0 }
-				const name = (' ' + sheet.name).slice(1)
-				const color = (' ' + sheet.tabColor).slice(1)
-				const visibility = <Excel.SheetVisibility>(
-					(' ' + sheet.visibility).slice(1)
-				)
-				const id = (' ' + sheet.id).slice(1)
-				const options: MatrixElementInterface.MatrixElementConstructor = {
-					color,
-					name,
-					typeOfName: this.typeOfName,
+
+				const element = await this.createNewSheetElement(
+					sheet.id,
+					sheet.name,
 					first,
 					second,
-					id,
-					visibility,
-					delimiter: this.delimiter,
-					elements: [],
-					_classTitle: undefined,
-				}
-
-				const element = new MatrixElement(options)
+					sheet.tabColor,
+					sheet.visibility
+				)
 
 				allElements.push(element)
 			}
