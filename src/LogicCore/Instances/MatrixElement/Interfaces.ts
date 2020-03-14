@@ -55,9 +55,8 @@ namespace MatrixElementInterface {
 		firstOpenScenarioCreateMatrixElements(
 			excelSheets: sheetsSource
 		): Promise<boolean>
-		changeSheetPosition(items: MEArr): Promise<void>
 		sheetsNumerationRepairer(): Promise<void>
-		reorderSheets({
+		reorderSheetsBasedOnPosition({
 			requereToCorrectType,
 		}: {
 			requereToCorrectType: boolean
@@ -66,6 +65,9 @@ namespace MatrixElementInterface {
 		writeSheets(sheetsArr: MEArr): void
 		getExcelSheets(): MEArr
 		changeElement(el: MatrixElement): Promise<void>
+		insertElement(el: MatrixElement): Promise<void>
+		deleteElement(idOrName?: string, el?: MatrixElement): Promise<void>
+		usualSheetChange(arr: MatrixElementInterface.MEArr): Promise<void>
 		createNewSheetElement(
 			id: string,
 			name: string,
@@ -73,7 +75,10 @@ namespace MatrixElementInterface {
 			second: number,
 			tabColor: string,
 			visibility: Excel.SheetVisibility
-		):Promise<MatrixElement>
+		): Promise<MatrixElement>
+		_simpleSheetsLoading(
+			sheets: MatrixElementInterface.sheetsSource
+		): Promise<void>
 	}
 	export interface MatrixControllerConstructor extends BasicConstructor {
 		maintainerStatuses: maintainerStatuses

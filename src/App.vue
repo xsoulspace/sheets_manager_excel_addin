@@ -109,8 +109,7 @@ export default class App extends Vue {
 				sheetsModule.selectSheetMut(args.worksheetId)
 				break
 			case 'WorksheetDeleted':
-				await sheetsModule.initializeStore()
-				// this.$store.dispatch('worksheetDeleted', event.worksheetId)
+				await sheetsModule.removeElementFromStore(args.worksheetId)
 				break
 			case 'WorksheetAdded':
 				await sheetsModule.addNewSheet(args.worksheetId)

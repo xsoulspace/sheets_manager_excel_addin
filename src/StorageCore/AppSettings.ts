@@ -7,6 +7,8 @@ import { MaintainerStatuses } from '@/LogicCore/Instances/MatrixElement/Maintain
 @Module({ name: 'AppSettings', namespaced: true })
 export default class AppSettings extends VuexModule {
 	themeName: SheetManager.AppSettingsThemeName = 'dark'
+	maintainerStatuses: MatrixElementInterface.maintainerStatuses = new MaintainerStatuses()
+
 	get getIsDarkTheme() {
 		const dark: SheetManager.AppSettingsThemeName = 'dark'
 		return this.themeName == dark
@@ -30,7 +32,6 @@ export default class AppSettings extends VuexModule {
 	}
 
 
-	maintainerStatuses: MatrixElementInterface.maintainerStatuses = new MaintainerStatuses()
 	get getMaintainerStatuses() {
 		const m = new MaintainerStatuses(
 			this.maintainerStatuses.areSheetsHaveNumeration,
@@ -52,10 +53,17 @@ export default class AppSettings extends VuexModule {
 	async switchSheetsNumeration() {
 		const currentState = this.maintainerStatuses.areSheetsHaveNumeration
 		const newState = !currentState
-		this.switchSheetsNumerationMut(newState)
 
-		await this.context.dispatch('Sheets/initializeStore', null, {
-			root: true,
-		})
+		this.switchSheetsNumerationMut(newState)
+		const isNumerated = true
+		if(newState == isNumerated){
+			await this.context.dispatch('Sheets/initializeStore', null, {
+				root: true,
+			})
+		} else {
+			await this.context.dispatch('Sheets/cleanNumerationIni', null, {
+				root: true,
+			})
+		}
 	}
 }

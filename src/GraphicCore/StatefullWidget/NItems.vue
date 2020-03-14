@@ -120,6 +120,10 @@ export default class Item extends Vue {
 		const module = getModule(AppSettings, this.$store)
 		return module.getIsDarkTheme
 	}
+	get maintenerStatuses(){
+		const module = getModule(AppSettings, this.$store)
+		return module.getMaintainerStatuses
+	}
 }
 </script>
 

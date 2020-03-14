@@ -4,6 +4,7 @@ import { Log } from '@/LogicCore/Debug/Log'
 import getMockSheets from './getMockSheets'
 import { MatrixController } from '@/LogicCore/Instances/MatrixElement/MatrixController'
 import { MaintainerStatuses } from '@/LogicCore/Instances/MatrixElement/Maintainer'
+import { rewritePositions } from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'
 
 const iniOptions: MatrixElementInterface.MatrixControllerConstructor = {
 	typeOfName: '_excelSheetName',
@@ -149,37 +150,85 @@ export default class Sheets extends VuexModule {
 		first?: number,
 		second?: number
 	) {
+		try {
+			console.log('sheetId', sheetId)
+			switch (this.outsideApp) {
+				case 'excelDesktop':
+					/** get new sheet position */
+					const worksheetsClass = await WorksheetsBuilder.buildWorksheetsClass()
+					const item = await worksheetsClass.getWorksheet(sheetId)
+					item.load(['position', 'name', 'tabColor', 'visibility'])
+					await worksheetsClass.context.sync()
+					let fixFirst: number = first ? first : item.position
+					let fixSecond: number = second ? second : 0
+					/** need to get current item in this position
+					 * to set new positiong correctly*/
+
+					let oldItem = this.getExcelSheets[item.position]
+					if (oldItem === undefined) {
+						oldItem = this.getExcelSheets[item.position - 1]
+						if (oldItem.positions.second > 0) {
+							fixFirst = oldItem.positions.first
+							fixSecond = oldItem.positions.second + 1
+						} else {
+							fixFirst = oldItem.positions.first + 1
+						}
+					} else {
+						if (oldItem.positions.second > 0) {
+							fixFirst = oldItem.positions.first
+							fixSecond = oldItem.positions.second
+						} else {
+							fixFirst = oldItem.positions.first
+						}
+					}
+
+					const elements = this.elements
+
+					const el = await elements.createNewSheetElement(
+						sheetId,
+						name ? name : item.name,
+						fixFirst,
+						fixSecond,
+						item.tabColor,
+						<Excel.SheetVisibility>item.visibility
+					)
+
+					await elements.insertElement(el)
+					await elements.usualSheetChange(elements.arrElements)
+					this.changeElementsMutation(elements)
+					await this.saveSheetsTo()
+					break
+
+				default:
+					break
+			}
+		} catch (error) {
+			throw Log.error('addNewSheet', error)
+		}
+	}
+
+	@Action
+	async removeElementFromStore(
+		idOrName?: string,
+		el?: MatrixElementInterface.MatrixElement
+	) {
+		const elements = this.elements
+
 		switch (this.outsideApp) {
 			case 'excelDesktop':
-				/** get new sheet position */
-				const worksheetsClass = await WorksheetsBuilder.buildWorksheetsClass()
-				const item = await worksheetsClass.getWorksheet(sheetId)
-				item.load(['position', 'name', 'tabColor', 'visibility'])
-				await worksheetsClass.context.sync()
-				/** need to get current item in this position
-				 * to set new positiong correctly*/
-				const oldItem = this.getExcelSheets[item.position]
-				let fixFirst: number = first ? first : item.position,
-					fixSecond: number = second ? second : 0
-				if (oldItem.positions.second > 0) {
-					fixFirst = oldItem.positions.first 
-					fixSecond = oldItem.positions.second 
-				}
-
-				const elements = this.elements
-
-				const el = await elements.createNewSheetElement(
-					sheetId,
-					name ? name : item.name,
-					fixFirst,
-					fixSecond,
-					item.tabColor,
-					<Excel.SheetVisibility>item.visibility
-				)
-				console.log(el)
+				await elements.deleteElement(idOrName, el)
 				break
+		}
+		const maintainerStatuses: MatrixElementInterface.maintainerStatuses = this
+			.context.rootGetters['AppSettings/getMaintainerStatuses']
+		if (maintainerStatuses.areSheetsHaveNumeration) {
+			await elements.usualSheetChange(elements.arrElements)
+		}
+		this.changeElementsMutation(elements)
 
-			default:
+		switch (this.outsideApp) {
+			case 'excelDesktop':
+				await this.saveSheetsTo()
 				break
 		}
 	}
@@ -192,19 +241,10 @@ export default class Sheets extends VuexModule {
 	}): Promise<void> {
 		if (items.length > 0) {
 			const elements = this.elements
-			await elements.changeSheetPosition(items)
+			await elements.usualSheetChange(items)
 			this.changeElementsMutation(elements)
-			switch (this.outsideApp) {
-				case 'browser':
-					//nothing to do
-					break
-				case 'excelDesktop':
-					const shts = elements.getExcelSheets()
-					await this.changeExcelPositions(shts)
-					await this.changeExcelNames(shts)
 
-					break
-			}
+			await this.saveSheetsTo()
 		}
 	}
 
@@ -214,6 +254,52 @@ export default class Sheets extends VuexModule {
 	) {
 		this.elements = elements
 	}
+	@Action
+	async cleanNumerationIni(newSourceApp?: MatrixElementInterface.outsideApp) {
+		try {
+			const sourceApp = newSourceApp ? newSourceApp : this.outsideApp
+
+			let elements: MatrixElementInterface.MatrixController
+			let sheets: MatrixElementInterface.sheetsSource
+			const maintainerStatuses: MatrixElementInterface.maintainerStatuses = this
+				.context.rootGetters['AppSettings/getMaintainerStatuses']
+			let options: MatrixElementInterface.MatrixControllerConstructor = {
+				typeOfName: '_excelSheetName',
+				delimiter: '_',
+				_classTitle: 'SheetElementsMap',
+				maintainerStatuses,
+			}
+			switch (sourceApp) {
+				case 'browser':
+					sheets = await getMockSheets()
+					elements = new MatrixController(options)
+					break
+
+				case 'excelDesktop':
+					/** creating worksheets class */
+					const worksheetsClass = await WorksheetsBuilder.buildWorksheetsClass()
+					sheets = await worksheetsClass.getWorksheets()
+					/** getting context */
+					// await this.setExcelContext(context)
+					/** preparing and pushing sheets to store */
+
+					elements = new MatrixController(options)
+					break
+				default:
+					throw Error('source is not defined')
+			}
+
+			await elements._simpleSheetsLoading(sheets)
+
+			this.initializeStoreMutation(elements)
+			this.setOutsideApp(sourceApp)
+			await this.saveSheetsTo()
+			await this.getActiveSheet()
+		} catch (error) {
+			throw Log.error('cleanNumerationIni', error)
+		}
+	}
+
 	@Action
 	public async initializeStore(
 		newSourceApp?: MatrixElementInterface.outsideApp
@@ -259,24 +345,29 @@ export default class Sheets extends VuexModule {
 			if (!isLoaded) {
 				return false
 			}
+
 			this.initializeStoreMutation(elements)
 			this.setOutsideApp(sourceApp)
-			switch (sourceApp) {
-				case 'browser':
-					break
-				case 'excelDesktop':
-					await this.getActiveSheet()
-					if (maintainerStatuses.areSheetsHaveNumeration) {
-						await elements.correctDoubles()
-					}
-					const shts = elements.getExcelSheets()
-					await this.changeExcelPositions(shts)
-					await this.changeExcelNames(shts)
-					break
-			}
+			await this.getActiveSheet()
+
+			await this.saveSheetsTo()
+
 			return true
 		} catch (error) {
 			throw Log.error('initializeStore', error)
+		}
+	}
+
+	@Action
+	async saveSheetsTo() {
+		switch (this.outsideApp) {
+			case 'browser':
+				break
+			case 'excelDesktop':
+				const shts = this.getExcelSheets
+				await this.changeExcelPositions(shts)
+				await this.changeExcelNames(shts)
+				break
 		}
 	}
 

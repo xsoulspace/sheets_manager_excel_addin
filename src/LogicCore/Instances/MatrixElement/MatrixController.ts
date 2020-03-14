@@ -44,15 +44,7 @@ export class MatrixController extends Basic
 	// #endregion Constructors (1)
 
 	// #region Public Methods (6)
-	public async changeSheetPosition(
-		items: MatrixElementInterface.MEArr
-	): Promise<void> {
-		try {
-			await this.usualSheetChange(items)
-		} catch (error) {
-			this.log.error('changeSheetPosition', error)
-		}
-	}
+
 	public async changeElement(el: MatrixElementInterface.MatrixElement) {
 		/**find element position and split it */
 		const isSecond = el.positions.second > 0
@@ -64,26 +56,56 @@ export class MatrixController extends Basic
 			this._arr[el.positions.first] = el
 		}
 	}
+	public async insertElement(el: MatrixElementInterface.MatrixElement) {
+		/**find element position and split it */
+		const isSecond = el.positions.second > 0
+		if (isSecond) {
+			const parent = this._arr[el.positions.first]
+			parent.elements.splice(el.positions.second - 1, 0, el)
+			this._arr[el.positions.first] = parent
+		} else {
+			this._arr.splice(el.positions.first, 0, el)
+		}
+	}
+	public async deleteElement(
+		idOrName?: string,
+		el?: MatrixElementInterface.MatrixElement
+	) {
+		if (el) {
+			/**find element position and split it */
+			const isSecond = el.positions.second > 0
+			if (isSecond) {
+				const parent = this._arr[el.positions.first]
+				parent.elements.splice(el.positions.second - 1, 1)
+				this._arr[el.positions.first] = parent
+			} else {
+				this._arr.splice(el.positions.first, 1)
+			}
+			return
+		}
+		if (idOrName) {
+			const i = this._arr.findIndex(e => e.sourceId == idOrName)
+			if (i < 0) {
+				for (let child of this._arr) {
+					const childIndex = child.elements.findIndex(
+						e => e.sourceId == idOrName
+					)
+					if (childIndex >= 0) {
+						child.elements.splice(childIndex, 1)
+					}
+				}
+			} else {
+				this._arr.splice(i, 1)
+			}
+		}
+	}
 	public async usualSheetChange(arr: MatrixElementInterface.MEArr) {
 		const reorderedArr = await rewritePositions(arr)
 		this._arr = reorderedArr
+		// const x = this._arr[1].positions.first
+		// console.log("zz",x)
+		await this.writeSheets(reorderedArr)
 		await this._sheetsNumerationMaintainer()
-		const {
-			areSheetsHaveNumeration,
-			isNumerationBroken,
-		} = this.maintainerStatuses
-		if (areSheetsHaveNumeration && !isNumerationBroken) {
-			/** if numeration is ok, then we need to switch numeration type */
-			// console.log('numeration is exists and not broken')
-			await this.writeSheets(reorderedArr)
-		} else if (areSheetsHaveNumeration && isNumerationBroken) {
-			/** we need to show ui messgae to user do we need to restore  */
-			await this.sheetsNumerationRepairer()
-		} else {
-			// console.log('numeration is exists and not broken')
-			/** we will reorder all sheets accordingly to type */
-			await this.reorderSheets({ requereToCorrectType: false })
-		}
 	}
 
 	/**@description
@@ -118,8 +140,9 @@ export class MatrixController extends Basic
 			} = this.maintainerStatuses
 			// console.log(this.maintainerStatuses)
 			if (
-				areSheetsHaveNumeration !=
-				this.maintainerStatuses.default.areSheetsHaveNumeration
+				(areSheetsHaveNumeration === true) ===
+				(this.maintainerStatuses.default.areSheetsHaveNumeration ===
+					false)
 			) {
 				return false
 			}
@@ -141,7 +164,9 @@ export class MatrixController extends Basic
 			} else {
 				// console.log('numeration is exists and not broken')
 				/** we will reorder all sheets accordingly to type */
-				await this.reorderSheets({ requereToCorrectType: false })
+				await this.reorderSheetsBasedOnPosition({
+					requereToCorrectType: false,
+				})
 			}
 			return true
 			// console.log('process end', this._arr)
@@ -159,7 +184,9 @@ export class MatrixController extends Basic
 				/** switch global type to numeration */
 				this.typeOfName = '_encodedName'
 				/** call method to reorder sheets */
-				await this.reorderSheets({ requereToCorrectType: true })
+				await this.reorderSheetsBasedOnPosition({
+					requereToCorrectType: true,
+				})
 			}
 		} catch (error) {
 			throw this.log.error('writeSheets', error)
@@ -169,7 +196,7 @@ export class MatrixController extends Basic
 	/**@description
 	 * Reorder all sheets by requered type
 	 */
-	public async reorderSheets({
+	public async reorderSheetsBasedOnPosition({
 		requereToCorrectType,
 	}: {
 		requereToCorrectType: boolean
@@ -186,9 +213,9 @@ export class MatrixController extends Basic
 					const tempArr: MatrixElementInterface.MEArr = await getPositionsAndGroupEArr(
 						options
 					)
-
+					const reorderedArr = await rewritePositions(tempArr)
 					/** resort elements */
-					await this.writeSheets(tempArr)
+					await this.writeSheets(reorderedArr)
 					break
 				default:
 					/** simple loading */
@@ -208,6 +235,7 @@ export class MatrixController extends Basic
 	 * So, before we will write and make any changes,
 	 * we will need to be shure and check,
 	 * that all names are unique
+	 * ONLY FOR DECODED NAMES!
 	 */
 	public async correctDoubles(): Promise<void> {
 		try {
@@ -224,11 +252,12 @@ export class MatrixController extends Basic
 				if (sheet === undefined)
 					throw 'correctDoubles has sheet === undefined'
 				const sheetName: string = checkNameAndTryNew(
-					sheet.name,
+					sheet.decodedName,
 					sheetNames,
 					i
 				)
-				sheet.name = sheetName
+				sheet.decodedName = sheetName
+
 				sheetNames.set(sheetName, sheetName)
 				newSheets.push(sheet)
 			}
@@ -256,7 +285,7 @@ export class MatrixController extends Basic
 			/** Reset statuses */
 			this.maintainerStatuses.resetToDefault()
 			/** now we need to check every sheet - is it has encoded pattern */
-			this.maintainerStatuses.areSheetsHaveNumeration = ((): boolean => {
+			const getNumeration = (): boolean => {
 				let hasNumeration: boolean = false
 				for (let sheet of this._arr) {
 					if (hasNumeration === false) {
@@ -274,7 +303,8 @@ export class MatrixController extends Basic
 				}
 
 				return hasNumeration
-			})()
+			}
+			this.maintainerStatuses.areSheetsHaveNumeration = getNumeration()
 		} catch (error) {
 			throw this.log.error('_sheetsNumerationMaintainer', error)
 		}
@@ -320,11 +350,10 @@ export class MatrixController extends Basic
 		return element
 	}
 
-	private async _simpleSheetsLoading(
+	public async _simpleSheetsLoading(
 		sheets: MatrixElementInterface.sheetsSource
 	): Promise<void> {
 		try {
-			const { MatrixElement } = await import('./MatrixElement')
 			let allElements: MatrixElementInterface.MEArr = []
 			for (let [index, sheet] of Object.entries(sheets)) {
 				const { first, second }: MatrixElementInterface.Positions =

@@ -7,6 +7,7 @@
 		v-touch:tap="selectWorksheet"
 	>
 		{{ name }}
+		<button @click="switchNum">s</button>
 	</p>
 	<input
 		ref="input"
@@ -104,11 +105,15 @@ export default class Item extends Vue {
 		this.actionType = ActionTypes.rename
 	}
 	get name() {
-		return this.element.decodedName
+		return this.showNumeration ? this.element.name :  this.element.decodedName
 	}
+	showNumeration: boolean = true
 	async selectWorksheet() {
 		const sheetsModule = getModule(Sheets, this.$store)
 		await sheetsModule.selectSheet(this.$props.el.sourceId)
+	}
+	async switchNum(){
+		this.showNumeration = !this.showNumeration
 	}
 }
 </script>

@@ -142,24 +142,23 @@ export const rewritePositions = async (
 	upperLevel: number = 0
 ): Promise<MatrixElementInterface.MEArr> => {
 	let newArr: MatrixElementInterface.MEArr = []
-	for (const [i, el] of arr.entries()) {
+	for (let [i, el] of arr.entries()) {
+		let newEl = el
 		if (level == 0) {
-			el.positions.first = i
-			el.positions.second = 0
+			newEl.positions.first = i
+			newEl.positions.second = 0
 		} else {
-			el.positions.first = upperLevel
-			el.positions.second = i + 1
+			newEl.positions.first = upperLevel
+			newEl.positions.second = i + 1
 		}
-
-		el.decodedName = el.name
-		if (el.elements.length > 0) {
-			el.elements = await rewritePositions(
-				el.elements,
+		if (newEl.elements.length > 0) {
+			newEl.elements = await rewritePositions(
+				newEl.elements,
 				1,
-				el.positions.first
+				newEl.positions.first
 			)
 		}
-		newArr.push(el)
+		newArr.push(newEl)
 	}
 	return newArr
 }
