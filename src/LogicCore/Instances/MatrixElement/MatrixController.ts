@@ -102,7 +102,7 @@ export class MatrixController extends Basic
 	 */
 	public async firstOpenScenarioCreateMatrixElements(
 		excelSheets: MatrixElementInterface.sheetsSource
-	): Promise<void> {
+	): Promise<boolean> {
 		try {
 			/** firstly we conevert all sheets to elements map */
 			// console.log('simple sheet loading starts', excelSheets)
@@ -115,6 +115,13 @@ export class MatrixController extends Basic
 				isNumerationBroken,
 				shouldWeRestoreNumeration,
 			} = this.maintainerStatuses
+			console.log(this.maintainerStatuses)
+			if (
+				areSheetsHaveNumeration !=
+				this.maintainerStatuses.default.areSheetsHaveNumeration
+			) {
+				return false
+			}
 
 			if (areSheetsHaveNumeration && !isNumerationBroken) {
 				/** if numeration is ok, then we need to switch numeration type */
@@ -135,6 +142,7 @@ export class MatrixController extends Basic
 				/** we will reorder all sheets accordingly to type */
 				await this.reorderSheets({ requereToCorrectType: false })
 			}
+			return true
 			// console.log('process end', this._arr)
 		} catch (error) {
 			throw this.log.error('firstOpenScenarioCreateSheetElements', error)

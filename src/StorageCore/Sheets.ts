@@ -132,7 +132,7 @@ export default class Sheets extends VuexModule {
 	@Action
 	public async initializeStore(
 		newSourceApp?: MatrixElementInterface.outsideApp
-	): Promise<void> {
+	): Promise<boolean> {
 		try {
 			/** first, we need to understand
 			 * what we will use as data source
@@ -160,7 +160,6 @@ export default class Sheets extends VuexModule {
 					const worksheetsClass = await WorksheetsBuilder.buildWorksheetsClass()
 					sheets = await worksheetsClass.getWorksheets()
 					/** getting context */
-					const context = worksheetsClass.context
 					// await this.setExcelContext(context)
 					/** preparing and pushing sheets to store */
 
@@ -169,7 +168,10 @@ export default class Sheets extends VuexModule {
 				default:
 					throw Error('source is not defined')
 			}
-			await elements.firstOpenScenarioCreateMatrixElements(sheets)
+			const isLoaded = await elements.firstOpenScenarioCreateMatrixElements(sheets)
+			if(!isLoaded){
+				return false
+			}
 			this.initializeStoreMutation(elements)
 			this.setOutsideApp(sourceApp)
 			switch (sourceApp) {
@@ -185,6 +187,7 @@ export default class Sheets extends VuexModule {
 					await this.changeExcelNames(shts)
 					break
 			}
+			return true
 		} catch (error) {
 			throw Log.error('initializeStore', error)
 		}

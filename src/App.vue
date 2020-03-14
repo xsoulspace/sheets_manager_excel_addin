@@ -1,5 +1,5 @@
 <template>
-	<div id="app" :class="{'--is-dark': isDarkTheme}">
+	<div id="app" :class="{ '--is-dark': isDarkTheme }">
 		<router-view />
 	</div>
 </template>
@@ -16,9 +16,10 @@ export default {
 		return {
 			StoreAppSettings: 'appSettings',
 			hostInfo: undefined,
-			sourceApp: 'excelDesktop',//browser
+			sourceApp: 'excelDesktop', //browser
 			// sourceApp: 'browser',//browser
-
+			hasBrokenNumeration: false,
+			iniStore: false,
 		}
 	},
 	computed: {
@@ -46,6 +47,23 @@ export default {
 					JSON.stringify(this.appSettings)
 				)
 			}
+		},
+		hasBrokenNumeration: async function(newValue){
+			console.log('hasBrokenNumeration')
+
+			/**TODO: call popup do we need to restore numeration? */
+			if (newValue) {
+				const module = getModule(AppSettings, this.$store)
+				await module.switchSheetsNumeration()
+				this.iniStore = ! this.iniStore
+			}
+		},
+		iniStore: async function() {
+			console.log('hey')
+			const sheets = getModule(Sheets, this.$store)
+			const isLoaded = await sheets.initializeStore(this.sourceApp)
+			console.log('heyxx',isLoaded)
+
 		},
 	},
 	methods: {
@@ -112,8 +130,15 @@ export default {
 		// Excel Events end
 		// ****************
 		/** dispatch context to store */
-		const elements = getModule(Sheets, this.$store)
-		await elements.initializeStore(this.sourceApp)
+		const sheets = getModule(Sheets, this.$store)
+		const isLoaded = await sheets.initializeStore(this.sourceApp)
+		if (!isLoaded) {
+			this.hasBrokenNumeration = true
+			return
+		}
+					console.log('isLoaded',isLoaded)
+
+		this.hasBrokenNumeration = false
 		// const elements = localStorage.getItem("elements")
 		// if(typeof elements != "undefined"){
 		//   this.$store.dispatch('specialUpdateElements',elements)

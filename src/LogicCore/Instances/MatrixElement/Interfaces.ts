@@ -54,7 +54,7 @@ namespace MatrixElementInterface {
 		arrElements: MEArr
 		firstOpenScenarioCreateMatrixElements(
 			excelSheets: sheetsSource
-		): Promise<void>
+		): Promise<boolean>
 		changeSheetPosition(items: MEArr): Promise<void>
 		sheetsNumerationRepairer(): Promise<void>
 		reorderSheets({

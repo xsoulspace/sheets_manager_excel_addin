@@ -34,7 +34,7 @@ const getMockSheets = async function(): Promise<SheetElementsInterface.sheetsSou
 	const copyObject2 = new SheetElement(options)
 	
 	copyObject2.id = 'testing2'
-	copyObject2.name = 'testing2'
+	copyObject2.name = 'testing00_01'
 	copyObject1.id = 'testing1'
 	copyObject1.name = 'testing1'
 
