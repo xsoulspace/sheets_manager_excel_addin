@@ -4,7 +4,7 @@ export class MaintainerStatuses implements MatrixElementInterface.maintainerStat
     constructor(
         public areSheetsHaveNumeration: boolean = false,
         public isNumerationBroken: boolean = false,
-        public shouldWeRestoreNumeration: boolean = false
+        public shouldWeRestoreNumeration: boolean = true
     ){ 
         this.default.areSheetsHaveNumeration = areSheetsHaveNumeration
         this.default.isNumerationBroken = isNumerationBroken

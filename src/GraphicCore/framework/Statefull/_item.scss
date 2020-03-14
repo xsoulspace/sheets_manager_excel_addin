@@ -45,28 +45,6 @@ $color-mark-width: 6px;
 			}
 		}
 	}
-	&.--is-active {
-		&,
-		&:focus,
-		&:active,
-		&:hover {
-			background-color: darken(
-				colours.theme-color('background', 'base', 1),
-				6%
-			);
-		}
-		&.--is-dark {
-			&,
-			&:focus,
-			&:active,
-			&:hover {
-				background-color: darken(
-					colours.theme-color('background', 'dark', 1),
-					6%
-				);
-			}
-		}
-	}
 	&-color {
 		margin: 0 0.5em 0 0;
 		&.--has-corner {

@@ -6,7 +6,6 @@
 		:class="{
 			'--is-dark': isDarkTheme,
 			'--on-edit': onEdit,
-			'--is-active': isActive,
 		}"
 	>
 		<NColorMark :el="el" @click="openColors" />
@@ -38,6 +37,30 @@ import Sheets from '../../StorageCore/Sheets'
 	components: { NInput, NColorMark },
 })
 export default class Item extends Vue {
+	get isActive() {
+		const sheetsModule = getModule(Sheets, this.$store)
+		const isActive =
+			this.$props.el.sourceId == sheetsModule.getActiveSheetId
+		return isActive
+	}
+	@Watch('isActive')
+	elm(isActive: boolean) {
+
+		const item: HTMLElement | null  = this.$el.parentElement!.parentElement!.parentElement
+		if(item){
+			if(isActive){
+				item.classList.add("--is-active");
+				if(this.isDarkTheme){
+					item.classList.add("--is-dark");
+				}
+			} else {
+				item.classList.remove("--is-active");
+				if(this.isDarkTheme){
+					item.classList.remove("--is-dark");
+				}
+			}
+		}
+	}
 	isDraggable: boolean = true
 	get onEdit() {
 		return !this.isDraggable
@@ -51,10 +74,6 @@ export default class Item extends Vue {
 	}
 	openColors() {
 		this.$emit('open-colors', this.$props.el)
-	}
-	get isActive() {
-		const sheetsModule = getModule(Sheets, this.$store)
-		return this.$props.el.sourceId == sheetsModule.getActiveSheetId
 	}
 }
 </script>

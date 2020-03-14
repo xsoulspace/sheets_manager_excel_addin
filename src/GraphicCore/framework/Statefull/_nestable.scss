@@ -12,6 +12,7 @@
 	height: auto;
 	border-bottom-right-radius: inherit;
 	border-top-right-radius: inherit;
+
 	& [draggable='true'] {
 		cursor: move;
 	}
@@ -54,7 +55,29 @@
 		border: 1px solid colours.theme-color('foreground', 'base', 0.1);
 		transition: 0.3s;
 		// padding: 0.6em;
-		& + &{
+		&.--is-active {
+			&,
+			&:focus,
+			&:active,
+			&:hover {
+				background-color: darken(
+					colours.theme-color('background', 'base', 1),
+					6%
+				);
+			}
+			&.--is-dark {
+				&,
+				&:focus,
+				&:active,
+				&:hover {
+					background-color: darken(
+						colours.theme-color('background', 'dark', 1),
+						6%
+					);
+				}
+			}
+		}
+		& + & {
 			margin-top: 0.1em;
 			margin-bottom: 0.1em;
 		}

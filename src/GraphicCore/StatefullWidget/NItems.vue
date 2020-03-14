@@ -8,7 +8,12 @@
 			@change="changeElements"
 		>
 			<vue-nestable-handle slot-scope="{ item }" :item="item">
-				<NItem :el="item" :id="item.id" @open-colors="openColors" />
+				<NItem
+					:el="item"
+					:id="item.id"
+					@open-colors="openColors"
+					
+				/>
 			</vue-nestable-handle>
 		</vue-nestable>
 		<NModal
@@ -57,6 +62,7 @@ import { ActionTypes } from './NInput.vue'
 	},
 })
 export default class Item extends Vue {
+
 	els: MatrixElementInterface.MEArr = []
 	@Watch('pElements')
 	changePElements(values: any[]) {
