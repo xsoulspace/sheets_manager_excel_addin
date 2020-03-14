@@ -369,7 +369,7 @@ export class MatrixController extends Basic
 					sheet.tabColor,
 					sheet.visibility
 				)
-
+				element._doesNameIncludesNumerationPattern()
 				allElements.push(element)
 			}
 			await this.writeSheets(allElements)

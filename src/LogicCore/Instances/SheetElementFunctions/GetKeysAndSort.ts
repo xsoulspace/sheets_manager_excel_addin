@@ -178,7 +178,12 @@ export const getPositionsAndGroupEArr = ({
 		let tempMap: MatrixElementInterface.MEMap = new Map()
 		for (let sheet of oldArr) {
 			if (requereToCorrectType) sheet.typeOfName = typeOfName
+			const first = sheet.positions.first
+			const second = sheet.positions.second
+			const n = sheet.name
+			console.log({ first, second, n })
 			if (sheet.positions.second > 0) {
+				console.log('sheet - second', sheet)
 				/** if second position is > 0
 				 * 	then we need to place it to elements
 				 * */
@@ -218,6 +223,7 @@ export const getPositionsAndGroupEArr = ({
 				tempMap.set(String(sheet.positions.first), sheet)
 			}
 		}
+
 		/** we need to check all first position
 		 * sheets to delete empty one if children elements size <= 1
 		 * or replace to one of children
