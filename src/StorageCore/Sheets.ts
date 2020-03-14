@@ -21,7 +21,7 @@ export default class Sheets extends VuexModule {
 		iniOptions
 	)
 	public outsideApp: MatrixElementInterface.outsideApp = 'browser'
-
+	public activeSheetId: string = ''
 	// #endregion Properties (3)
 
 	// #region Public Accessors (2)
@@ -32,6 +32,10 @@ export default class Sheets extends VuexModule {
 
 	public get getSheets() {
 		return this.elements.arrElements
+	}
+
+	public get getActiveSheetId() {
+		return this.activeSheetId
 	}
 
 	// #endregion Public Accessors (2)
@@ -49,11 +53,10 @@ export default class Sheets extends VuexModule {
 	public async changeExcelNames(sheets: MatrixElementInterface.MEArr) {
 		try {
 			const worksheetsClass = await WorksheetsBuilder.buildWorksheetsClass()
-			const maintainerStatuses: MatrixElementInterface.maintainerStatuses = this.context
-				.rootGetters['AppSettings/getMaintainerStatuses']
+			const maintainerStatuses: MatrixElementInterface.maintainerStatuses = this
+				.context.rootGetters['AppSettings/getMaintainerStatuses']
 
 			if (maintainerStatuses.areSheetsHaveNumeration) {
-
 				for (let [pos, sheet] of sheets.entries()) {
 					console.log(sheet)
 					await worksheetsClass.renameWorksheet(
@@ -63,7 +66,6 @@ export default class Sheets extends VuexModule {
 					)
 				}
 			} else {
-
 				for (let [pos, sheet] of sheets.entries()) {
 					await worksheetsClass.renameWorksheet(
 						sheet.sourceId,
@@ -137,9 +139,8 @@ export default class Sheets extends VuexModule {
 			 */
 			let elements: MatrixElementInterface.MatrixController
 			let sheets: MatrixElementInterface.sheetsSource
-			const maintainerStatuses: MatrixElementInterface.maintainerStatuses = this.context.rootGetters[
-				'AppSettings/getMaintainerStatuses'
-			]
+			const maintainerStatuses: MatrixElementInterface.maintainerStatuses = this
+				.context.rootGetters['AppSettings/getMaintainerStatuses']
 			let options: MatrixElementInterface.MatrixControllerConstructor = {
 				typeOfName: '_excelSheetName',
 				delimiter: '_',
@@ -175,15 +176,15 @@ export default class Sheets extends VuexModule {
 				case 'browser':
 					break
 				case 'excelDesktop':
-					if(maintainerStatuses.areSheetsHaveNumeration){
+					await this.getActiveSheet()
+					if (maintainerStatuses.areSheetsHaveNumeration) {
 						await elements.correctDoubles()
-					} 	
+					}
 					const shts = elements.getExcelSheets()
 					await this.changeExcelPositions(shts)
 					await this.changeExcelNames(shts)
 					break
 			}
-
 		} catch (error) {
 			throw Log.error('initializeStore', error)
 		}
@@ -210,19 +211,13 @@ export default class Sheets extends VuexModule {
 					'AppSettings/shouldWeRestoreNumeration'
 				]
 				const sh = await WorksheetsBuilder.buildWorksheetsClass()
-				
-				if(sheetsHasNumeration){
-					await sh.renameWorksheet(
-						el.sourceId,
-						el.name
-					)
-				} else {					
-					await sh.renameWorksheet(
-						el.sourceId,
-						el.decodedName
-					)
+
+				if (sheetsHasNumeration) {
+					await sh.renameWorksheet(el.sourceId, el.name)
+				} else {
+					await sh.renameWorksheet(el.sourceId, el.decodedName)
 				}
-				
+
 				break
 		}
 	}
@@ -255,6 +250,39 @@ export default class Sheets extends VuexModule {
 	public setSheetsMutation(sheets: MatrixElementInterface.MEArr) {
 		this.elements.writeSheets(sheets)
 	}
+	@Mutation
+	async selectSheetMut(elId: string) {
+		this.activeSheetId = elId
+	}
 
+	@Action
+	async selectSheet(elId: string) {
+		switch (this.outsideApp) {
+			case 'excelDesktop':
+				const sh = await WorksheetsBuilder.buildWorksheetsClass()
+				await sh.setActiveWorksheet(elId)
+
+				break
+
+			default:
+				break
+		}
+		this.selectSheetMut(elId)
+	}
+	@Action
+	async getActiveSheet() {
+		switch (this.outsideApp) {
+			case 'excelDesktop':
+				const sh = await WorksheetsBuilder.buildWorksheetsClass()
+				const sheet = await sh.getActiveWorksheet()
+				sheet.load('id')
+				await sh.context.sync()
+				this.selectSheetMut(sheet.id)
+				break
+
+			default:
+				break
+		}
+	}
 	// #endregion Public Methods (13)
 }

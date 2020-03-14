@@ -108,7 +108,7 @@ export default class Item extends Vue {
 	}
 	async selectWorksheet() {
 		const sheetsModule = getModule(Sheets, this.$store)
-		
+		await sheetsModule.selectSheet(this.$props.el.sourceId)
 	}
 }
 </script>

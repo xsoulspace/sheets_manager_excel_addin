@@ -27,6 +27,15 @@ export class ExcelWorksheets {
 			throw Log.error('ExcelWorksheets.getActiveWorksheet', error)
 		}
 	}
+	public async setActiveWorksheet(elId: string): Promise<void> {
+		try {
+			const worksheet = this._contextWorksheets().getItem(elId)
+			worksheet.activate()
+			await this.sync()
+		} catch (error) {
+			throw Log.error('ExcelWorksheets.getActiveWorksheet', error)
+		}
+	}
 	public async renameWorksheet(
 		id: Excel.Worksheet['id'],
 		name: Excel.Worksheet['name'],

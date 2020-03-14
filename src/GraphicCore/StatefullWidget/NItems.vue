@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<!-- <vue-nestable
+		<vue-nestable
 			v-model="els"
 			:childrenProp="childrenProp"
 			:maxDepth="depth"
@@ -10,17 +10,7 @@
 			<vue-nestable-handle slot-scope="{ item }" :item="item">
 				<NItem :el="item" :id="item.id" @open-colors="openColors" />
 			</vue-nestable-handle>
-		</vue-nestable> -->
-		<draggable v-model="eels">
-			<NItem
-				v-for="item in eels"
-				:el="item"
-				:id="item.id"
-				:key="item.id"
-				@open-colors="openColors"
-			>
-			</NItem>
-		</draggable>
+		</vue-nestable>
 		<NModal
 			:isActive="isColorsOpen"
 			@close="closeColors"
@@ -58,32 +48,23 @@ import outsideClick from '@/GraphicCore/Directives/outside-click'
 import NItem from './NItem.vue'
 import { ActionTypes } from './NInput.vue'
 
-import draggable from 'vuedraggable'
-
 @Component({
 	props: ['pElements'],
 	components: {
 		NItem,
 		NModal,
 		Swatches,
-		draggable,
 	},
 })
 export default class Item extends Vue {
 	els: MatrixElementInterface.MEArr = []
-	// @Watch('pElements')
-	// changePElements(values: any[]) {
-	// 	this.els = values
-	// }
+	@Watch('pElements')
+	changePElements(values: any[]) {
+		this.els = values
+	}
 	// @Watch('els')
 	changeElements(value: MatrixElementInterface.MatrixElement) {
 		this.$emit('elements-change', this.els)
-	}
-	set eels(value: any[]){
-		this.$emit('elements-change', value)
-	}
-	get eels(){
-		return this.pElements
 	}
 	get depth() {
 		const settings = getModule(AppSettings, this.$store)
