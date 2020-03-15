@@ -90,7 +90,7 @@
 	</div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import AppSettings from '@/StorageCore/AppSettings'
 import { getModule } from 'vuex-module-decorators'
 import Sheets from '../../StorageCore/Sheets'
@@ -106,6 +106,11 @@ export default class NavigationTabs extends Vue {
 	}
 	isSearchActive: boolean = false
 	searchingWord: string = ''
+	@Watch('searchingWord')
+	async searchingWordChange(word: string) {
+		const module = getModule(Sheets, this.$store)
+		await module.filterSheetsByWord(word)
+	}
 	turnOnInfo() {}
 	turnOnSettings() {
 		this.$emit('turn-on-settings')

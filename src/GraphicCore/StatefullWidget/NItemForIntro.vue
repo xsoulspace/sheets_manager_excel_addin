@@ -5,9 +5,9 @@
 		class="item"
 		:class="{
 			'--is-dark': isDarkTheme,
-			'--on-edit': onEdit,
+			'--on-edit': isEditing,
 			'--is-special': isBaseThemeSpecial,
-			'--is-highlighted': isItemStep
+			'--is-highlighted': isItemStep,
 		}"
 		data-v-step="item-whole"
 	>
@@ -16,17 +16,13 @@
 			<i class="fas fa-ellipsis-v"></i>
 		</span>
 		<div data-v-step="item-name">
-			<NInput
-				:el="el"
-				:is-draggable="isDraggable"
-				@draggable-change="changeDraggable"
-			/>
+			<NInput :el="el" @input-state-change="changeIsEditing" />
 		</div>
 		<div
 			data-v-step="item-numeration"
 			class="item-numeration"
 			v-if="showNumeration"
-			v-show="!onEdit"
+			v-show="!isEditing"
 		>
 			<i>{{ numerationPattern }}</i>
 		</div>
@@ -58,7 +54,7 @@ export default class NItemForIntro extends Vue {
 		if (this.currentStep >= 5 && !this.isDarkTheme) return true
 		return false
 	}
-	get isItemStep(){
+	get isItemStep() {
 		return this.currentStep == 5
 	}
 	@Watch('isActive')
@@ -79,17 +75,25 @@ export default class NItemForIntro extends Vue {
 			}
 		}
 	}
+	isEditing: boolean = false
+	changeIsEditing(value: boolean) {
+		this.isEditing = value
+	}
+	get isDraggable() {
+		if (this.isInFiltering) return false
+		if (this.isEditing) return false
 
-	isDraggable: boolean = true
-	get onEdit() {
-		return !this.isDraggable
+		return true
+	}
+
+	get isInFiltering() {
+		const module = getModule(Sheets, this.$store)
+		return module.isInFiltering
 	}
 	get numerationPattern() {
 		return this.$props.el._numerationPattern()
 	}
-	changeDraggable(newValue: boolean) {
-		this.isDraggable = newValue
-	}
+
 	get isDarkTheme() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getIsDarkTheme

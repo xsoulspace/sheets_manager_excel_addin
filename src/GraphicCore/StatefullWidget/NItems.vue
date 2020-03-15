@@ -6,6 +6,9 @@
 			:maxDepth="depth"
 			:threshold="50"
 			@change="changeElements"
+			:hooks="{
+				beforeMove: this.nestedHooksBeforeMove,
+			}"
 		>
 			<vue-nestable-handle slot-scope="{ item }" :item="item">
 				<NItem :el="item" :id="item.id" @open-colors="openColors" />
@@ -143,6 +146,15 @@ export default class Item extends Vue {
 	get maintenerStatuses() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getMaintainerStatuses
+	}
+	get isInFiltering() {
+		const module = getModule(Sheets, this.$store)
+		return module.isInFiltering
+	}
+	/** if returns false, cancel move */
+	nestedHooksBeforeMove(){
+		if(this.isInFiltering) return false
+		return true
 	}
 }
 </script>

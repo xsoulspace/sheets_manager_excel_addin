@@ -41,7 +41,7 @@ export enum ActionTypes {
 	nothing,
 }
 @Component({
-	props: ['el', 'isDraggable'],
+	props: ['el'],
 	components: {},
 	directives: {
 		outsideClick,
@@ -73,12 +73,12 @@ export default class Item extends Vue {
 	isInputActive: boolean = false
 	showInput() {
 		this.$data.isInputActive = true
-		this.$emit('draggable-change', false)
+		this.$emit('input-state-change', true)
 	}
 	async closeInput() {
 		this.$data.isInputActive = false
 		await this.elementChange(this.element)
-		this.$emit('draggable-change', true)
+		this.$emit('input-state-change', false)
 	}
 
 	element: MatrixElementInterface.MatrixElement = {} as MatrixElementInterface.MatrixElement

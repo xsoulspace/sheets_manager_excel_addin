@@ -173,7 +173,27 @@ export class MatrixController extends Basic
 			throw this.log.error('firstOpenScenarioCreateSheetElements', error)
 		}
 	}
-
+	async filterElements(word: string){
+		const condition = word.toLowerCase()
+		const checkCharacter=(el: MatrixElementInterface.MatrixElement)=> {
+			const name = el.decodedName
+			const checkingName = name.toLowerCase()
+			if (checkingName.indexOf(condition) >= 0) {
+				filteredElements.push(el)
+			}
+		}
+		let filteredElements: MatrixElementInterface.MEArr = []
+		for(let el of this._arr){
+			if (el.elements.length > 0) {
+				el.elements.forEach(elChild => {
+					checkCharacter(elChild)
+				})
+			}
+			checkCharacter(el)
+		}
+		
+		return filteredElements
+	}
 	/**@description
 	 * if user will need
 	 * we will try to restore numeration */
@@ -190,7 +210,7 @@ export class MatrixController extends Basic
 		} catch (error) {
 			throw this.log.error('writeSheets', error)
 		}
-	}
+	}	
 
 	/**@description
 	 * Reorder all sheets by requered type

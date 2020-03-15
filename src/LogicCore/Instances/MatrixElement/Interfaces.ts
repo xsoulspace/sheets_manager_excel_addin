@@ -80,6 +80,7 @@ namespace MatrixElementInterface {
 		_simpleSheetsLoading(
 			sheets: MatrixElementInterface.sheetsSource
 		): Promise<void>
+		filterElements(word: string): Promise<MEArr>
 	}
 	export interface MatrixControllerConstructor extends BasicConstructor {
 		maintainerStatuses: maintainerStatuses

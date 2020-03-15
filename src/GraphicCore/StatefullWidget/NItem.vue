@@ -5,7 +5,7 @@
 		class="item"
 		:class="{
 			'--is-dark': isDarkTheme,
-			'--on-edit': onEdit,
+			'--on-edit': isEditing,
 		}"
 	>
 		<NColorMark :el="el" @click="openColors" />
@@ -13,14 +13,10 @@
 			<i class="fas fa-ellipsis-v"></i>
 		</span>
 		<div>
-			<NInput
-				:el="el"
-				:is-draggable="isDraggable"
-				@draggable-change="changeDraggable"
-			/>
+			<NInput :el="el" @input-state-change="changeIsEditing" />
 		</div>
-		<div class='item-numeration' v-if='showNumeration' v-show='!onEdit'>
-			<i>{{numerationPattern}}</i>
+		<div class="item-numeration" v-if="showNumeration" v-show="!isEditing">
+			<i>{{ numerationPattern }}</i>
 		</div>
 	</div>
 </template>
@@ -48,32 +44,37 @@ export default class Item extends Vue {
 	}
 	@Watch('isActive')
 	elm(isActive: boolean) {
-
-		const item: HTMLElement | null  = this.$el.parentElement!.parentElement!.parentElement
-		if(item){
-			if(isActive){
-				item.classList.add("--is-active");
-				if(this.isDarkTheme){
-					item.classList.add("--is-dark");
+		const item: HTMLElement | null = this.$el.parentElement!.parentElement!
+			.parentElement
+		if (item) {
+			if (isActive) {
+				item.classList.add('--is-active')
+				if (this.isDarkTheme) {
+					item.classList.add('--is-dark')
 				}
 			} else {
-				item.classList.remove("--is-active");
-				if(this.isDarkTheme){
-					item.classList.remove("--is-dark");
+				item.classList.remove('--is-active')
+				if (this.isDarkTheme) {
+					item.classList.remove('--is-dark')
 				}
 			}
 		}
 	}
-	isDraggable: boolean = true
-	get onEdit() {
-		return !this.isDraggable
+	
+	isEditing: boolean = false
+	changeIsEditing(value: boolean) {
+		this.isEditing = value
 	}
-	get numerationPattern(){
+	get isDraggable() {
+		if (this.isEditing) return false
+
+		return true
+	}
+
+	get numerationPattern() {
 		return this.$props.el._numerationPattern()
 	}
-	changeDraggable(newValue: boolean) {
-		this.isDraggable = newValue
-	}
+
 	get isDarkTheme() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getIsDarkTheme
@@ -81,7 +82,7 @@ export default class Item extends Vue {
 	openColors() {
 		this.$emit('open-colors', this.$props.el)
 	}
-	get showNumeration(){
+	get showNumeration() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getShowNumeration
 	}

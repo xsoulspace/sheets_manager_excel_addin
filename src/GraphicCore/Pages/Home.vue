@@ -1,6 +1,6 @@
 <template>
 	<div class="home">
-		<header class="header" >
+		<header class="header">
 			<navigation-tabs
 				@turn-on-settings="changeSettingsState(true)"
 				:isSettingsActive="isSettingsActive"
@@ -11,7 +11,6 @@
 			@turn-off-settings-state="changeSettingsState(false)"
 		/>
 		<NItems :pElements="elements" @elements-change="changeElements" />
-
 	</div>
 </template>
 
@@ -40,7 +39,9 @@ export default class Home extends Vue {
 	}
 	async changeElements(items: any[]) {
 		const sheetsModule = getModule(Sheets, this.$store)
-		await sheetsModule.changeSheetPosition({ items })
+		if (!sheetsModule.isInFiltering) {
+			await sheetsModule.changeSheetPosition({ items })
+		}
 	}
 	public get isDarkTheme() {
 		const module = getModule(AppSettings, this.$store)
