@@ -1,0 +1,8 @@
+$base-font-name: 'primary' !default;
+@mixin font($font-name:$base-font-name){
+    @if($font-name == 'primary'){
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
