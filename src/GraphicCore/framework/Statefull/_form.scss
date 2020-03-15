@@ -1,6 +1,17 @@
 @use '../Library/_colours.scss';
 
 .form{
+    &__p{
+        padding-top: 15px;
+        padding-bottom: 15px;
+        &.--is-centered{
+            text-align: center;
+        }
+        &.--has-underline{
+            border-bottom: 1px;
+            border-bottom-style: solid;
+        }
+    }
     &__field{
         cursor: pointer;
         padding-top: 15px;

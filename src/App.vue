@@ -23,7 +23,7 @@
 import { getModule } from 'vuex-module-decorators'
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Log } from '@/LogicCore/Debug/Log'
-import AppSettings from '@/StorageCore/AppSettings'
+import AppSettings, { AllAppSettingsInterface } from '@/StorageCore/AppSettings'
 import Sheets from '@/StorageCore/Sheets'
 import { ExcelContextBuilder } from './LogicCore/APIExcel/ExcelContextBuilder'
 import ModalBrokenNavigation from '@/GraphicCore/StatefullWidget/ModalBrokenNavigation.vue'
@@ -56,8 +56,8 @@ export default class App extends Vue {
 		module.openAlert({ title: alertTitle, type: AlertTypes.success })
 
 		setTimeout(async () => {
-			await this.continueMounted()			
-		}, 1000);
+			await this.continueMounted()
+		}, 1000)
 	}
 	get introIsRunning() {
 		const module = getModule(AppSettings, this.$store)
@@ -143,20 +143,14 @@ export default class App extends Vue {
 			content: `номер листа по порядку - можно отключить в настройках`,
 		},
 	]
-	StoreAppSettings: string = 'appSettings'
 	hostInfo: any = undefined
-	// sourceApp: MatrixElementInterface.outsideApp = 'excelDesktop'
 	sourceApp: MatrixElementInterface.outsideApp = 'browser'
 	hasBrokenNumeration: boolean = false
 	iniStore: boolean = false
-	get isLocalStorageExists() {
-		return typeof localStorage != 'undefined'
-	}
-	set appSettings(value) {
-		//this.$store.commit(this.StoreAppSettings, value)
-	}
-	get appSettings() {
-		return '' //this.$store.getters[this.StoreAppSettings]
+	@Watch('iniStore')
+	async iniStoreChange() {
+		const sheets = getModule(Sheets, this.$store)
+		const isLoaded = await sheets.initializeStore(this.sourceApp)
 	}
 	closeAlert() {
 		const module = getModule(AppSettings, this.$store)
@@ -195,11 +189,7 @@ export default class App extends Vue {
 		}
 		module.openAlert({ title: alertTitle, type: AlertTypes.success })
 	}
-	@Watch('iniStore')
-	async iniStoreChange() {
-		const sheets = getModule(Sheets, this.$store)
-		const isLoaded = await sheets.initializeStore(this.sourceApp)
-	}
+
 	checkIsTouchDevice() {
 		//https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript/4819886#4819886
 		try {
@@ -262,21 +252,30 @@ export default class App extends Vue {
 		//
 	}
 
-	async beforeDestroy() {
-		if (this.sourceApp == 'excelDesktop') {
-			// Catch all events from Excel
-			const context: Excel.RequestContext = await ExcelContextBuilder.init()
-			const sheets: Excel.WorksheetCollection =
-				context.workbook.worksheets
-			sheets.onActivated.remove(this.eventHandler)
-			sheets.onAdded.remove(this.eventHandler)
-			sheets.onDeleted.remove(this.eventHandler)
-
-			await context.sync()
-		}
+	StoreAppSettings: string = 'appSettings'
+	get isLocalStorageExists() {
+		return typeof localStorage != 'undefined'
 	}
+	set appSettings(value: AllAppSettingsInterface) {
+		const module = getModule(AppSettings, this.$store)
+		module.setAllSettings(value)
+	}
+	get appSettings() {
+		const module = getModule(AppSettings, this.$store)
+		return module.getAllSettings
+	}
+
 	async mounted() {
 		const module = getModule(AppSettings, this.$store)
+		/** loading local settings */
+
+		if (this.isLocalStorageExists) {
+			// getting data from local storage
+			const item = localStorage.getItem(this.StoreAppSettings)
+			if (item) this.appSettings = JSON.parse(item)
+		}
+
+		/** run intro if it is needed */
 		if (module.getRunIntroOnOpen) {
 			this.startTour()
 			return
@@ -301,11 +300,7 @@ export default class App extends Vue {
 			await context.sync()
 		}
 		this.checkIsTouchDevice()
-		if (this.isLocalStorageExists) {
-			// getting data from local storage
-			const item = localStorage.getItem(this.StoreAppSettings)
-			if (item) this.appSettings = JSON.parse(item)
-		}
+
 		/** dispatch context to store */
 		const isLoaded = await sheetsModule.initializeStore(this.sourceApp)
 		if (!isLoaded) {
@@ -327,6 +322,19 @@ export default class App extends Vue {
 			/** we will load anyway to show user test data */
 		}
 		this.hasBrokenNumeration = false
+	}
+	async beforeDestroy() {
+		if (this.sourceApp == 'excelDesktop') {
+			// Catch all events from Excel
+			const context: Excel.RequestContext = await ExcelContextBuilder.init()
+			const sheets: Excel.WorksheetCollection =
+				context.workbook.worksheets
+			sheets.onActivated.remove(this.eventHandler)
+			sheets.onAdded.remove(this.eventHandler)
+			sheets.onDeleted.remove(this.eventHandler)
+
+			await context.sync()
+		}
 	}
 }
 </script>

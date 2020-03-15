@@ -5,15 +5,47 @@ import { Log } from '@/LogicCore/Debug/Log'
 import { MaintainerStatuses } from '@/LogicCore/Instances/MatrixElement/Maintainer'
 import { AlertTypes, AlertArgs } from '@/types/SheetManager'
 
+export interface AllAppSettingsInterface {
+	themeName: SheetManager.AppSettingsThemeName
+	maintainerStatuses: MatrixElementInterface.maintainerStatuses
+	runIntroOnOpen: boolean
+	showNumeration: boolean
+}
+
 @Module({ name: 'AppSettings', namespaced: true })
 export default class AppSettings extends VuexModule {
+	get getAllSettings(): AllAppSettingsInterface {
+		return {
+			themeName: this.themeName,
+			maintainerStatuses: this.maintainerStatuses,
+			runIntroOnOpen: this.runIntroOnOpen,
+			showNumeration: this.showNumeration,
+		}
+	}
+	@Mutation
+	setAllSettings(obj: AllAppSettingsInterface) {
+		const {
+			themeName,
+			maintainerStatuses,
+			runIntroOnOpen,
+			showNumeration,
+		} = obj
+		this.themeName = themeName
+		this.runIntroOnOpen = runIntroOnOpen
+		this.showNumeration = showNumeration
+		this.maintainerStatuses = new MaintainerStatuses(
+			maintainerStatuses.areSheetsHaveNumeration,
+			maintainerStatuses.isNumerationBroken,
+			maintainerStatuses.shouldWeRestoreNumeration
+		)
+	}
 	themeName: SheetManager.AppSettingsThemeName = 'dark'
-	maintainerStatuses: MatrixElementInterface.maintainerStatuses = new MaintainerStatuses()
 
 	get getIsDarkTheme() {
 		const dark: SheetManager.AppSettingsThemeName = 'dark'
 		return this.themeName == dark
 	}
+
 	@Mutation
 	setTheme(themeName: SheetManager.AppSettingsThemeName) {
 		this.themeName = themeName
@@ -32,6 +64,7 @@ export default class AppSettings extends VuexModule {
 		this.isTouchDevice = value
 	}
 
+	maintainerStatuses: MatrixElementInterface.maintainerStatuses = new MaintainerStatuses()
 	get getMaintainerStatuses() {
 		const m = new MaintainerStatuses(
 			this.maintainerStatuses.areSheetsHaveNumeration,
@@ -47,6 +80,14 @@ export default class AppSettings extends VuexModule {
 		this.maintainerStatuses.default.shouldWeRestoreNumeration = value
 		this.maintainerStatuses.default.areSheetsHaveNumeration = value
 		this.maintainerStatuses.resetToDefault()
+	}
+	@Mutation
+	changeShouldWeRestoreNumeration(value: boolean) {
+		this.maintainerStatuses.shouldWeRestoreNumeration = value
+		this.maintainerStatuses.default.shouldWeRestoreNumeration = value
+	}
+	get getShouldWeRestoreNumeration() {
+		return this.maintainerStatuses.default.shouldWeRestoreNumeration
 	}
 
 	@Action
@@ -103,11 +144,17 @@ export default class AppSettings extends VuexModule {
 	loading(isLoading: boolean) {
 		if (isLoading) {
 			this.alert.type = AlertTypes.loading
-			this.alert.title = 'Загрузка...'
+			const loadingTitle = 'Загрузка...'
+			this.alert.title = loadingTitle
 			this.alert.isOpen = true
 			setTimeout(() => {
-				if (this.alert.isOpen) {
+				if (
+					this.alert.isOpen &&
+					this.alert.type == AlertTypes.loading &&
+					this.alert.title == loadingTitle
+				) {
 					this.alert.type = AlertTypes.danger
+
 					this.alert.title =
 						'Не удается выполнить загрузку! Пожалуйста перезагрузите аддин'
 				}

@@ -38,11 +38,21 @@
 						@click="switchNumeration"
 					/>
 				</div>
+				<div class="form__p --is-centered --has-underline">
+					Настройки при открытии аддина
+				</div>
 				<div class="form__field">
 					<checkbox
-						:text="`Запускать обучение при каждом открытии`"
+						:text="`Запускать обучение`"
 						:value="runIntroOnOpen"
 						@click="switchIntroOnOpenState"
+					/>
+				</div>
+				<div class="form__field">
+					<checkbox
+						:text="`Пробовать восстановить нумерацию`"
+						:value="shouldWeRestoreNumeration"
+						@click="changeShouldWeRestoreNumeration"
 					/>
 				</div>
 				<!-- <div class="form__field --is-mobile">
@@ -64,7 +74,7 @@ import { Log } from '../../LogicCore/Debug/Log'
 import { getModule } from 'vuex-module-decorators'
 import AppSettings from '@/StorageCore/AppSettings'
 import Checkbox from '@/GraphicCore/StatelessWidget/Checkbox.vue'
-import { AlertTypes } from '../../types/SheetManager'
+import { AlertTypes } from '@/types/SheetManager'
 import NModal from './NModal.vue'
 @Component({
 	props: {
@@ -77,6 +87,19 @@ import NModal from './NModal.vue'
 	components: { Checkbox, NModal },
 })
 export default class SettingsModal extends Vue {
+	get shouldWeRestoreNumeration(){
+		const module = getModule(AppSettings, this.$store)
+		return module.getShouldWeRestoreNumeration
+	}
+	changeShouldWeRestoreNumeration(){
+		const newState = !this.shouldWeRestoreNumeration
+		const module = getModule(AppSettings, this.$store)
+		module.changeShouldWeRestoreNumeration(newState)
+		const title = newState
+			? 'Восстановление нумерации при открытии включено'
+			: 'Восстановление нумерации при открытии отключено'
+		module.openAlert({ title, type: AlertTypes.success })
+	}
 	get runIntroOnOpen(){
 		const module = getModule(AppSettings, this.$store)
 		return module.getRunIntroOnOpen
