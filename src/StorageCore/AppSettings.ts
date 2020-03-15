@@ -88,7 +88,9 @@ export default class AppSettings extends VuexModule {
 		this.alert.title = title
 		this.alert.isOpen = true
 		setTimeout(() => {
-			this.alert.isOpen = false
+			if(this.alert.title == title && this.alert.type == type){
+				this.alert.isOpen = false
+			}
 		}, 5000)
 	}
 	@Mutation

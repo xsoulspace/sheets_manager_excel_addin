@@ -121,7 +121,6 @@ export default class SettingsModal extends Vue {
 		settings.loading(true)
 		await settings.switchSheetsNumeration()
 		settings.openAlert({title, type: AlertTypes.success})
-
 	}
 	get isNumerated() {
 		const settings = getModule(AppSettings, this.$store)
