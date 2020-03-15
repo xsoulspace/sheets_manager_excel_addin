@@ -14,7 +14,9 @@ $color-mark-width: 6px;
 		top: 0em;
 		left: 3em;
 		font-size: 0.6em;
-
+		&.v-tour__target--relative{
+			position: absolute !important;
+		}
 	}
 	&.--is-special{
 		background-color: colours.theme-color('background', 'base');
