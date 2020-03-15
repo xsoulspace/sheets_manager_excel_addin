@@ -75,7 +75,6 @@ export default class App extends Vue {
 		}
 	}
 	startTour() {
-		this.sourceApp = 'browser'
 		this.switchIntroIsRunning()
 	}
 	introOnNextStep(currentStep: string) {}

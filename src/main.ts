@@ -52,8 +52,8 @@ switch (infoGlobal == undefined){
           store,
           render: h => h(App)
         })
-        vm.$data.sourceApp = sourceExcel
-        vm.$data.hostInfo = info
+        vm.$children[0].$data.sourceApp = sourceExcel
+        vm.$children[0].$data.hostInfo = info
       });
     })()
   break;
