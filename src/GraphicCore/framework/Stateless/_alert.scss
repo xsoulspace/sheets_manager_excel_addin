@@ -6,9 +6,9 @@
     box-shadow: 0px 4px 6px -5px colours.theme-color('foreground', 'base', 0.75);
     @include colours.corner-radius;
     min-height: 6em;
+    transition: 0.3s;
 }
 .alert{
-    transition: 0.2s ease-in-out;
     z-index: 10;
     position: fixed;
     top: 0;
@@ -16,15 +16,19 @@
     left: 0;
     color: white;
     background-color: darken(colours.theme-color('background', 'dark', 0.96),10%);
-    display: none;
+	visibility: hidden;
+	opacity: 0;
+	transition: visibility 0s, opacity 0.3s ease-in-out;
     flex-direction: column;
     align-items: center;
     font-weight: bold;
     padding-left: 2em;
     padding-right: 2em;
+    display: flex;
 
     &.--is-active{
-        display: flex;
+        visibility: visible;
+        opacity: 1;
     }
     @include colours.corner-radius;
     &.--is-danger{
@@ -38,6 +42,7 @@
     &.--is-loading{
         background-color: darken(colours.theme-color('background', 'dark', 0.8),10%);
         bottom: 0;
+        transition: 0.3s;
         .alert-title{
             flex: 1;
             display: flex;

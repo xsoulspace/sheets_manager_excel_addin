@@ -1,7 +1,7 @@
 <template>
-	<div class="alert" :class="classMod">
+	<div class="alert" :class="classMod" @click="close">
 		<div class="alert-title">{{ title }}</div>
-		<div v-if="!isLoading" @click="close" class="alert-close">
+		<div v-if="!isLoading" class="alert-close">
 			<span class="icon">
 				<i class="fas fa-times"></i>
 			</span>
@@ -39,9 +39,10 @@ export default class Alert extends Vue {
 				return classes + '--is-loading'
 		}
 	}
-	@Emit()
 	close() {
-		return
+		if (!this.isLoading) {
+			this.$emit('close')
+		}
 	}
 }
 </script>
