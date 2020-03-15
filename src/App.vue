@@ -53,13 +53,8 @@ export default class App extends Vue {
 	}
 	async acceptRepaireAnswer(restoreNumeration: boolean) {
 		const module = getModule(AppSettings, this.$store)
-		console.log('restoreNumeration',restoreNumeration)
-		if (restoreNumeration) {
-			await module.switchSheetsNumeration()
-		} else {
-			/** disable numeration */
-			await module.switchSheetsNumeration(false)
-		}
+		await module.switchSheetsNumeration(restoreNumeration)
+
 		this.iniStore = !this.iniStore
 
 		this.hasBrokenNumeration = false

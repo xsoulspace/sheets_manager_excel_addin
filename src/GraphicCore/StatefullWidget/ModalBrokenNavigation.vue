@@ -29,9 +29,9 @@
 				</button>
 			</p>
 
-			<section>
+			<!-- <section>
 				<p>В чем преимущество нумерации?</p>
-			</section>
+			</section> -->
 		</template>
 	</NModal>
 </template>

@@ -51,7 +51,7 @@ export default class AppSettings extends VuexModule {
 	@Action
 	async switchSheetsNumeration(forceState?: boolean) {
 		const currentState = this.maintainerStatuses.areSheetsHaveNumeration
-		const newState = forceState ? forceState : !currentState
+		const newState = forceState !== undefined ? forceState : !currentState
 
 		this.switchSheetsNumerationMut(newState)
 		const isNumerated = true
