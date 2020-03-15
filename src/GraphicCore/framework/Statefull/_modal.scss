@@ -4,15 +4,17 @@
 	$color: colours.theme-color('foreground', 'base'),
 	$position: left
 ) {
-	position: absolute;
-	#{$position}: 0;
-	top: 50%;
+	flex-grow: 0.2;
+	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 100%;
-	width: 5em;
-	transform: translate(0%, -50%);
+	min-height: 4em;
+	height: auto;
+	max-height: 6em;
+	min-width: 2.5em;
+	width: auto;
+	max-width: 5em;
 	transition: 0.3s linear;
 	@include colours.corner-radius;
 	@if ($position == left) {
@@ -78,13 +80,18 @@
 			}
 		}
 		&-title{
-			padding-left: 5em;
-			padding-right: 5em;
+			word-wrap: normal;
+			flex-grow: 1.5;
 		}
 		&-head {
 			text-align: center;
 			position: relative;
+			display: flex;
+			flex-direction: row;
+			align-items: stretch;
 			min-height: 3em;
+			padding-left: 0.2em;
+			padding-right: 0.2em;
 			border-bottom: 1px solid
 				colours.theme-color('foreground', 'base', 0.5);
 			&.--has-accent{

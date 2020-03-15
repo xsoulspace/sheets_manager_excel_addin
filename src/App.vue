@@ -33,8 +33,8 @@ import { AlertTypes, AlertArgs } from '@/types/SheetManager'
 export default class App extends Vue {
 	StoreAppSettings: string = 'appSettings'
 	hostInfo: any = undefined
-	sourceApp: MatrixElementInterface.outsideApp = 'excelDesktop'
-	// sourceApp: MatrixElementInterface.outsideApp = 'browser'
+	// sourceApp: MatrixElementInterface.outsideApp = 'excelDesktop'
+	sourceApp: MatrixElementInterface.outsideApp = 'browser'
 	hasBrokenNumeration: boolean = false
 	iniStore: boolean = false
 	get isLocalStorageExists() {
@@ -84,10 +84,8 @@ export default class App extends Vue {
 	}
 	@Watch('iniStore')
 	async iniStoreChange() {
-		console.log('hey')
 		const sheets = getModule(Sheets, this.$store)
 		const isLoaded = await sheets.initializeStore(this.sourceApp)
-		console.log('heyxx', isLoaded)
 	}
 	checkIsTouchDevice() {
 		//https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript/4819886#4819886

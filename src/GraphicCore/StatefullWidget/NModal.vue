@@ -11,6 +11,18 @@
 			:class="{ '--is-dark': isDarkTheme }"
 		>
 			<header class="modal__card-head">
+				<div
+					class="modal__card-save"
+					@click="turnOffSave"
+					v-if="showSave"
+				>
+					<span
+						class="icon --has-accent"
+						:class="{ '--is-dark': isDarkTheme }"
+					>
+						<i class="fas fa-save"></i>
+					</span>
+				</div>
 				<p class="modal__card-title --has-accent">{{ title }}</p>
 				<div
 					class="modal__card-close"
@@ -22,18 +34,6 @@
 						:class="{ '--is-dark': isDarkTheme }"
 					>
 						<i class="fas fa-times"></i>
-					</span>
-				</div>
-				<div
-					class="modal__card-save"
-					@click="turnOffSave"
-					v-if="showSave"
-				>
-					<span
-						class="icon --has-accent"
-						:class="{ '--is-dark': isDarkTheme }"
-					>
-						<i class="fas fa-save"></i>
 					</span>
 				</div>
 			</header>
