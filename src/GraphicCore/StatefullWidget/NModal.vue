@@ -12,7 +12,11 @@
 		>
 			<header class="modal__card-head">
 				<p class="modal-card-title --has-accent">{{ title }}</p>
-				<div class="modal__card-close" @click="turnOffCancel">
+				<div
+					class="modal__card-close"
+					@click="turnOffCancel"
+					v-if="showClose"
+				>
 					<span
 						class="icon --has-accent"
 						:class="{ '--is-dark': isDarkTheme }"
@@ -20,7 +24,11 @@
 						<i class="fas fa-times"></i>
 					</span>
 				</div>
-				<div class="modal__card-save" @click="turnOffSave">
+				<div
+					class="modal__card-save"
+					@click="turnOffSave"
+					v-if="showSave"
+				>
 					<span
 						class="icon --has-accent"
 						:class="{ '--is-dark': isDarkTheme }"
@@ -36,7 +44,7 @@
 	</div>
 </template>
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue, Watch, Prop } from 'vue-property-decorator'
 import { Log } from '../../LogicCore/Debug/Log'
 import { getModule } from 'vuex-module-decorators'
 import AppSettings from '@/StorageCore/AppSettings'
@@ -57,6 +65,11 @@ import Checkbox from '@/GraphicCore/StatelessWidget/Checkbox.vue'
 	components: { Checkbox },
 })
 export default class NModal extends Vue {
+	//@ts-ignore
+	@Prop({ required: false, default: true }) readonly showSave: boolean
+	//@ts-ignore
+	@Prop({ required: false, default: true }) readonly showClose: boolean
+
 	public get isDarkTheme() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getIsDarkTheme

@@ -21,6 +21,7 @@
 			@close="closeColors"
 			@save="saveColors"
 			:title="'Выбор цвета'"
+			:show-save='false'
 		>
 			<template v-slot:modalBody>
 				<swatches

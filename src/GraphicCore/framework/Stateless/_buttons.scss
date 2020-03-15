@@ -44,6 +44,9 @@
 		&:active{
 			background-color: colours.theme-color('accent', 'base', 0.2);
 		}
+		&:hover{
+			background-color: colours.theme-color('foreground', 'base', 0.2);
+		}
 	}
 }
 
@@ -59,4 +62,8 @@
 		@include colours.corner-radius;
 
 	}
+}
+.buttons{
+	display: grid;
+	
 }

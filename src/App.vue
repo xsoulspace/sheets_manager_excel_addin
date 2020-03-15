@@ -1,6 +1,10 @@
 <template>
 	<div id="app" :class="{ '--is-dark': isDarkTheme }">
 		<router-view />
+		<ModalBrokenNavigation
+			@repaire-answer="acceptRepaireAnswer"
+			:isActive="hasBrokenNumeration"
+		/>
 	</div>
 </template>
 <script lang="ts">
@@ -10,8 +14,13 @@ import { Log } from '@/LogicCore/Debug/Log'
 import AppSettings from '@/StorageCore/AppSettings'
 import Sheets from '@/StorageCore/Sheets'
 import { ExcelContextBuilder } from './LogicCore/APIExcel/ExcelContextBuilder'
+import ModalBrokenNavigation from '@/GraphicCore/StatefullWidget/ModalBrokenNavigation.vue'
 
-@Component
+@Component({
+	components: {
+		ModalBrokenNavigation,
+	},
+})
 export default class App extends Vue {
 	StoreAppSettings: string = 'appSettings'
 	hostInfo: any = undefined
@@ -42,16 +51,18 @@ export default class App extends Vue {
 			)
 		}
 	}
-	@Watch('hasBrokenNumeration')
-	async hasBrokenNumerationChange(newValue: boolean) {
-		console.log('hasBrokenNumeration',newValue)
-
-		/**TODO: call popup do we need to restore numeration? */
-		if (newValue) {
-			const module = getModule(AppSettings, this.$store)
+	async acceptRepaireAnswer(restoreNumeration: boolean) {
+		const module = getModule(AppSettings, this.$store)
+		console.log('restoreNumeration',restoreNumeration)
+		if (restoreNumeration) {
 			await module.switchSheetsNumeration()
-			this.iniStore = !this.iniStore
+		} else {
+			/** disable numeration */
+			await module.switchSheetsNumeration(false)
 		}
+		this.iniStore = !this.iniStore
+
+		this.hasBrokenNumeration = false
 	}
 	@Watch('iniStore')
 	async iniStoreChange() {
