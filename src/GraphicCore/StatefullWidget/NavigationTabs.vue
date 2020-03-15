@@ -6,6 +6,7 @@
 		}"
 	>
 		<div
+			data-v-step="header-search"
 			class="tabs__tab"
 			@mouseover="changeIsSearchActive(true)"
 			@mouseleave="changeIsSearchActive(false)"
@@ -30,7 +31,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="tabs__tab" @click="sync">
+		<div class="tabs__tab" @click="sync" data-v-step="header-sync">
 			<div
 				class="button --has-accent"
 				:class="{
@@ -42,7 +43,11 @@
 				</span>
 			</div>
 		</div>
-		<div class="tabs__tab" @click="turnOnSettings">
+		<div
+			class="tabs__tab"
+			@click="turnOnSettings"
+			data-v-step="header-settings"
+		>
 			<div
 				class="button --has-accent"
 				:class="{
@@ -54,7 +59,11 @@
 				</span>
 			</div>
 		</div>
-		<div class="tabs__tab" @click="turnOnTutorial">
+		<div
+			class="tabs__tab"
+			@click="turnOnTutorial"
+			data-v-step="header-help"
+		>
 			<div
 				class="button --has-accent"
 				:class="{
@@ -66,7 +75,7 @@
 				</span>
 			</div>
 		</div>
-		<div class="tabs__tab" @click="turnOnInfo">
+		<div class="tabs__tab" @click="turnOnInfo" data-v-step="header-info">
 			<div
 				class="button --has-accent"
 				:class="{
@@ -101,7 +110,10 @@ export default class NavigationTabs extends Vue {
 	turnOnSettings() {
 		this.$emit('turn-on-settings')
 	}
-	turnOnTutorial() {}
+	turnOnTutorial() {
+		const module = getModule(AppSettings, this.$store)
+		module.switchIntroState()
+	}
 	async refreshSheets() {}
 	changeIsSearchActive(value: boolean, useItExplicitly?: boolean) {
 		let isExplicit: boolean = false

@@ -9,6 +9,7 @@ import { AlertTypes, AlertArgs } from '@/types/SheetManager'
 export default class AppSettings extends VuexModule {
 	themeName: SheetManager.AppSettingsThemeName = 'dark'
 	maintainerStatuses: MatrixElementInterface.maintainerStatuses = new MaintainerStatuses()
+
 	get getIsDarkTheme() {
 		const dark: SheetManager.AppSettingsThemeName = 'dark'
 		return this.themeName == dark
@@ -88,7 +89,7 @@ export default class AppSettings extends VuexModule {
 		this.alert.title = title
 		this.alert.isOpen = true
 		setTimeout(() => {
-			if(this.alert.title == title && this.alert.type == type){
+			if (this.alert.title == title && this.alert.type == type) {
 				this.alert.isOpen = false
 			}
 		}, 5000)
@@ -115,5 +116,34 @@ export default class AppSettings extends VuexModule {
 			this.alert.title = ''
 			this.alert.isOpen = false
 		}
+	}
+	@Mutation
+	dimmer(isEnabled: boolean) {
+		if (isEnabled) {
+			this.alert.type = AlertTypes.dimmer
+			this.alert.title = ''
+			this.alert.isOpen = true
+		} else {
+			this.alert.title = ''
+			this.alert.isOpen = false
+		}
+	}
+
+	introIsRunning: boolean = false
+	@Mutation
+	switchIntroState() {
+		this.introIsRunning = !this.introIsRunning
+	}
+	get getIntroIsRunning() {
+		return this.introIsRunning
+	}
+
+	runIntroOnOpen: boolean = true
+	get getRunIntroOnOpen() {
+		return this.runIntroOnOpen
+	}
+	@Mutation
+	switchRunIntroOnOpen() {
+		this.runIntroOnOpen = !this.runIntroOnOpen
 	}
 }

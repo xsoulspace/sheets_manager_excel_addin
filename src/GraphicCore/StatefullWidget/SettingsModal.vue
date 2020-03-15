@@ -38,6 +38,13 @@
 						@click="switchNumeration"
 					/>
 				</div>
+				<div class="form__field">
+					<checkbox
+						:text="`Запускать обучение при каждом открытии`"
+						:value="runIntroOnOpen"
+						@click="switchIntroOnOpenState"
+					/>
+				</div>
 				<!-- <div class="form__field --is-mobile">
 						<button
 							class="button__box --has-border"
@@ -70,6 +77,21 @@ import NModal from './NModal.vue'
 	components: { Checkbox, NModal },
 })
 export default class SettingsModal extends Vue {
+	get runIntroOnOpen(){
+		const module = getModule(AppSettings, this.$store)
+		return module.getRunIntroOnOpen
+	}
+	switchIntroOnOpenState(){
+		const module = getModule(AppSettings, this.$store)
+		const newState = !this.runIntroOnOpen
+		module.switchRunIntroOnOpen()
+		const title = newState
+			? 'Обучение при открытии включено'
+			: 'Обучение при открытии отключено'
+		module.openAlert({ title, type: AlertTypes.success })
+	}
+
+
 	_isTouchDevice: boolean = false
 	public changeIsDarkTheme() {
 		const module = getModule(AppSettings, this.$store)

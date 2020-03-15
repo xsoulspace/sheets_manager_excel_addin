@@ -8,20 +8,22 @@
 			@change="changeElements"
 		>
 			<vue-nestable-handle slot-scope="{ item }" :item="item">
-				<NItem
-					:el="item"
-					:id="item.id"
-					@open-colors="openColors"
-					
-				/>
+				<NItem :el="item" :id="item.id" @open-colors="openColors" />
 			</vue-nestable-handle>
 		</vue-nestable>
+			<!-- item for intro -->
+			<NItemForIntro
+				v-if="introIsRunning"
+				:el="testItem"
+				:id="testItem.id"
+				@open-colors="openColors"
+			/>
 		<NModal
 			:isActive="isColorsOpen"
 			@close="closeColors"
 			@save="saveColors"
 			:title="'Выбор цвета'"
-			:show-save='false'
+			:show-save="false"
 		>
 			<template v-slot:modalBody>
 				<swatches
@@ -53,17 +55,34 @@ import AppSettings from '@/StorageCore/AppSettings'
 import outsideClick from '@/GraphicCore/Directives/outside-click'
 import NItem from './NItem.vue'
 import { ActionTypes } from './NInput.vue'
-
+import { MatrixElement } from '../../LogicCore/Instances/MatrixElement/MatrixElement'
+import NItemForIntro from "./NItemForIntro.vue";
 @Component({
 	props: ['pElements'],
 	components: {
 		NItem,
 		NModal,
 		Swatches,
+		NItemForIntro
 	},
 })
 export default class Item extends Vue {
-
+	testItem: MatrixElementInterface.MatrixElement = new MatrixElement({
+		id: 'hola',
+		visibility: 'Visible',
+		color: '#ffffff',
+		name: 'Test Item Name',
+		first: 5,
+		second: 0,
+		delimiter: '_',
+		typeOfName: '_excelSheetName',
+		elements: [],
+		_classTitle: 'SheetElement',
+	})
+	get introIsRunning() {
+		const settings = getModule(AppSettings, this.$store)
+		return settings.getIntroIsRunning
+	}
 	els: MatrixElementInterface.MEArr = []
 	@Watch('pElements')
 	changePElements(values: any[]) {
@@ -121,7 +140,7 @@ export default class Item extends Vue {
 		const module = getModule(AppSettings, this.$store)
 		return module.getIsDarkTheme
 	}
-	get maintenerStatuses(){
+	get maintenerStatuses() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getMaintainerStatuses
 	}

@@ -1,6 +1,6 @@
 <template>
 	<div class="home">
-		<header class="header">
+		<header class="header" >
 			<navigation-tabs
 				@turn-on-settings="changeSettingsState(true)"
 				:isSettingsActive="isSettingsActive"

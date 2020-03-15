@@ -1,7 +1,7 @@
 <template>
 	<div class="alert" :class="classMod" @click="close">
 		<div class="alert-title">{{ title }}</div>
-		<div v-if="!isLoading" class="alert-close">
+		<div v-if="!disableClose" class="alert-close">
 			<span class="icon">
 				<i class="fas fa-times"></i>
 			</span>
@@ -25,8 +25,14 @@ export default class Alert extends Vue {
 	get isBodyExists() {
 		return this.$slots.body !== undefined
 	}
-	get isLoading() {
-		return this.$props.type == AlertTypes.loading
+	get disableClose() {
+		switch(this.$props.type){
+			case AlertTypes.loading:
+				return true
+			case AlertTypes.dimmer:
+				return true
+		}
+		return  false
 	}
 	get classMod() {
 		let classes: string = this.$props.isActive ? '--is-active ' : ''
@@ -37,10 +43,12 @@ export default class Alert extends Vue {
 				return classes + '--is-success'
 			case AlertTypes.loading:
 				return classes + '--is-loading'
+			case AlertTypes.dimmer:
+				return classes + '--is-dimmer'
 		}
 	}
 	close() {
-		if (!this.isLoading) {
+		if (!this.disableClose) {
 			this.$emit('close')
 		}
 	}

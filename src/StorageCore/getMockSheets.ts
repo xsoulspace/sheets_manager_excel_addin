@@ -4,7 +4,7 @@ const getMockSheets = async function(): Promise<SheetElementsInterface.sheetsSou
 
 	const options: MatrixElementInterface.MatrixElementConstructor = {
 		color: '',
-		name: 'test00_01',
+		name: 'test',
 		typeOfName: '_excelSheetName',
 		first: 1,
 		second: 1,
@@ -34,7 +34,7 @@ const getMockSheets = async function(): Promise<SheetElementsInterface.sheetsSou
 	const copyObject2 = new MatrixElement(options)
 	
 	copyObject2.id = 'testing2'
-	copyObject2.name = 'testing00_01'
+	copyObject2.name = 'testing'
 	copyObject1.id = 'testing1'
 	copyObject1.name = 'testing1'
 

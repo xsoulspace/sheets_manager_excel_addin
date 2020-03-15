@@ -11,6 +11,12 @@
 			:type="alertState.type"
 			:isActive="alertState.isOpen"
 		/>
+		<v-tour
+			name="tour"
+			:steps="steps"
+			:options="{ highlight: true }"
+			:callbacks="tourCallbacks"
+		></v-tour>
 	</div>
 </template>
 <script lang="ts">
@@ -31,6 +37,113 @@ import { AlertTypes, AlertArgs } from '@/types/SheetManager'
 	},
 })
 export default class App extends Vue {
+	tourCallbacks = {
+		onStart: this.enableDimmer,
+		onStop: this.disableDimmer,
+		onNextStep: this.introOnNextStep,
+	}
+	async enableDimmer() {
+		const module = getModule(AppSettings, this.$store)
+		module.dimmer(true)
+		await this.mountTestData()
+	}
+	async disableDimmer() {
+		const module = getModule(AppSettings, this.$store)
+		module.dimmer(false)
+		await this.switchIntroIsRunning()
+		let alertTitle: string
+		alertTitle = 'Обучение пройдено!'
+		module.openAlert({ title: alertTitle, type: AlertTypes.success })
+
+		setTimeout(async () => {
+			await this.continueMounted()			
+		}, 1000);
+	}
+	get introIsRunning() {
+		const module = getModule(AppSettings, this.$store)
+		return module.getIntroIsRunning
+	}
+	switchIntroIsRunning() {
+		const module = getModule(AppSettings, this.$store)
+		module.switchIntroState()
+	}
+	@Watch('introIsRunning')
+	introIsRunningChange(newState: boolean) {
+		if (newState) {
+			//@ts-ignore
+			this.$tours['tour'].start()
+		}
+	}
+	startTour() {
+		this.sourceApp = 'browser'
+		this.switchIntroIsRunning()
+	}
+	introOnNextStep(currentStep: string) {}
+	steps: any[] = [
+		{
+			target: '[data-v-step="header-help"]',
+			header: {
+				title: 'Добро пожаловать в Sheet Manager!',
+			},
+			content: `Это обучение поможет вам освоится в программе - и всегда будет доступно по выделенному сейчас значку вопроса. Мы временно переключились на тестовые данные, чтобы показать как всё работает. По оконачнии обучения будут загружены листы Excel`,
+		},
+		{
+			target: '[data-v-step="header-sync"]',
+			header: {
+				title: 'Обратите внимение!',
+			},
+			content: `Любые изменения, которые вы сделаете в addin - автоматически синхронизируются с Excel. Однако если вы изменили что-то в Excel и не видите в addin - просто нажмите эту кнопку синхронизцаии`,
+		},
+		{
+			target: '[data-v-step="header-info"]',
+			header: {
+				title: 'Дополнительная информация',
+			},
+			content: `чтобы написать, если что-то не работает или есть идея`,
+		},
+		{
+			target: '[data-v-step="header-search"]',
+			header: {
+				title: 'Строка поиска',
+			},
+			content: `ищет по названиям листов`,
+		},
+		{
+			target: '[data-v-step="header-settings"]',
+			header: {
+				title: 'Настройки',
+			},
+			content: `добавление нумерации, переключение темы и т.д. больше - по значку вопроса в настройках`,
+		},
+		{
+			target: '[data-v-step="item"]',
+			header: {
+				title: 'Это лист',
+			},
+			content: `его позицию можно переместив просто перетянув (drag &  drop)`,
+		},
+		{
+			target: '[data-v-step="item-color"]',
+			header: {
+				title: 'Цвет листа',
+			},
+			content: `можно менять по нажатию`,
+		},
+		{
+			target: '[data-v-step="item-name"]',
+			header: {
+				title: 'Название листа',
+			},
+			content: `можно изменить дважды кликнув`,
+		},
+		{
+			target: '[data-v-step="item-numeration"]',
+			header: {
+				title: 'Нумерация',
+			},
+			content: `номер листа по порядку - можно отключить в настройках`,
+		},
+	]
 	StoreAppSettings: string = 'appSettings'
 	hostInfo: any = undefined
 	// sourceApp: MatrixElementInterface.outsideApp = 'excelDesktop'
@@ -67,6 +180,7 @@ export default class App extends Vue {
 			)
 		}
 	}
+
 	async acceptRepaireAnswer(restoreNumeration: boolean) {
 		const module = getModule(AppSettings, this.$store)
 		module.loading(true)
@@ -80,7 +194,7 @@ export default class App extends Vue {
 		} else {
 			alertTitle = 'Листы успешно загружены!'
 		}
-		module.openAlert({title:alertTitle, type:AlertTypes.success})
+		module.openAlert({ title: alertTitle, type: AlertTypes.success })
 	}
 	@Watch('iniStore')
 	async iniStoreChange() {
@@ -164,6 +278,15 @@ export default class App extends Vue {
 	}
 	async mounted() {
 		const module = getModule(AppSettings, this.$store)
+		if (module.getRunIntroOnOpen) {
+			this.startTour()
+			return
+		}
+		await this.continueMounted()
+	}
+	async continueMounted() {
+		console.log('hollaa', this.sourceApp)
+		const module = getModule(AppSettings, this.$store)
 		module.loading(true)
 		const sheetsModule = getModule(Sheets, this.$store)
 		if (this.sourceApp == 'excelDesktop') {
@@ -179,7 +302,11 @@ export default class App extends Vue {
 			await context.sync()
 		}
 		this.checkIsTouchDevice()
-
+		if (this.isLocalStorageExists) {
+			// getting data from local storage
+			const item = localStorage.getItem(this.StoreAppSettings)
+			if (item) this.appSettings = JSON.parse(item)
+		}
 		/** dispatch context to store */
 		const isLoaded = await sheetsModule.initializeStore(this.sourceApp)
 		if (!isLoaded) {
@@ -187,20 +314,20 @@ export default class App extends Vue {
 			module.loading(false)
 			return
 		}
-		// console.log('isLoaded', isLoaded)
 
 		this.hasBrokenNumeration = false
-		// const elements = localStorage.getItem("elements")
-		// if(typeof elements != "undefined"){
-		//   this.$store.dispatch('specialUpdateElements',elements)
-		// }
-		if (this.isLocalStorageExists) {
-			// getting data from local storage
-			//console.log(wStorage)
-			const item = localStorage.getItem(this.StoreAppSettings)
-			if (item) this.appSettings = JSON.parse(item)
+
+		let alertTitle: string
+		alertTitle = 'Листы успешно загружены!'
+		module.openAlert({ title: alertTitle, type: AlertTypes.success })
+	}
+	async mountTestData() {
+		const sheetsModule = getModule(Sheets, this.$store)
+		const isLoaded = await sheetsModule.initializeStore('browser')
+		if (!isLoaded) {
+			/** we will load anyway to show user test data */
 		}
-		module.loading(false)
+		this.hasBrokenNumeration = false
 	}
 }
 </script>

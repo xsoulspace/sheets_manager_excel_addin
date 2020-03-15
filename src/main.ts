@@ -16,8 +16,11 @@ Vue.use(VueNestable)
 import Vue2TouchEvents from 'vue2-touch-events'
 //https://www.npmjs.com/package/vue2-touch-events
 import "vue-swatches/dist/vue-swatches.min.css"
-//@ts-ignore
-import { AlertTypes } from '@/GraphicCore/StatelessWidget/Alert.vue'
+import VueTour from 'vue-tour'
+
+require('vue-tour/dist/vue-tour.css')
+
+Vue.use(VueTour)
 
 Vue.use(Vue2TouchEvents)
 Vue.config.productionTip = false

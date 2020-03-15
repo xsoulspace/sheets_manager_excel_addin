@@ -7,4 +7,5 @@ export enum AlertTypes {
 	danger = 'danger',
 	success = 'success',
 	loading = 'loading',
+	dimmer = 'dimmer'
 }
