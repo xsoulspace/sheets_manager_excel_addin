@@ -5,6 +5,12 @@
 			@repaire-answer="acceptRepaireAnswer"
 			:isActive="hasBrokenNumeration"
 		/>
+		<Alert
+			@close="closeAlert"
+			:title="alertState.title"
+			:type="alertState.type"
+			:isActive="alertState.isOpen"
+		/>
 	</div>
 </template>
 <script lang="ts">
@@ -15,10 +21,13 @@ import AppSettings from '@/StorageCore/AppSettings'
 import Sheets from '@/StorageCore/Sheets'
 import { ExcelContextBuilder } from './LogicCore/APIExcel/ExcelContextBuilder'
 import ModalBrokenNavigation from '@/GraphicCore/StatefullWidget/ModalBrokenNavigation.vue'
+import Alert from '@/GraphicCore/StatelessWidget/Alert.vue'
+import { AlertTypes, AlertArgs } from '@/types/SheetManager'
 
 @Component({
 	components: {
 		ModalBrokenNavigation,
+		Alert,
 	},
 })
 export default class App extends Vue {
@@ -37,7 +46,14 @@ export default class App extends Vue {
 	get appSettings() {
 		return '' //this.$store.getters[this.StoreAppSettings]
 	}
-
+	closeAlert() {
+		const module = getModule(AppSettings, this.$store)
+		module.closeAlert()
+	}
+	get alertState() {
+		const module = getModule(AppSettings, this.$store)
+		return module.getAlertState
+	}
 	get isDarkTheme() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getIsDarkTheme
@@ -53,11 +69,18 @@ export default class App extends Vue {
 	}
 	async acceptRepaireAnswer(restoreNumeration: boolean) {
 		const module = getModule(AppSettings, this.$store)
+		module.loading(true)
 		await module.switchSheetsNumeration(restoreNumeration)
-
 		this.iniStore = !this.iniStore
 
 		this.hasBrokenNumeration = false
+		let alertTitle: string
+		if (restoreNumeration) {
+			alertTitle = 'Нумерация успешно восстановлена!'
+		} else {
+			alertTitle = 'Листы успешно загружены!'
+		}
+		module.openAlert({title:alertTitle, type:AlertTypes.success})
 	}
 	@Watch('iniStore')
 	async iniStoreChange() {
@@ -142,6 +165,8 @@ export default class App extends Vue {
 		}
 	}
 	async mounted() {
+		const module = getModule(AppSettings, this.$store)
+		module.loading(true)
 		const sheetsModule = getModule(Sheets, this.$store)
 		if (this.sourceApp == 'excelDesktop') {
 			// Catch all events from Excel
@@ -161,6 +186,7 @@ export default class App extends Vue {
 		const isLoaded = await sheetsModule.initializeStore(this.sourceApp)
 		if (!isLoaded) {
 			this.hasBrokenNumeration = true
+			module.loading(false)
 			return
 		}
 		// console.log('isLoaded', isLoaded)
@@ -176,6 +202,7 @@ export default class App extends Vue {
 			const item = localStorage.getItem(this.StoreAppSettings)
 			if (item) this.appSettings = JSON.parse(item)
 		}
+		module.loading(false)
 	}
 }
 </script>

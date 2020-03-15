@@ -3,6 +3,7 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { Log } from '@/LogicCore/Debug/Log'
 import { MaintainerStatuses } from '@/LogicCore/Instances/MatrixElement/Maintainer'
+import { AlertTypes, AlertArgs } from '@/types/SheetManager'
 
 @Module({ name: 'AppSettings', namespaced: true })
 export default class AppSettings extends VuexModule {
@@ -72,5 +73,36 @@ export default class AppSettings extends VuexModule {
 	@Mutation
 	switchShowNumeration(){
 		this.showNumeration = !this.showNumeration
+	}
+
+	alert: AlertArgs = {
+		title: '',
+		type: AlertTypes.loading,
+		isOpen: false
+	}
+	get getAlertState(){
+		return this.alert
+	}
+	@Mutation
+	openAlert({title, type}: {title: string, type: AlertTypes}) {
+		this.alert.type = type
+		this.alert.title = title
+		this.alert.isOpen = true
+	}
+	@Mutation
+	closeAlert(){
+		this.alert.title = ''
+		this.alert.isOpen = false
+	}
+	@Mutation
+	loading(isLoading: boolean){
+		if (isLoading) {
+			this.alert.type = AlertTypes.loading
+			this.alert.title = 'Загрузка...'
+			this.alert.isOpen = true
+		} else {
+			this.alert.title = ''
+			this.alert.isOpen = false
+		}
 	}
 }

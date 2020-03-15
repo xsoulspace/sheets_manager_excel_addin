@@ -1,0 +1,75 @@
+@use '../Library/colours';
+%toast{
+    top: 1vh;
+    right: 3vw;
+    left: 3vw;
+    box-shadow: 0px 4px 6px -5px colours.theme-color('foreground', 'base', 0.75);
+    @include colours.corner-radius;
+    min-height: 6em;
+}
+.alert{
+    transition: 0.1s;
+    z-index: 10;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    color: white;
+    background-color: darken(colours.theme-color('background', 'dark', 0.96),10%);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    padding-left: 2em;
+    &.--is-active{
+        display: flex;
+    }
+    @include colours.corner-radius;
+    &.--is-danger{
+        background-color: colours.theme-color('secondary', 'base', 0.96);
+        @extend %toast;
+    }
+    &.--is-success{
+        background-color: colours.theme-color('accent', 'dark', 0.96);
+        @extend %toast;
+    }
+    &.--is-loading{
+        background-color: darken(colours.theme-color('background', 'dark', 0.8),10%);
+        bottom: 0;
+        .alert-title{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;    
+        }
+    }
+    &-title{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    &-close{
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: 0.2s;
+        position: absolute;
+        right: 0.4em;
+        top: 0.4em;
+        height: 30px;
+        width: 30px;
+        background-color: colours.theme-color('hoverground', 'base', 0.4);
+        &:hover{
+            background-color: colours.theme-color('hoverground', 'base', 0.6);
+        }
+        border-radius: 30px;
+    }
+    &-body{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}

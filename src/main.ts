@@ -7,7 +7,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import './registerServiceWorker'
 import router from '@/GraphicCore/Router'
-import {store} from '@/StorageCore/Index'
+import {store} from '@/StorageCore'
 import '@/GraphicCore/framework/style.scss'
 import "@/GraphicCore/Directives/DragDropTouch.js";
 import VueNestable from 'vue-nestable'
@@ -16,10 +16,12 @@ Vue.use(VueNestable)
 import Vue2TouchEvents from 'vue2-touch-events'
 //https://www.npmjs.com/package/vue2-touch-events
 import "vue-swatches/dist/vue-swatches.min.css"
+//@ts-ignore
+import { AlertTypes } from '@/GraphicCore/StatelessWidget/Alert.vue'
 
 Vue.use(Vue2TouchEvents)
 Vue.config.productionTip = false
-let vm: Vue | undefined = undefined
+let vm: Vue 
 /**for custom type definitions need to add to types in tsconfig "./src/types", 
  * "node_modules/@types"
  */
@@ -53,11 +55,6 @@ switch (infoGlobal == undefined){
     })()
   break;
 }
-
-// if(vm !== undefined){
-//   vm.$root.$store.commit('setExcelUsingInfo',infoGlobal)
-//   console.log(vm.$root.$store)
-// }
 
 
 

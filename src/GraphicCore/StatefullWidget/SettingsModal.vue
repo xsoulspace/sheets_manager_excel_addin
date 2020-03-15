@@ -82,6 +82,7 @@ import { Log } from '../../LogicCore/Debug/Log'
 import { getModule } from 'vuex-module-decorators'
 import AppSettings from '@/StorageCore/AppSettings'
 import Checkbox from '@/GraphicCore/StatelessWidget/Checkbox.vue'
+import { AlertTypes } from '../../types/SheetManager'
 @Component({
 	props: {
 		isSettingsActive: {
@@ -114,8 +115,12 @@ export default class SettingsModal extends Vue {
 		return this.$data._isTouchDevice
 	}
 	async changeIsNumerated() {
+		const newState = !this.isNumerated
+		const title = newState ? 'Нумерации включена':'Нумерации отключена'
 		const settings = getModule(AppSettings, this.$store)
 		await settings.switchSheetsNumeration()
+		settings.openAlert({title, type: AlertTypes.success})
+
 	}
 	get isNumerated() {
 		const settings = getModule(AppSettings, this.$store)
@@ -126,7 +131,10 @@ export default class SettingsModal extends Vue {
 	}
 	switchNumeration(){
 		const module = getModule(AppSettings, this.$store)
+		const newState = !this.showNumeration
 		module.switchShowNumeration()
+		const title = newState ? 'Видимость нумерации включена':'Видимость нумерации отключена'
+		module.openAlert({title, type: AlertTypes.success})
 	}
 	get showNumeration(){
 		const module = getModule(AppSettings, this.$store)
