@@ -87,6 +87,7 @@
 				</span>
 			</div>
 		</div>
+		<ModalInfo :isActive='isInfoActive' @close='closeInfo'/>
 	</div>
 </template>
 <script lang="ts">
@@ -94,10 +95,10 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import AppSettings from '@/StorageCore/AppSettings'
 import { getModule } from 'vuex-module-decorators'
 import Sheets from '../../StorageCore/Sheets'
-
+import ModalInfo from "@/GraphicCore/StatefullWidget/ModalInfo.vue";
 @Component({
 	name: 'navigation-tabs',
-	components: {},
+	components: {ModalInfo},
 })
 export default class NavigationTabs extends Vue {
 	public get isDarkTheme() {
@@ -111,7 +112,13 @@ export default class NavigationTabs extends Vue {
 		const module = getModule(Sheets, this.$store)
 		await module.filterSheetsByWord(word)
 	}
-	turnOnInfo() {}
+	isInfoActive: boolean = true
+	turnOnInfo() {
+		this.isInfoActive = true
+	}
+	closeInfo(){
+		this.isInfoActive = false
+	}
 	turnOnSettings() {
 		this.$emit('turn-on-settings')
 	}
