@@ -16,6 +16,21 @@ $color-mark-width: 6px;
 		font-size: 0.6em;
 
 	}
+	&.--is-special{
+		background-color: colours.theme-color('background', 'base');
+		.item-numeration{
+			background-color: colours.theme-color('background', 'base');
+			&.v-tour__target--relative{
+				position: absolute !important;
+			}
+		}
+		.item-name{
+			background-color: colours.theme-color('background', 'base');
+		}
+	}
+	&.--is-highlighted{
+		z-index: 200;
+	}
 	&.--on-edit {
 		padding: 0;
 		.item-input {

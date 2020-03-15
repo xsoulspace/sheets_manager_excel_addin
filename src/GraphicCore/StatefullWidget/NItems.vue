@@ -11,13 +11,13 @@
 				<NItem :el="item" :id="item.id" @open-colors="openColors" />
 			</vue-nestable-handle>
 		</vue-nestable>
-			<!-- item for intro -->
-			<NItemForIntro
-				v-if="introIsRunning"
-				:el="testItem"
-				:id="testItem.id"
-				@open-colors="openColors"
-			/>
+		<!-- item for intro -->
+		<NItemForIntro
+			v-if="introIsRunning"
+			:el="testItem"
+			:id="testItem.id"
+			@open-colors="openColors"
+		/>
 		<NModal
 			:isActive="isColorsOpen"
 			@close="closeColors"
@@ -56,14 +56,14 @@ import outsideClick from '@/GraphicCore/Directives/outside-click'
 import NItem from './NItem.vue'
 import { ActionTypes } from './NInput.vue'
 import { MatrixElement } from '../../LogicCore/Instances/MatrixElement/MatrixElement'
-import NItemForIntro from "./NItemForIntro.vue";
+import NItemForIntro from './NItemForIntro.vue'
 @Component({
 	props: ['pElements'],
 	components: {
 		NItem,
 		NModal,
 		Swatches,
-		NItemForIntro
+		NItemForIntro,
 	},
 })
 export default class Item extends Vue {

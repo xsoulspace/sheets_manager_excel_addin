@@ -176,13 +176,24 @@ export default class AppSettings extends VuexModule {
 		}
 	}
 
-	introIsRunning: boolean = false
+	intro: {
+		step: number
+		isRunning: boolean
+	} = { step: 0, isRunning: false }
+
+	get getIntroIsRunning() {
+		return this.intro.isRunning
+	}
 	@Mutation
 	switchIntroState() {
-		this.introIsRunning = !this.introIsRunning
+		this.intro.isRunning = !this.intro.isRunning
 	}
-	get getIntroIsRunning() {
-		return this.introIsRunning
+	get getIntroStep() {
+		return this.intro.step
+	}
+	@Mutation
+	setIntroStep(value: number) {
+		this.intro.step = value
 	}
 
 	runIntroOnOpen: boolean = true

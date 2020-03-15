@@ -6,10 +6,12 @@
 		:class="{
 			'--is-dark': isDarkTheme,
 			'--on-edit': onEdit,
+			'--is-special': isBaseThemeSpecial,
+			'--is-highlighted': isItemStep
 		}"
-		data-v-step="item"
+		data-v-step="item-whole"
 	>
-		<NColorMark :el="el" @click="openColors" data-v-step="item-color" />
+		<NColorMark :el="el" data-v-step="item-color" />
 		<span class="item-icon">
 			<i class="fas fa-ellipsis-v"></i>
 		</span>
@@ -52,6 +54,13 @@ export default class NItemForIntro extends Vue {
 			this.$props.el.sourceId == sheetsModule.getActiveSheetId
 		return isActive
 	}
+	get isBaseThemeSpecial() {
+		if (this.currentStep >= 5 && !this.isDarkTheme) return true
+		return false
+	}
+	get isItemStep(){
+		return this.currentStep == 5
+	}
 	@Watch('isActive')
 	elm(isActive: boolean) {
 		const item: HTMLElement | null = this.$el.parentElement!.parentElement!
@@ -70,6 +79,7 @@ export default class NItemForIntro extends Vue {
 			}
 		}
 	}
+
 	isDraggable: boolean = true
 	get onEdit() {
 		return !this.isDraggable
@@ -90,6 +100,10 @@ export default class NItemForIntro extends Vue {
 	get showNumeration() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getShowNumeration
+	}
+	get currentStep() {
+		const module = getModule(AppSettings, this.$store)
+		return module.getIntroStep
 	}
 }
 </script>

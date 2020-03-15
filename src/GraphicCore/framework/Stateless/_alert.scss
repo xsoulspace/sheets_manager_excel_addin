@@ -6,8 +6,9 @@
 	box-shadow: 0px 4px 6px -5px colours.theme-color('foreground', 'base', 0.75);
 	@include colours.corner-radius;
 	min-height: 6em;
-	transition: 0.3s ease-in-out;
+	transition: 0.2s ease-in-out;
 }
+
 .alert {
 	z-index: 10;
 	position: fixed;
@@ -33,7 +34,7 @@
 		visibility: visible;
 		opacity: 1;
 	}
-	@include colours.corner-radius;
+
 	&.--is-danger {
 		background-color: colours.theme-color('secondary', 'base', 0.96);
 		@extend %toast;
@@ -48,11 +49,11 @@
 			10%
 		);
 		bottom: 0;
-		transition: 0.3s ease-in-out;
+		transition: 0.2s ease-in-out;
 	}
 	&.--is-dimmer {
 		bottom: 0;
-		transition: 0.3s ease-in-out;
+		transition: 0.2s ease-in-out;
 		background: -webkit-radial-gradient(
 			center,
 			ellipse cover,

@@ -5,6 +5,7 @@
 		@click.prevent="selectWorksheet"
 		v-touch:longtap="edit"
 		v-touch:tap="selectWorksheet"
+		class='item-name'
 	>
 		{{ name }}
 	</p>

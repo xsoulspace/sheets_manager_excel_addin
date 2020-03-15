@@ -41,6 +41,7 @@ export default class App extends Vue {
 		onStart: this.enableDimmer,
 		onStop: this.disableDimmer,
 		onNextStep: this.introOnNextStep,
+		onPreviousStep: this.introOnPreviousStep,
 	}
 	async enableDimmer() {
 		const module = getModule(AppSettings, this.$store)
@@ -73,12 +74,30 @@ export default class App extends Vue {
 		if (newState) {
 			//@ts-ignore
 			this.$tours['tour'].start()
+			const module = getModule(AppSettings, this.$store)
+			this.tourCurrentStep = 0
+			module.setIntroStep(this.tourCurrentStep)
 		}
 	}
+	tourCurrentStep: number = 0
 	startTour() {
 		this.switchIntroIsRunning()
 	}
-	introOnNextStep(currentStep: string) {}
+	introOnPreviousStep() {
+		this.introOnStep(true)
+	}
+	introOnNextStep() {
+		this.introOnStep(false)
+	}
+	introOnStep(isPrevious: boolean) {
+		const module = getModule(AppSettings, this.$store)
+		if (isPrevious) {
+			this.tourCurrentStep -= 1
+		} else {
+			this.tourCurrentStep += 1
+		}
+		module.setIntroStep(this.tourCurrentStep)
+	}
 	steps: any[] = [
 		{
 			target: '[data-v-step="header-help"]',
@@ -116,11 +135,11 @@ export default class App extends Vue {
 			content: `добавление нумерации, переключение темы и т.д. больше - по значку вопроса в настройках`,
 		},
 		{
-			target: '[data-v-step="item"]',
+			target: '[data-v-step="item-whole"]',
 			header: {
 				title: 'Это лист',
 			},
-			content: `его позицию можно переместив просто перетянув (drag &  drop)`,
+			content: `его позицию можно поменять, просто его перетянув (drag & drop)`,
 		},
 		{
 			target: '[data-v-step="item-color"]',
@@ -265,7 +284,7 @@ export default class App extends Vue {
 		const module = getModule(AppSettings, this.$store)
 		return module.getAllSettings
 	}
-	
+
 	isMounted: boolean = false
 	async mounted() {
 		const module = getModule(AppSettings, this.$store)
