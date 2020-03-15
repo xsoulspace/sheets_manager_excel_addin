@@ -54,10 +54,11 @@ export default class App extends Vue {
 		let alertTitle: string
 		alertTitle = 'Обучение пройдено!'
 		module.openAlert({ title: alertTitle, type: AlertTypes.success })
-
-		setTimeout(async () => {
-			await this.continueMounted()
-		}, 1000)
+		if (!this.isMounted) {
+			setTimeout(async () => {
+				await this.continueMounted()
+			}, 1000)
+		}
 	}
 	get introIsRunning() {
 		const module = getModule(AppSettings, this.$store)
@@ -264,7 +265,8 @@ export default class App extends Vue {
 		const module = getModule(AppSettings, this.$store)
 		return module.getAllSettings
 	}
-
+	
+	isMounted: boolean = false
 	async mounted() {
 		const module = getModule(AppSettings, this.$store)
 		/** loading local settings */
@@ -283,7 +285,6 @@ export default class App extends Vue {
 		await this.continueMounted()
 	}
 	async continueMounted() {
-		console.log('hollaa', this.sourceApp)
 		const module = getModule(AppSettings, this.$store)
 		module.loading(true)
 		const sheetsModule = getModule(Sheets, this.$store)
@@ -314,6 +315,7 @@ export default class App extends Vue {
 		let alertTitle: string
 		alertTitle = 'Листы успешно загружены!'
 		module.openAlert({ title: alertTitle, type: AlertTypes.success })
+		this.isMounted = true
 	}
 	async mountTestData() {
 		const sheetsModule = getModule(Sheets, this.$store)
