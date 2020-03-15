@@ -15,8 +15,8 @@ import { ExcelContextBuilder } from './LogicCore/APIExcel/ExcelContextBuilder'
 export default class App extends Vue {
 	StoreAppSettings: string = 'appSettings'
 	hostInfo: any = undefined
-	sourceApp: MatrixElementInterface.outsideApp = 'excelDesktop'
-	// sourceApp: MatrixElementInterface.outsideApp = 'browser'
+	// sourceApp: MatrixElementInterface.outsideApp = 'excelDesktop'
+	sourceApp: MatrixElementInterface.outsideApp = 'browser'
 	hasBrokenNumeration: boolean = false
 	iniStore: boolean = false
 	get isLocalStorageExists() {
@@ -44,7 +44,7 @@ export default class App extends Vue {
 	}
 	@Watch('hasBrokenNumeration')
 	async hasBrokenNumerationChange(newValue: boolean) {
-		console.log('hasBrokenNumeration')
+		console.log('hasBrokenNumeration',newValue)
 
 		/**TODO: call popup do we need to restore numeration? */
 		if (newValue) {

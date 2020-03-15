@@ -1,8 +1,8 @@
-import { SheetElement } from '@/LogicCore/Instances/SheetElement/SheetElement'
+import { MatrixElement } from '@/LogicCore/Instances/MatrixElement/MatrixElement'
 
 const getMockSheets = async function(): Promise<SheetElementsInterface.sheetsSource> {
 
-	const options: SheetElementsInterface.SheetElementConstructor = {
+	const options: MatrixElementInterface.MatrixElementConstructor = {
 		color: '',
 		name: 'test00_01',
 		typeOfName: '_excelSheetName',
@@ -11,10 +11,10 @@ const getMockSheets = async function(): Promise<SheetElementsInterface.sheetsSou
 		id: 'testingID',
 		visibility: 'Visible',
 		delimiter: '_',
-		elements: undefined,
+		elements: [],
 		_classTitle: undefined,
 	}
-	const options2: SheetElementsInterface.SheetElementConstructor = {
+	const options2: MatrixElementInterface.MatrixElementConstructor = {
 		color: '',
 		name: 'test',
 		typeOfName: '_excelSheetName',
@@ -23,15 +23,15 @@ const getMockSheets = async function(): Promise<SheetElementsInterface.sheetsSou
 		id: 'testing',
 		visibility: 'Visible',
 		delimiter: '_',
-		elements: undefined,
+		elements: [],
 		_classTitle: undefined,
 	}
-	const element = new SheetElement(options)
-	const copyObject = new SheetElement(options)
+	const element = new MatrixElement(options)
+	const copyObject = new MatrixElement(options)
 	copyObject.name = 'te'
-	const copyObject1 = new SheetElement(options2)
+	const copyObject1 = new MatrixElement(options2)
 	
-	const copyObject2 = new SheetElement(options)
+	const copyObject2 = new MatrixElement(options)
 	
 	copyObject2.id = 'testing2'
 	copyObject2.name = 'testing00_01'

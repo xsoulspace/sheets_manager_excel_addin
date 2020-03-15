@@ -8,6 +8,14 @@ $color-mark-width: 6px;
 	align-self: stretch;
 	height: 100%;
 	width: 100%;
+	position: relative;
+	&-numeration{
+		position: absolute;
+		top: 0em;
+		left: 3em;
+		font-size: 0.6em;
+
+	}
 	&.--on-edit {
 		padding: 0;
 		.item-input {
@@ -47,6 +55,7 @@ $color-mark-width: 6px;
 	}
 	&-color {
 		margin: 0 0.5em 0 0;
+		transition: 0.1s;
 		&.--has-corner {
 			border-style: solid;
 			border-left-width: $color-mark-width;

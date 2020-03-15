@@ -19,6 +19,9 @@
 				@draggable-change="changeDraggable"
 			/>
 		</div>
+		<div class='item-numeration' v-if='showNumeration' v-show='!onEdit'>
+			<i>{{numerationPattern}}</i>
+		</div>
 	</div>
 </template>
 
@@ -65,6 +68,9 @@ export default class Item extends Vue {
 	get onEdit() {
 		return !this.isDraggable
 	}
+	get numerationPattern(){
+		return this.$props.el._numerationPattern()
+	}
 	changeDraggable(newValue: boolean) {
 		this.isDraggable = newValue
 	}
@@ -74,6 +80,10 @@ export default class Item extends Vue {
 	}
 	openColors() {
 		this.$emit('open-colors', this.$props.el)
+	}
+	get showNumeration(){
+		const module = getModule(AppSettings, this.$store)
+		return module.getShowNumeration
 	}
 }
 </script>

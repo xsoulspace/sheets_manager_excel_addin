@@ -55,6 +55,13 @@
 							@click="changeIsDarkTheme"
 						/>
 					</div>
+					<div class="form__field">
+						<checkbox
+							:text="`Показать нумерацию`"
+							:value="showNumeration"
+							@click="switchNumeration"
+						/>
+					</div>
 					<!-- <div class="form__field --is-mobile">
 						<button
 							class="button__box --has-border"
@@ -116,6 +123,14 @@ export default class SettingsModal extends Vue {
 	}
 	turnOffSettings() {
 		this.$emit('turn-off-settings-state')
+	}
+	switchNumeration(){
+		const module = getModule(AppSettings, this.$store)
+		module.switchShowNumeration()
+	}
+	get showNumeration(){
+		const module = getModule(AppSettings, this.$store)
+		return module.getShowNumeration
 	}
 	async clearNumeration() {}
 }

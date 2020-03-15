@@ -154,7 +154,7 @@ export class MatrixElement extends Basic
 
 	// #region Private Methods (1)
 
-	private _numerationPattern(): string {
+	public _numerationPattern(): string {
 		try {
 			const returnPart = (draftValue: number): string => {
 				return draftValue > 9

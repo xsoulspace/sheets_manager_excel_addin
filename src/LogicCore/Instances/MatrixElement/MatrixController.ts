@@ -1,7 +1,6 @@
 import { Basic } from '@/LogicCore/Instances/SheetElement/Basic'
 import {
 	getKeysAndSort,
-	getPositionsAndGroupEMap,
 	getPositionsAndGroupEArr,
 	rewritePositions,
 } from '@/LogicCore/Instances/SheetElementFunctions/GetKeysAndSort'

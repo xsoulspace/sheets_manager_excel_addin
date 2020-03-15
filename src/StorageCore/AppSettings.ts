@@ -8,7 +8,6 @@ import { MaintainerStatuses } from '@/LogicCore/Instances/MatrixElement/Maintain
 export default class AppSettings extends VuexModule {
 	themeName: SheetManager.AppSettingsThemeName = 'dark'
 	maintainerStatuses: MatrixElementInterface.maintainerStatuses = new MaintainerStatuses()
-
 	get getIsDarkTheme() {
 		const dark: SheetManager.AppSettingsThemeName = 'dark'
 		return this.themeName == dark
@@ -65,5 +64,13 @@ export default class AppSettings extends VuexModule {
 				root: true,
 			})
 		}
+	}
+	showNumeration: boolean = true
+	get getShowNumeration(){
+		return this.showNumeration
+	}
+	@Mutation
+	switchShowNumeration(){
+		this.showNumeration = !this.showNumeration
 	}
 }

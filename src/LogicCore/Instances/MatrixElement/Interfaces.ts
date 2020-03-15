@@ -25,6 +25,7 @@ namespace MatrixElementInterface {
 		_doesNameIncludesNumerationPattern(): boolean
 		decodedName: string
 		encodedName: string
+		_numerationPattern():string
 	}
 	export interface MatrixElementConstructor extends BasicConstructor {
 		id: string
