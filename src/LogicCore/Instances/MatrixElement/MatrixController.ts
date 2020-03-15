@@ -139,9 +139,9 @@ export class MatrixController extends Basic
 			} = this.maintainerStatuses
 			// console.log(this.maintainerStatuses)
 			if (
-				(areSheetsHaveNumeration === true) ===
-				(this.maintainerStatuses.default.areSheetsHaveNumeration ===
-					false)
+				areSheetsHaveNumeration === true &&
+				this.maintainerStatuses.default.areSheetsHaveNumeration ===
+					false
 			) {
 				return false
 			}

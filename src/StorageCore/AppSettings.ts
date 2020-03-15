@@ -23,14 +23,13 @@ export default class AppSettings extends VuexModule {
 	}
 
 	isTouchDevice: boolean = false
-	get getIsTouchDevice(){
+	get getIsTouchDevice() {
 		return this.isTouchDevice
 	}
 	@Mutation
-	setIsTouchDevice(value: boolean){
+	setIsTouchDevice(value: boolean) {
 		this.isTouchDevice = value
 	}
-
 
 	get getMaintainerStatuses() {
 		const m = new MaintainerStatuses(
@@ -56,7 +55,7 @@ export default class AppSettings extends VuexModule {
 
 		this.switchSheetsNumerationMut(newState)
 		const isNumerated = true
-		if(newState == isNumerated){
+		if (newState == isNumerated) {
 			await this.context.dispatch('Sheets/initializeStore', null, {
 				root: true,
 			})
@@ -67,39 +66,49 @@ export default class AppSettings extends VuexModule {
 		}
 	}
 	showNumeration: boolean = true
-	get getShowNumeration(){
+	get getShowNumeration() {
 		return this.showNumeration
 	}
 	@Mutation
-	switchShowNumeration(){
+	switchShowNumeration() {
 		this.showNumeration = !this.showNumeration
 	}
 
 	alert: AlertArgs = {
 		title: '',
 		type: AlertTypes.loading,
-		isOpen: false
+		isOpen: false,
 	}
-	get getAlertState(){
+	get getAlertState() {
 		return this.alert
 	}
 	@Mutation
-	openAlert({title, type}: {title: string, type: AlertTypes}) {
+	openAlert({ title, type }: { title: string; type: AlertTypes }) {
 		this.alert.type = type
 		this.alert.title = title
 		this.alert.isOpen = true
+		setTimeout(() => {
+			this.alert.isOpen = false
+		}, 5000)
 	}
 	@Mutation
-	closeAlert(){
+	closeAlert() {
 		this.alert.title = ''
 		this.alert.isOpen = false
 	}
 	@Mutation
-	loading(isLoading: boolean){
+	loading(isLoading: boolean) {
 		if (isLoading) {
 			this.alert.type = AlertTypes.loading
 			this.alert.title = 'Загрузка...'
 			this.alert.isOpen = true
+			setTimeout(() => {
+				if (this.alert.isOpen) {
+					this.alert.type = AlertTypes.danger
+					this.alert.title =
+						'Не удается выполнить загрузку! Пожалуйста перезагрузите аддин'
+				}
+			}, 100000)
 		} else {
 			this.alert.title = ''
 			this.alert.isOpen = false

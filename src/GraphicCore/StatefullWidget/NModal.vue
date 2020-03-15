@@ -11,7 +11,7 @@
 			:class="{ '--is-dark': isDarkTheme }"
 		>
 			<header class="modal__card-head">
-				<p class="modal-card-title --has-accent">{{ title }}</p>
+				<p class="modal__card-title --has-accent">{{ title }}</p>
 				<div
 					class="modal__card-close"
 					@click="turnOffCancel"

@@ -33,8 +33,8 @@ import { AlertTypes, AlertArgs } from '@/types/SheetManager'
 export default class App extends Vue {
 	StoreAppSettings: string = 'appSettings'
 	hostInfo: any = undefined
-	// sourceApp: MatrixElementInterface.outsideApp = 'excelDesktop'
-	sourceApp: MatrixElementInterface.outsideApp = 'browser'
+	sourceApp: MatrixElementInterface.outsideApp = 'excelDesktop'
+	// sourceApp: MatrixElementInterface.outsideApp = 'browser'
 	hasBrokenNumeration: boolean = false
 	iniStore: boolean = false
 	get isLocalStorageExists() {

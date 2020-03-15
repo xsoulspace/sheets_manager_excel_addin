@@ -114,8 +114,11 @@ export default class NavigationTabs extends Vue {
 		this.$data.isSearchActive = value
 	}
 	async sync() {
+		const settings = getModule(AppSettings, this.$store)
+		settings.loading(true)
 		const module = getModule(Sheets, this.$store)
 		await module.initializeStore()
+		settings.loading(false)
 	}
 }
 </script>

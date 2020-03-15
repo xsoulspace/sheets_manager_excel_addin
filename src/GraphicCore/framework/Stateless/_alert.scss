@@ -8,7 +8,7 @@
     min-height: 6em;
 }
 .alert{
-    transition: 0.1s;
+    transition: 0.2s ease-in-out;
     z-index: 10;
     position: fixed;
     top: 0;
@@ -21,6 +21,8 @@
     align-items: center;
     font-weight: bold;
     padding-left: 2em;
+    padding-right: 2em;
+
     &.--is-active{
         display: flex;
     }

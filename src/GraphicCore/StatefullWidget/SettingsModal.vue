@@ -11,7 +11,7 @@
 			:class="{ '--is-dark': isDarkTheme }"
 		>
 			<header class="modal__card-head">
-				<p class="modal-card-title --has-accent">Настройки</p>
+				<p class="modal__card-title --has-accent">Настройки</p>
 				<div class="modal__card-close" @click="turnOffSettings">
 					<span
 						class="icon --has-accent"
@@ -118,6 +118,7 @@ export default class SettingsModal extends Vue {
 		const newState = !this.isNumerated
 		const title = newState ? 'Нумерации включена':'Нумерации отключена'
 		const settings = getModule(AppSettings, this.$store)
+		settings.loading(true)
 		await settings.switchSheetsNumeration()
 		settings.openAlert({title, type: AlertTypes.success})
 
