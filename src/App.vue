@@ -55,11 +55,12 @@ export default class App extends Vue {
 		let alertTitle: string
 		alertTitle = 'Обучение пройдено!'
 		module.openAlert({ title: alertTitle, type: AlertTypes.success })
-		if (!this.isMounted) {
+		// if (!this.isMounted) {
 			setTimeout(() => {
+				this.sourceApp = 'excelDesktop'
 				this.continueMounted()
 			}, 1000)
-		}
+		// }
 	}
 	get introIsRunning() {
 		const module = getModule(AppSettings, this.$store)

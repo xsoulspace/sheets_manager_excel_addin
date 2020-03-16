@@ -137,7 +137,7 @@ export default class SettingsModal extends Vue {
 	}
 	async changeIsNumerated() {
 		const newState = !this.isNumerated
-		const title = newState ? 'Нумерации включена' : 'Нумерации отключена'
+		const title = newState ? 'Нумерация включена' : 'Нумерация отключена'
 		const settings = getModule(AppSettings, this.$store)
 		settings.loading(true)
 		await settings.switchSheetsNumeration()
