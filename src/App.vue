@@ -56,8 +56,8 @@ export default class App extends Vue {
 		alertTitle = 'Обучение пройдено!'
 		module.openAlert({ title: alertTitle, type: AlertTypes.success })
 		if (!this.isMounted) {
-			setTimeout(async () => {
-				await this.continueMounted()
+			setTimeout(() => {
+				this.continueMounted()
 			}, 1000)
 		}
 	}
@@ -148,8 +148,8 @@ export default class App extends Vue {
 			},
 			content: `можно менять по нажатию`,
 			params: {
-              placement: 'right'
-            }
+				placement: 'right',
+			},
 		},
 		{
 			target: '[data-v-step="item-name"]',
@@ -167,7 +167,7 @@ export default class App extends Vue {
 		},
 	]
 	hostInfo: any = undefined
-	sourceApp: MatrixElementInterface.outsideApp = 'browser'
+	sourceApp: MatrixElementInterface.outsideApp = 'excelDesktop'
 	hasBrokenNumeration: boolean = false
 	iniStore: boolean = false
 	@Watch('iniStore')
@@ -311,21 +311,28 @@ export default class App extends Vue {
 		module.loading(true)
 		const sheetsModule = getModule(Sheets, this.$store)
 		if (this.sourceApp == 'excelDesktop') {
-			// Catch all events from Excel
-			const context: Excel.RequestContext = await ExcelContextBuilder.init()
-			const sheets: Excel.WorksheetCollection =
-				context.workbook.worksheets
+			try {
+				// Catch all events from Excel
+				const context: Excel.RequestContext = await ExcelContextBuilder.init()
+				const sheets: Excel.WorksheetCollection =
+					context.workbook.worksheets
 
-			sheets.onActivated.add(this.eventHandler)
-			sheets.onAdded.add(this.eventHandler)
-			sheets.onDeleted.add(this.eventHandler)
+				sheets.onActivated.add(this.eventHandler)
+				sheets.onAdded.add(this.eventHandler)
+				sheets.onDeleted.add(this.eventHandler)
 
-			await context.sync()
+				await context.sync()
+			} catch (error) {
+				this.sourceApp = 'browser'
+			}
+
 		}
 		this.checkIsTouchDevice()
+		console.log('continue mounted', this.sourceApp)
 
 		/** dispatch context to store */
 		const isLoaded = await sheetsModule.initializeStore(this.sourceApp)
+		console.log('m',this.sourceApp)
 		if (!isLoaded) {
 			this.hasBrokenNumeration = true
 			module.loading(false)
@@ -334,8 +341,7 @@ export default class App extends Vue {
 
 		this.hasBrokenNumeration = false
 
-		let alertTitle: string
-		alertTitle = 'Листы успешно загружены!'
+		let alertTitle: string = 'Листы успешно загружены!'
 		module.openAlert({ title: alertTitle, type: AlertTypes.success })
 		this.isMounted = true
 	}

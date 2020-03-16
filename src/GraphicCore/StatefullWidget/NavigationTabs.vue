@@ -87,7 +87,7 @@
 				</span>
 			</div>
 		</div>
-		<ModalInfo :isActive='isInfoActive' @close='closeInfo'/>
+		<ModalInfo :isActive="isInfoActive" @close="closeInfo" />
 	</div>
 </template>
 <script lang="ts">
@@ -95,10 +95,11 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import AppSettings from '@/StorageCore/AppSettings'
 import { getModule } from 'vuex-module-decorators'
 import Sheets from '../../StorageCore/Sheets'
-import ModalInfo from "@/GraphicCore/StatefullWidget/ModalInfo.vue";
+import ModalInfo from '@/GraphicCore/StatefullWidget/ModalInfo.vue'
+import { AlertTypes } from "@/types/SheetManager";
 @Component({
 	name: 'navigation-tabs',
-	components: {ModalInfo},
+	components: { ModalInfo },
 })
 export default class NavigationTabs extends Vue {
 	public get isDarkTheme() {
@@ -112,11 +113,11 @@ export default class NavigationTabs extends Vue {
 		const module = getModule(Sheets, this.$store)
 		await module.filterSheetsByWord(word)
 	}
-	isInfoActive: boolean = true
+	isInfoActive: boolean = false
 	turnOnInfo() {
 		this.isInfoActive = true
 	}
-	closeInfo(){
+	closeInfo() {
 		this.isInfoActive = false
 	}
 	turnOnSettings() {
@@ -126,7 +127,6 @@ export default class NavigationTabs extends Vue {
 		const module = getModule(AppSettings, this.$store)
 		module.switchIntroState()
 	}
-	async refreshSheets() {}
 	changeIsSearchActive(value: boolean, useItExplicitly?: boolean) {
 		let isExplicit: boolean = false
 		if (useItExplicitly === true) isExplicit = true
@@ -142,7 +142,8 @@ export default class NavigationTabs extends Vue {
 		settings.loading(true)
 		const module = getModule(Sheets, this.$store)
 		await module.initializeStore()
-		settings.loading(false)
+		const title = 'Успешно синхронизировано'
+		settings.openAlert({ title, type: AlertTypes.success })
 	}
 }
 </script>
