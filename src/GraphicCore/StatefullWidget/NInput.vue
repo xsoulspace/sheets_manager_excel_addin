@@ -5,25 +5,27 @@
 		@click.prevent="selectWorksheet"
 		v-touch:longtap="edit"
 		v-touch:tap="selectWorksheet"
-		class='item-name'
+		class="item-name"
 	>
 		{{ name }}
 	</p>
-	<input
-		ref="input"
-		:maxlength="maxLength"
-		v-else-if="isInputActive"
-		@click="edit"
-		v-touch:tap="edit"
-		@keydown.enter="closeEdit"
-		v-outsideClick="{
-			exclude: ['input'],
-			handler: 'closeEdit',
-		}"
-		type="text"
-		class="item-input"
-		v-model="name"
-	/>
+	<div v-else-if="isInputActive">
+		<input
+			ref="input"
+			:maxlength="maxLength"
+			@click="edit"
+			v-touch:tap="edit"
+			@keydown.enter="closeEdit"
+			v-outsideClick="{
+				exclude: ['input'],
+				handler: 'closeEdit',
+			}"
+			type="text"
+			class="item-input"
+			v-model="name"
+		/>
+		<div v-if='isWarningShown' class="item-input-warning">Название не может быть пустым!</div>
+	</div>
 </template>
 
 <script lang="ts">
@@ -99,8 +101,14 @@ export default class Item extends Vue {
 		}
 		this.actionType = ActionTypes.nothing
 	}
-
+	isWarningShown: boolean = false
 	set name(value: string) {
+		if (value.length <= 0) {
+			this.isWarningShown = true
+			return
+		} else {
+			this.isWarningShown = false
+		}
 		this.element.encodedName = value
 		this.actionType = ActionTypes.rename
 	}
@@ -111,7 +119,6 @@ export default class Item extends Vue {
 		const sheetsModule = getModule(Sheets, this.$store)
 		await sheetsModule.selectSheet(this.$props.el.sourceId)
 	}
-
 }
 </script>
 

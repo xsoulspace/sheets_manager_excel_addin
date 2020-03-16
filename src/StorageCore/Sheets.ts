@@ -33,7 +33,7 @@ export default class Sheets extends VuexModule {
 	}
 
 	public get getSheets() {
-		if(this.filterWord != ''){
+		if (this.filterWord != '') {
 			return this.filteredSheets
 		}
 		return this.elements.arrElements
@@ -65,22 +65,27 @@ export default class Sheets extends VuexModule {
 	/** Filtering */
 	filteredSheets: MatrixElementInterface.MEArr = []
 	filterWord: string = ''
-	get isInFiltering(){
+	get isInFiltering() {
 		return this.filterWord != ''
 	}
 	@Mutation
-	async setFilteredElements({elements, word}: {elements: MatrixElementInterface.MEArr, word: string}){
+	async setFilteredElements({
+		elements,
+		word,
+	}: {
+		elements: MatrixElementInterface.MEArr
+		word: string
+	}) {
 		this.filteredSheets = elements
 		this.filterWord = word
 	}
 	@Action
-	async filterSheetsByWord(word: string){
+	async filterSheetsByWord(word: string) {
 		let elements: MatrixElementInterface.MEArr = []
-		if(word.length > 0){
+		if (word.length > 0) {
 			elements = await this.elements.filterElements(word)
-
 		}
-		this.setFilteredElements({elements, word})
+		this.setFilteredElements({ elements, word })
 	}
 	/** Filtering end */
 
@@ -125,10 +130,9 @@ export default class Sheets extends VuexModule {
 			case 'browser':
 				break
 			case 'excelDesktop':
-				const sheetsHasNumeration: MatrixElementInterface.maintainerStatuses['shouldWeRestoreNumeration'] = this
-					.context.rootGetters[
-					'AppSettings/shouldWeRestoreNumeration'
-				]
+				const sheetsHasNumeration: MatrixElementInterface.maintainerStatuses['areSheetsHaveNumeration'] = this
+					.context.rootGetters['AppSettings/getMaintainerStatuses']
+					.default.areSheetsHaveNumeration
 				const sh = await WorksheetsBuilder.buildWorksheetsClass()
 
 				if (sheetsHasNumeration) {
@@ -380,7 +384,7 @@ export default class Sheets extends VuexModule {
 			throw Log.error('initializeStore', error)
 		}
 	}
-	
+
 	@Action
 	async saveSheetsTo() {
 		switch (this.outsideApp) {
