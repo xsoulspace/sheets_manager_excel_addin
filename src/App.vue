@@ -56,10 +56,10 @@ export default class App extends Vue {
 		alertTitle = 'Обучение пройдено!'
 		module.openAlert({ title: alertTitle, type: AlertTypes.success })
 		// if (!this.isMounted) {
-			setTimeout(() => {
-				this.sourceApp = 'excelDesktop'
-				this.continueMounted()
-			}, 1000)
+		setTimeout(() => {
+			this.sourceApp = 'excelDesktop'
+			this.continueMounted()
+		}, 1000)
 		// }
 	}
 	get introIsRunning() {
@@ -105,7 +105,7 @@ export default class App extends Vue {
 			header: {
 				title: 'Добро пожаловать в Sheet Manager!',
 			},
-			content: `Это обучение поможет вам освоиться в программе - и всегда будет доступно по выделенному сейчас значку вопроса. Мы временно переключились на тестовые данные, чтобы показать как всё работает. По оконачнии обучения будут загружены листы Excel`,
+			content: `Это обучение поможет вам освоиться в программе - и всегда будет доступно по выделенному сейчас значку вопроса. Мы временно переключились на тестовые данные, чтобы показать, как всё работает. По оконачнии обучения будут загружены листы Excel`,
 		},
 		{
 			target: '[data-v-step="header-sync"]',
@@ -133,7 +133,7 @@ export default class App extends Vue {
 			header: {
 				title: 'Настройки',
 			},
-			content: `добавление нумерации, переключение темы и т.д. больше - по значку вопроса в настройках`,
+			content: `для добавления нумерации, переключения темы и т.д. больше - по значку вопроса в настройках`,
 		},
 		{
 			target: '[data-v-step="item-whole"]',
@@ -326,14 +326,13 @@ export default class App extends Vue {
 			} catch (error) {
 				this.sourceApp = 'browser'
 			}
-
 		}
 		this.checkIsTouchDevice()
 		console.log('continue mounted', this.sourceApp)
 
 		/** dispatch context to store */
 		const isLoaded = await sheetsModule.initializeStore(this.sourceApp)
-		console.log('m',this.sourceApp)
+		console.log('m', this.sourceApp)
 		if (!isLoaded) {
 			this.hasBrokenNumeration = true
 			module.loading(false)
