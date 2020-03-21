@@ -13,8 +13,6 @@
 		<input
 			ref="input"
 			:maxlength="maxLength"
-			@click="edit"
-			v-touch:tap="edit"
 			@keydown.enter="closeEdit"
 			v-outsideClick="{
 				exclude: ['input'],
@@ -24,7 +22,9 @@
 			class="item-input"
 			v-model="name"
 		/>
-		<div v-if='isWarningShown' class="item-input-warning">Название не может быть пустым!</div>
+		<div v-if="isWarningShown" class="item-input-warning">
+			Название не может быть пустым!
+		</div>
 	</div>
 </template>
 
@@ -58,6 +58,11 @@ export default class Item extends Vue {
 		if (newValue !== oldValue) {
 			if (newValue) {
 				this.showInput()
+				await this.$nextTick(() => {
+					const el = <HTMLInputElement>this.$refs.input
+					el.focus()
+					el.select()
+				})
 			} else {
 				await this.closeInput()
 			}

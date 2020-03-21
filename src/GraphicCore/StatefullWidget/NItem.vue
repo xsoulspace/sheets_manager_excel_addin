@@ -1,7 +1,6 @@
 <template>
 	<div
 		:id="id"
-		draggable="isDraggable"
 		class="item"
 		:class="{
 			'--is-dark': isDarkTheme,
@@ -60,15 +59,13 @@ export default class Item extends Vue {
 			}
 		}
 	}
-	
-	isEditing: boolean = false
-	changeIsEditing(value: boolean) {
-		this.isEditing = value
-	}
-	get isDraggable() {
-		if (this.isEditing) return false
 
-		return true
+	isEditing: boolean = false
+	changeIsEditing(isEditing: boolean) {
+		this.isEditing = isEditing
+		const draggableHandle: HTMLElement | null = this.$el.parentElement
+		const isDraggable = !isEditing
+		draggableHandle!.setAttribute('draggable', `${isDraggable}`)
 	}
 
 	get numerationPattern() {
