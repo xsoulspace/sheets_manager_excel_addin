@@ -6,6 +6,7 @@
 			'--is-dark': isDarkTheme,
 			'--on-edit': isEditing,
 		}"
+		draggable="isDraggable"
 	>
 		<NColorMark :el="el" @click="openColors" />
 		<span class="item-icon">
@@ -63,11 +64,15 @@ export default class Item extends Vue {
 	isEditing: boolean = false
 	changeIsEditing(isEditing: boolean) {
 		this.isEditing = isEditing
+	}
+	@Watch('isDraggable')
+	isDraggableChange(isDraggable: boolean) {
 		const draggableHandle: HTMLElement | null = this.$el.parentElement
-		const isDraggable = !isEditing
 		draggableHandle!.setAttribute('draggable', `${isDraggable}`)
 	}
-
+	get isDraggable() {
+		return !this.isEditing
+	}
 	get numerationPattern() {
 		return this.$props.el._numerationPattern()
 	}

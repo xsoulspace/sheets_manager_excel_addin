@@ -4,7 +4,7 @@
 			v-model="els"
 			:childrenProp="childrenProp"
 			:maxDepth="depth"
-			:threshold="50"
+			:threshold="30"
 			@change="changeElements"
 			:hooks="{
 				beforeMove: this.nestedHooksBeforeMove,

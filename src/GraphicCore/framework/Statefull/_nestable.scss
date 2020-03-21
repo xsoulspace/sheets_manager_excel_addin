@@ -55,6 +55,9 @@
 		border: 1px solid colours.theme-color('foreground', 'base', 0.1);
 		transition: 0.3s;
 		// padding: 0.6em;
+		&-content{
+			flex-grow: 0.8;
+		}
 		&.--is-active {
 			&,
 			&:focus,
