@@ -17,7 +17,9 @@ export default class AppSettings extends VuexModule {
 	get getAllSettings(): AllAppSettingsInterface {
 		return {
 			themeName: this.themeName,
-			maintainerStatuses: this.maintainerStatuses,
+			maintainerStatuses: JSON.parse(
+				JSON.stringify(this.maintainerStatuses)
+			),
 			runIntroOnOpen: this.runIntroOnOpen,
 			showNumeration: this.showNumeration,
 		}

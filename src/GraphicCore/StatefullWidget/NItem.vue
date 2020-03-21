@@ -6,7 +6,7 @@
 			'--is-dark': isDarkTheme,
 			'--on-edit': isEditing,
 		}"
-		draggable="isDraggable"
+		:draggable="isDraggable"
 	>
 		<NColorMark :el="el" @click="openColors" />
 		<span class="item-icon">
