@@ -54,7 +54,7 @@
 				</div>
 				<div class="form__field">
 					{{ $t('settings.chooseLanguage') }}
-					<select v-model="$i18n.locale">
+					<select class="select" v-model="$i18n.locale">
 						<option
 							v-for="(lang, i) in langs"
 							:key="`Lang${i}`"
