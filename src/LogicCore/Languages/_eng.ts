@@ -66,7 +66,11 @@ export const eng: LangFile = {
 	},
 	buttons: {
 		yes: 'Yes',
-		no: 'No'
+		no: 'No',
+		skipTutorial: 'Skip tutorial',
+        previousStep: 'Previous',
+        nextStep: 'Next',
+        finishTour: 'Finish',
 	},
 	alerts: {
 		successfulSync: 'Synced successfully!', 

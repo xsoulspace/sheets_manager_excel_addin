@@ -16,7 +16,78 @@
 			:steps="steps"
 			:options="{ highlight: true }"
 			:callbacks="tourCallbacks"
-		></v-tour>
+		>
+			<template slot-scope="tour">
+				<v-step
+					v-for="(step, index) of tour.steps"
+					v-if="tour.currentStep === index"
+					:key="index"
+					:step="step"
+					:previous-step="tour.previousStep"
+					:next-step="tour.nextStep"
+					:stop="tour.stop"
+					:is-first="tour.isFirst"
+					:is-last="tour.isLast"
+					:labels="tour.labels"
+					:highlight="tour.highlight"
+				>
+					<template v-if="tour.isFirst">
+						<div slot="actions">
+							<button
+								@click="tour.stop"
+								class="v-step__button v-step__button-skip"
+							>
+								{{ $t('buttons.skipTutorial') }}
+							</button>
+							<button
+								@click="tour.nextStep"
+								class="v-step__button v-step__button-next"
+							>
+								{{ $t('buttons.nextStep') }}
+							</button>
+						</div>
+					</template>
+					<template v-if="!tour.isFirst && !tour.isLast">
+						<div slot="actions">
+							<button
+								@click="tour.stop"
+								class="v-step__button v-step__button-skip"
+							>
+								{{ $t('buttons.skipTutorial') }}
+							</button>
+							<button
+								@click="tour.previousStep"
+								class="v-step__button v-step__button-previous"
+							>
+								{{ $t('buttons.previousStep') }}
+							</button>
+							<button
+								@click="tour.nextStep"
+								class="v-step__button v-step__button-next"
+							>
+								{{ $t('buttons.nextStep') }}
+							</button>
+						</div>
+					</template>
+					<template v-if="tour.isLast">
+						<div slot="actions">
+							<button
+								@click="tour.previousStep"
+								class="v-step__button v-step__button-previous"
+							>
+								{{ $t('buttons.previousStep') }}
+							</button>
+							<button
+								@click="tour.stop"
+								class="v-step__button v-step__button-stop"
+							>
+								{{ $t('buttons.finishTour') }}
+							</button>
+						</div>
+					</template>
+				</v-step>
+			</template>
+		</v-tour>
 	</div>
 </template>
 <script lang="ts">

@@ -67,7 +67,11 @@ export const rus: LangFile = {
 	},
 	buttons: {
 		yes: 'Да',
-		no: 'Нет'
+		no: 'Нет',
+		skipTutorial: 'Пропустить обучение',
+        previousStep: 'Назад',
+        nextStep: 'Дальше',
+        finishTour: 'Завершить',
 	},
 	alerts: {
 		successfulSync: 'Успешно синхронизировано!',

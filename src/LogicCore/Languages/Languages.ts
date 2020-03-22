@@ -59,7 +59,11 @@ export interface LangFile extends LocaleMessageObject{
     },
 	buttons: {
 		yes: string
-		no: string
+        no: string
+        skipTutorial: string
+        previousStep: string
+        nextStep: string
+        finishTour: string
     }
     alerts: {
         successfulSync: string
