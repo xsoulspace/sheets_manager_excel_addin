@@ -1,16 +1,16 @@
 <template>
 	<NModal
-		:title="'Восстановление нумерации'"
+		:title="$t('brokenNumeration.header')"
 		:isActive="isActive"
 		:show-save="false"
 		@close="close"
 	>
 		<template v-slot:modalBody>
 			<p>
-				Мы обнаружили, что у части листов есть нумерация.
+				{{$t('brokenNumeration.whatWeFound')}}
 			</p>
 			<p>
-				Попробовать восстановить нумерацию?
+				{{$t('brokenNumeration.tryToRecover')}}
 			</p>
 			<p class="buttons">
 				<button
@@ -18,14 +18,14 @@
 					:class="{ '--is-dark': isDarkTheme }"
 					@click="repaire(true)"
 				>
-					Да
+					{{$t('buttons.yes')}}
 				</button>
 				<button
 					class="button__box --has-border"
 					:class="{ '--is-dark': isDarkTheme }"
 					@click="repaire(false)"
 				>
-					Нет
+					{{$t('buttons.no')}}
 				</button>
 			</p>
 

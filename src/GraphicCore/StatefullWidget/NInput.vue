@@ -23,7 +23,7 @@
 			v-model="name"
 		/>
 		<div v-if="isWarningShown" class="item-input-warning">
-			Название не может быть пустым!
+			{{$t('item.nameCannotBeEmpty')}}
 		</div>
 	</div>
 </template>

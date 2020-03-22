@@ -3,16 +3,13 @@
 		:isActive="isSettingsActive"
 		@close="turnOffSettings"
 		@save="turnOffSettings"
-		:title="'Настройки'"
+		:title="$t('settings.header')"
 	>
 		<template v-slot:modalBody>
 			<div class="form" :class="{ '--is-dark': isDarkTheme }">
 				<div class="form__field">
 					<checkbox
-						:text="
-							`Группировка листов (все листы будут
-								пронумерованы)`
-						"
+						:text="$t('settings.sheetsNumerationEnabled')"
 						:value="isNumerated"
 						@click="changeIsNumerated"
 					/>
@@ -26,34 +23,45 @@
 					</div> -->
 				<div class="form__field">
 					<checkbox
-						:text="`Темная тема`"
+						:text="$t('settings.darkTheme')"
 						:value="isDarkTheme"
 						@click="changeIsDarkTheme"
 					/>
 				</div>
 				<div class="form__field">
 					<checkbox
-						:text="`Показать нумерацию`"
+						:text="$t('settings.showNumeration')"
 						:value="showNumeration"
 						@click="switchNumeration"
 					/>
 				</div>
 				<div class="form__p --is-centered --has-underline">
-					Настройки при открытии аддина
+					{{ $t('settings.settingsOnStart') }}
 				</div>
 				<div class="form__field">
 					<checkbox
-						:text="`Запускать обучение`"
+						:text="$t('settings.openIntroTutorial')"
 						:value="runIntroOnOpen"
 						@click="switchIntroOnOpenState"
 					/>
 				</div>
 				<div class="form__field">
 					<checkbox
-						:text="`Пробовать восстановить нумерацию`"
+						:text="$t('settings.tryToRecoverNumeration')"
 						:value="shouldWeRestoreNumeration"
 						@click="changeShouldWeRestoreNumeration"
 					/>
+				</div>
+				<div class="form__field">
+					{{ $t('settings.chooseLanguage') }}
+					<select v-model="$i18n.locale">
+						<option
+							v-for="(lang, i) in langs"
+							:key="`Lang${i}`"
+							:value="lang"
+							>{{ lang }}</option
+						>
+					</select>
 				</div>
 				<!-- <div class="form__field --is-mobile">
 						<button
@@ -76,6 +84,10 @@ import AppSettings from '@/StorageCore/AppSettings'
 import Checkbox from '@/GraphicCore/StatelessWidget/Checkbox.vue'
 import { AlertTypes } from '@/types/SheetManager'
 import NModal from './NModal.vue'
+import {
+	Languages,
+	SettingsLangInterface,
+} from '@/LogicCore/Languages/Languages'
 @Component({
 	props: {
 		isSettingsActive: {
@@ -87,33 +99,45 @@ import NModal from './NModal.vue'
 	components: { Checkbox, NModal },
 })
 export default class SettingsModal extends Vue {
-	get shouldWeRestoreNumeration(){
+	langs: Languages[] = [Languages.eng, Languages.rus]
+	get shouldWeRestoreNumeration() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getShouldWeRestoreNumeration
 	}
-	changeShouldWeRestoreNumeration(){
+	changeShouldWeRestoreNumeration() {
 		const newState = !this.shouldWeRestoreNumeration
 		const module = getModule(AppSettings, this.$store)
 		module.changeShouldWeRestoreNumeration(newState)
-		const title = newState
-			? 'Восстановление нумерации при открытии включено'
-			: 'Восстановление нумерации при открытии отключено'
+		let title: string = `${this.$t('alerts.numerationRecover')} ${
+			newState
+				? this.$t('alerts.activated')
+				: this.$t('alerts.deactivated')
+		}`
+
+		if (this.$i18n.locale == Languages.rus) {
+			title = `${title}о`
+		}
 		module.openAlert({ title, type: AlertTypes.success })
 	}
-	get runIntroOnOpen(){
+	get runIntroOnOpen() {
 		const module = getModule(AppSettings, this.$store)
 		return module.getRunIntroOnOpen
 	}
-	switchIntroOnOpenState(){
+	switchIntroOnOpenState() {
 		const module = getModule(AppSettings, this.$store)
 		const newState = !this.runIntroOnOpen
 		module.switchRunIntroOnOpen()
-		const title = newState
-			? 'Обучение при открытии включено'
-			: 'Обучение при открытии отключено'
+		let title: string = `${this.$t('alerts.onOpenTutorial')} ${
+			newState
+				? this.$t('alerts.activated')
+				: this.$t('alerts.deactivated')
+		}`
+
+		if (this.$i18n.locale == Languages.rus) {
+			title = `${title}о`
+		}
 		module.openAlert({ title, type: AlertTypes.success })
 	}
-
 
 	_isTouchDevice: boolean = false
 	public changeIsDarkTheme() {
@@ -137,7 +161,15 @@ export default class SettingsModal extends Vue {
 	}
 	async changeIsNumerated() {
 		const newState = !this.isNumerated
-		const title = newState ? 'Нумерация включена' : 'Нумерация отключена'
+		let title: string = `${this.$t('alerts.numeration')} ${
+			newState
+				? this.$t('alerts.activated')
+				: this.$t('alerts.deactivated')
+		}`
+
+		if (this.$i18n.locale == Languages.rus) {
+			title = `${title}a`
+		}
 		const settings = getModule(AppSettings, this.$store)
 		settings.loading(true)
 		await settings.switchSheetsNumeration()
@@ -154,9 +186,16 @@ export default class SettingsModal extends Vue {
 		const module = getModule(AppSettings, this.$store)
 		const newState = !this.showNumeration
 		module.switchShowNumeration()
-		const title = newState
-			? 'Видимость нумерации включена'
-			: 'Видимость нумерации отключена'
+		let title: string = `${this.$t('alerts.numerationVisibility')} ${
+			newState
+				? this.$t('alerts.activated')
+				: this.$t('alerts.deactivated')
+		}`
+
+		if (this.$i18n.locale == Languages.rus) {
+			title = `${title}а`
+		}
+
 		module.openAlert({ title, type: AlertTypes.success })
 	}
 	get showNumeration() {

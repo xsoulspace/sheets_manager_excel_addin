@@ -29,7 +29,8 @@ import { ExcelContextBuilder } from './LogicCore/APIExcel/ExcelContextBuilder'
 import ModalBrokenNavigation from '@/GraphicCore/StatefullWidget/ModalBrokenNavigation.vue'
 import Alert from '@/GraphicCore/StatelessWidget/Alert.vue'
 import { AlertTypes, AlertArgs } from '@/types/SheetManager'
-
+import { introTour } from '@/LogicCore/Tours/IntroTour'
+import { Languages } from './LogicCore/Languages/Languages'
 @Component({
 	components: {
 		ModalBrokenNavigation,
@@ -53,7 +54,8 @@ export default class App extends Vue {
 		module.dimmer(false)
 		await this.switchIntroIsRunning()
 		let alertTitle: string
-		alertTitle = 'Обучение пройдено!'
+		alertTitle = <string>this.$t('alerts.introTutorialCompleted')
+
 		module.openAlert({ title: alertTitle, type: AlertTypes.success })
 		// if (!this.isMounted) {
 		setTimeout(() => {
@@ -99,74 +101,9 @@ export default class App extends Vue {
 		}
 		module.setIntroStep(this.tourCurrentStep)
 	}
-	steps: any[] = [
-		{
-			target: '[data-v-step="header-help"]',
-			header: {
-				title: 'Добро пожаловать в Sheet Manager!',
-			},
-			content: `Это обучение поможет вам освоиться в программе - и всегда будет доступно по выделенному сейчас значку вопроса. Мы временно переключились на тестовые данные, чтобы показать, как всё работает. По оконачнии обучения будут загружены листы Excel`,
-		},
-		{
-			target: '[data-v-step="header-sync"]',
-			header: {
-				title: 'Кнопка синхронизации',
-			},
-			content: `Обратите внимание! Любые изменения, которые вы сделаете в addin - автоматически синхронизируются с Excel. Однако, если вы изменили что-то в Excel и не видите этого в addin - просто нажмите эту кнопку синхронизцаии`,
-		},
-		{
-			target: '[data-v-step="header-info"]',
-			header: {
-				title: 'Дополнительная информация',
-			},
-			content: `чтобы написать, если что-то не работает или есть идея`,
-		},
-		{
-			target: '[data-v-step="header-search"]',
-			header: {
-				title: 'Строка поиска',
-			},
-			content: `ищет по названиям листов`,
-		},
-		{
-			target: '[data-v-step="header-settings"]',
-			header: {
-				title: 'Настройки',
-			},
-			content: `для добавления нумерации, переключения темы и т.д. больше - по значку вопроса в настройках`,
-		},
-		{
-			target: '[data-v-step="item-whole"]',
-			header: {
-				title: 'Это лист',
-			},
-			content: `его позицию можно поменять, просто его перетянув (drag & drop)`,
-		},
-		{
-			target: '[data-v-step="item-color"]',
-			header: {
-				title: 'Цвет листа',
-			},
-			content: `можно менять по нажатию`,
-			params: {
-				placement: 'right',
-			},
-		},
-		{
-			target: '[data-v-step="item-name"]',
-			header: {
-				title: 'Название листа',
-			},
-			content: `можно изменить дважды кликнув`,
-		},
-		{
-			target: '[data-v-step="item-numeration"]',
-			header: {
-				title: 'Нумерация',
-			},
-			content: `номер листа по порядку - можно отключить в настройках`,
-		},
-	]
+	get steps() {
+		return introTour()
+	}
 	hostInfo: any = undefined
 	sourceApp: MatrixElementInterface.outsideApp = 'excelDesktop'
 	hasBrokenNumeration: boolean = false
@@ -192,7 +129,7 @@ export default class App extends Vue {
 	appSettingsChange() {
 		if (this.isLocalStorageExists) {
 			localStorage.setItem(
-				this.StoreAppSettings,
+				this.title.storeAppSettings,
 				JSON.stringify(this.appSettings)
 			)
 		}
@@ -205,11 +142,12 @@ export default class App extends Vue {
 		this.iniStore = !this.iniStore
 
 		this.hasBrokenNumeration = false
+
 		let alertTitle: string
 		if (restoreNumeration) {
-			alertTitle = 'Нумерация успешно восстановлена!'
+			alertTitle = <string>this.$t('alerts.successfulSheetsRecover')
 		} else {
-			alertTitle = 'Листы успешно загружены!'
+			alertTitle = <string>this.$t('alerts.successfulSheetsLoad')
 		}
 		module.openAlert({ title: alertTitle, type: AlertTypes.success })
 	}
@@ -275,8 +213,10 @@ export default class App extends Vue {
 		}
 		//
 	}
-
-	StoreAppSettings: string = 'appSettings'
+	title = {
+		lang: 'lang',
+		storeAppSettings: 'appSettings',
+	}
 	get isLocalStorageExists() {
 		return typeof localStorage != 'undefined'
 	}
@@ -288,6 +228,16 @@ export default class App extends Vue {
 		const module = getModule(AppSettings, this.$store)
 		return module.getAllSettings
 	}
+	get currentLang() {
+		return <Languages>this.$i18n.locale
+	}
+	set currentLang(value: Languages) {
+		this.$i18n.locale = value
+	}
+	@Watch('currentLang')
+	currentLangChange(value: Languages) {
+		localStorage.setItem(this.title.lang, value)
+	}
 
 	isMounted: boolean = false
 	async mounted() {
@@ -296,8 +246,10 @@ export default class App extends Vue {
 
 		if (this.isLocalStorageExists) {
 			// getting data from local storage
-			const item = localStorage.getItem(this.StoreAppSettings)
+			const item = localStorage.getItem(this.title.storeAppSettings)
 			if (item) this.appSettings = JSON.parse(item)
+			const lang = localStorage.getItem(this.title.lang)
+			if (lang) this.currentLang = <Languages>lang
 		}
 
 		/** run intro if it is needed */
@@ -341,7 +293,8 @@ export default class App extends Vue {
 
 		this.hasBrokenNumeration = false
 
-		let alertTitle: string = 'Листы успешно загружены!'
+		let alertTitle: string = <string>this.$t('alerts.successfulSheetsLoad')
+
 		module.openAlert({ title: alertTitle, type: AlertTypes.success })
 		this.isMounted = true
 	}

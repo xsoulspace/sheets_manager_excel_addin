@@ -142,7 +142,7 @@ export default class NavigationTabs extends Vue {
 		settings.loading(true)
 		const module = getModule(Sheets, this.$store)
 		await module.initializeStore()
-		const title = 'Успешно синхронизировано'
+		const title = <string>this.$t('alerts.successfulSync')
 		settings.openAlert({ title, type: AlertTypes.success })
 	}
 }

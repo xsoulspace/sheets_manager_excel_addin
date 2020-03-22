@@ -18,14 +18,22 @@ import Vue2TouchEvents from 'vue2-touch-events'
 //https://www.npmjs.com/package/vue2-touch-events
 import 'vue-swatches/dist/vue-swatches.min.css'
 import VueTour from 'vue-tour'
-
+import VueI18n from 'vue-i18n'
+import { Languages } from '@/LogicCore/Languages/Languages'
+import { LangMessage } from '@/LogicCore/Languages'
 require('vue-tour/dist/vue-tour.css')
 
 Vue.use(VueTour)
-
+Vue.use(VueI18n)
 Vue.use(Vue2TouchEvents)
 Vue.config.productionTip = false
 let vm: Vue
+
+export const i18n = new VueI18n({
+	locale: Languages.rus, // set locale
+	messages: LangMessage,
+})
+
 /**for custom type definitions need to add to types in tsconfig "./src/types",
  * "node_modules/@types"
  */
@@ -37,6 +45,7 @@ switch (infoGlobal == undefined) {
 	case true: //outside office client
 		console.log("I'm an outsider")
 		vm = new Vue({
+			i18n,
 			router,
 			store,
 			render: function(h) {
@@ -51,6 +60,7 @@ switch (infoGlobal == undefined) {
 		Office.onReady(function(info) {
 			vm = new Vue({
 				el: '#app',
+				i18n,
 				router,
 				store,
 				render: h => h(App),
