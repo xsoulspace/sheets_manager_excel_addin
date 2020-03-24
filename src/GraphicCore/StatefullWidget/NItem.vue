@@ -13,7 +13,11 @@
 			<i class="fas fa-ellipsis-v"></i>
 		</span>
 		<div>
-			<NInput :el="el" @input-state-change="changeIsEditing" />
+			<NInput
+				:el="el"
+				@input-state-change="changeIsEditing"
+				:editing="isEditing"
+			/>
 		</div>
 		<div class="item-numeration" v-if="showNumeration" v-show="!isEditing">
 			<i>{{ numerationPattern }}</i>
@@ -25,17 +29,21 @@
 import NColorMark from './NColorMark.vue'
 
 import { getModule } from 'vuex-module-decorators'
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue, Watch, Prop } from 'vue-property-decorator'
 import { Log } from '@/LogicCore/Debug/Log'
 import NInput, { ActionTypes } from './NInput.vue'
 import AppSettings from '@/StorageCore/AppSettings'
-import Sheets from '../../StorageCore/Sheets'
+import Sheets, { EditingElement } from '../../StorageCore/Sheets'
 
 @Component({
-	props: ['id', 'el'],
 	components: { NInput, NColorMark },
 })
 export default class Item extends Vue {
+	//@ts-ignore
+	@Prop() readonly id: number
+	//@ts-ignore
+	@Prop() readonly el: MatrixElementInterface.MatrixElement
+
 	get isActive() {
 		const sheetsModule = getModule(Sheets, this.$store)
 		const isActive =
@@ -64,6 +72,17 @@ export default class Item extends Vue {
 	isEditing: boolean = false
 	changeIsEditing(isEditing: boolean) {
 		this.isEditing = isEditing
+		this.$emit('edit-change', isEditing)
+	}
+	get editingElement(){
+		const module = getModule(Sheets, this.$store)
+		return module.getEditingElement
+	}
+	@Watch('editingElement')
+	editingElementChange(el: EditingElement){
+		if(el.id == this.el.id){
+			this.isEditing = el.isEditing
+		}
 	}
 	@Watch('isDraggable')
 	isDraggableChange(isDraggable: boolean) {

@@ -23,14 +23,14 @@
 			v-model="name"
 		/>
 		<div v-if="isWarningShown" class="item-input-warning">
-			{{$t('item.nameCannotBeEmpty')}}
+			{{ $t('item.nameCannotBeEmpty') }}
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
 import { getModule } from 'vuex-module-decorators'
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue, Watch, Prop } from 'vue-property-decorator'
 import { Log } from '@/LogicCore/Debug/Log'
 import Sheets from '@/StorageCore/Sheets'
 import AppSettings from '@/StorageCore/AppSettings'
@@ -43,23 +43,31 @@ export enum ActionTypes {
 	nothing,
 }
 @Component({
-	props: ['el'],
 	components: {},
 	directives: {
 		outsideClick,
 	},
 })
 export default class Item extends Vue {
+	//@ts-ignore
+	@Prop() readonly el: MatrixElementInterface.MatrixElement
+	//@ts-ignore
+	@Prop({ required: true }) readonly editing: boolean
+	@Watch('editing')
+	editingChange(isEditing: boolean) {
+		this.isEditing = isEditing
+	}
 	actionType: ActionTypes = ActionTypes.nothing
 	maxLength: number = 26
-	onEdit: boolean = false
-	@Watch('onEdit')
-	async onEditChange(newValue: boolean, oldValue: boolean) {
+	isEditing: boolean = false
+	@Watch('isEditing')
+	async isEditingChange(newValue: boolean, oldValue: boolean) {
 		if (newValue !== oldValue) {
 			if (newValue) {
 				this.showInput()
 				await this.$nextTick(() => {
 					const el = <HTMLInputElement>this.$refs.input
+					console.log(el)
 					el.focus()
 					el.select()
 				})
@@ -69,10 +77,10 @@ export default class Item extends Vue {
 		}
 	}
 	edit() {
-		this.onEdit = true
+		this.isEditing = true
 	}
 	closeEdit() {
-		this.onEdit = false
+		this.isEditing = false
 	}
 	mounted() {
 		this.changeEl(this.$props.el)

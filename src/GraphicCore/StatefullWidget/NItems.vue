@@ -10,9 +10,27 @@
 				beforeMove: this.nestedHooksBeforeMove,
 			}"
 		>
-			<vue-nestable-handle slot-scope="{ item }" :item="item">
-				<NItem :el="item" :id="item.id" @open-colors="openColors" />
-			</vue-nestable-handle>
+			<template slot-scope="{ item }">
+				<NItem
+					v-if="isEditing && editingId == item.id"
+					:el="item"
+					:id="item.id"
+					@open-colors="openColors"
+					@edit-change="state => chooseEditing(state, item.id)"
+				/>
+				<vue-nestable-handle
+					v-else
+					:item="item"
+				>
+					<NItem
+						:el="item"
+						:id="item.id"
+						@open-colors="openColors"
+						@edit-change="state => chooseEditing(state, item.id)"
+					/>
+				</vue-nestable-handle>
+				
+			</template>
 		</vue-nestable>
 		<!-- item for intro -->
 		<NItemForIntro
@@ -102,7 +120,15 @@ export default class Item extends Vue {
 	}
 	childrenProp: string = 'elements'
 	actionType: ActionTypes = ActionTypes.nothing
-
+	isEditing: boolean = false
+	editingId: string = ''
+	chooseEditing(isEditing: boolean, id: string) {
+		const idState = isEditing ? id : ''
+		this.editingId = idState
+		this.isEditing = isEditing
+		const sht = getModule(Sheets, this.$store)
+		sht.setEditing({isEditing,id: idState})
+	}
 	element: MatrixElementInterface.MatrixElement = {} as MatrixElementInterface.MatrixElement
 	@Watch('element', { deep: true })
 	async elementChange(el: MatrixElementInterface.MatrixElement) {
@@ -152,8 +178,8 @@ export default class Item extends Vue {
 		return module.isInFiltering
 	}
 	/** if returns false, cancel move */
-	nestedHooksBeforeMove(){
-		if(this.isInFiltering) return false
+	nestedHooksBeforeMove() {
+		if (this.isInFiltering) return false
 		return true
 	}
 }
