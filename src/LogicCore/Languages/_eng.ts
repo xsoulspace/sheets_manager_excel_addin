@@ -39,7 +39,7 @@ export const eng: LangFile = {
 		},
 		'item-name': {
 			title: 'Sheet name',
-			content: `to change - click twice on its name`,
+			content: `to change - click twice on its name or if you have touch screen by long touch`,
 		},
 		'item-numeration': {
 			title: 'Sheet tab position',
