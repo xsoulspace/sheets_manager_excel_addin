@@ -7,7 +7,7 @@
 	>
 		<template v-slot:modalBody>
 			<section class="form">
-				<p class="form__p --is-centered">
+				<p class="form__p --is-centered --is-iframe-google">
 					<iframe
 						src="https://docs.google.com/forms/d/e/1FAIpQLSfTjl0EPEtQW7I1SNexONwSOinC9t3p9gwig3ehR-w4IN-j0g/viewform?embedded=true"
 						frameborder="0"
@@ -16,7 +16,7 @@
 						>Loading…</iframe
 					>
 				</p>
-				<div>(c) CozySoft (aka Arenukvern:)</div>
+				<div>(c) CozySoft (aka Arenukvern)</div>
 			</section>
 		</template>
 	</NModal>
