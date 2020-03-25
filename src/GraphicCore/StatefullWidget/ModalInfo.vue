@@ -8,31 +8,14 @@
 		<template v-slot:modalBody>
 			<section class="form">
 				<p class="form__p --is-centered">
-					Если у вас есть предложения или замечания - просто напишите
-					об этом ниже
-				</p>
-				<textarea
-					class="textarea"
-					cols="30"
-					rows="10"
-					autocomplete="on"
-				></textarea>
-				<div class="form__p">email:</div>
-				<textarea
-					class="textarea --like-input"
-					cols="30"
-					rows="1"
-					autocomplete="on"
-					maxlength="40"
-				></textarea>
-				<div class="buttons">
-					<button
-						class="button --has-border"
-						:class="{ '--is-dark': isDarkTheme }"
+					<iframe
+						src="https://docs.google.com/forms/d/e/1FAIpQLSfTjl0EPEtQW7I1SNexONwSOinC9t3p9gwig3ehR-w4IN-j0g/viewform?embedded=true"
+						frameborder="0"
+						marginheight="0"
+						marginwidth="0"
+						>Loading…</iframe
 					>
-						Отправить
-					</button>
-				</div>
+				</p>
 				<div>(c) CozySoft (aka Arenukvern:)</div>
 			</section>
 		</template>
