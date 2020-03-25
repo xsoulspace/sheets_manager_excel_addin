@@ -48,7 +48,7 @@ export enum ActionTypes {
 		outsideClick,
 	},
 })
-export default class Item extends Vue {
+export default class Input extends Vue {
 	//@ts-ignore
 	@Prop() readonly el: MatrixElementInterface.MatrixElement
 	//@ts-ignore
@@ -84,6 +84,7 @@ export default class Item extends Vue {
 	}
 	mounted() {
 		this.changeEl(this.$props.el)
+		this.editingChange(this.editing)
 	}
 	isInputActive: boolean = false
 	showInput() {

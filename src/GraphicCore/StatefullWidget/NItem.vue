@@ -84,6 +84,9 @@ export default class Item extends Vue {
 			this.isEditing = el.isEditing
 		}
 	}
+	mounted(){
+		this.editingElementChange(this.editingElement)
+	}
 	@Watch('isDraggable')
 	isDraggableChange(isDraggable: boolean) {
 		const draggableHandle: HTMLElement | null = this.$el.parentElement
