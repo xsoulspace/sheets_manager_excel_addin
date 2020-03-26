@@ -39,7 +39,7 @@
     "@vue/cli-plugin-unit-jest": "4.2.3",
     "@vue/cli-plugin-vuex": "4.2.3",
     "@vue/cli-service": "4.2.3",
-    "@vue/test-utils": "1.0.0-beta.29",
+    "@vue/test-utils": "1.0.0-beta.32",
     "sass": "1.26.3",
     "sass-loader": "8.0.2",
     "typescript": "3.8.3",
