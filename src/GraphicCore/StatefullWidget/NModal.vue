@@ -11,6 +11,17 @@
 			:class="{ '--is-dark': isDarkTheme }"
 		>
 			<header class="modal__card-head">
+				<div class="modal__bookmarks" v-if="isBookmarksActive">
+					<slot name='bookmarks'/>
+					<div
+						@click="bookmarkClicked(i)"
+						class="bookmark"
+						v-for="( mark,i) in bookmarks"
+						:key="i"
+					>
+						{{mark}}
+					</div>
+				</div>
 				<div
 					class="modal__card-save"
 					@click="turnOffSave"
@@ -23,6 +34,7 @@
 						<i class="fas fa-save"></i>
 					</span>
 				</div>
+
 				<p class="modal__card-title --has-accent">{{ title }}</p>
 				<div
 					class="modal__card-close"
@@ -58,13 +70,25 @@ import Checkbox from '@/GraphicCore/StatelessWidget/Checkbox.vue'
 		},
 		title: {
 			type: String,
-			required: true,
+			required: false,
 			default: '',
+		},
+		bookmarks: {
+			type: Array,
+			required: false,
+			default: () => [],
 		},
 	},
 	components: { Checkbox },
 })
 export default class NModal extends Vue {
+	get isBookmarksActive() {
+		return this.$props.bookmarks.length > 0
+	}
+	bookmarkClicked(el: number){
+		this.$emit('b-click',el)
+	}
+
 	//@ts-ignore
 	@Prop({ required: false, default: true }) readonly showSave: boolean
 	//@ts-ignore
