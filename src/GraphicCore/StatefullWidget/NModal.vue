@@ -13,14 +13,6 @@
 			<header class="modal__card-head">
 				<div class="modal__bookmarks" v-if="isBookmarksActive">
 					<slot name='bookmarks'/>
-					<div
-						@click="bookmarkClicked(i)"
-						class="bookmark"
-						v-for="( mark,i) in bookmarks"
-						:key="i"
-					>
-						{{mark}}
-					</div>
 				</div>
 				<div
 					class="modal__card-save"
@@ -73,17 +65,12 @@ import Checkbox from '@/GraphicCore/StatelessWidget/Checkbox.vue'
 			required: false,
 			default: '',
 		},
-		bookmarks: {
-			type: Array,
-			required: false,
-			default: () => [],
-		},
 	},
 	components: { Checkbox },
 })
 export default class NModal extends Vue {
 	get isBookmarksActive() {
-		return this.$props.bookmarks.length > 0
+		return this.$slots['bookmarks'] !== undefined
 	}
 	bookmarkClicked(el: number){
 		this.$emit('b-click',el)

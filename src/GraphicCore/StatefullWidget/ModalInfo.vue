@@ -1,22 +1,19 @@
 <template>
-	<NModal
-		:bookmarks="['Отзыв','Changes']"
-		:isActive="isActive"
-		:show-save="false"
-		@close="close"
-		@b-click='changeTab'
-	>	
+	<NModal :isActive="isActive" :show-save="false" @close="close">
 		<template v-slot:bookmarks>
-			<Changelog/>
+			<div :class="'bookmark'" @click="changeTab(0)">
+				<Changelog :isActive='isChangelogActive' />
+			</div>
+			<div :class="'bookmark'" @click="changeTab(1)" :isActive='isFeedbackActive'>
+				<Feedback />
+			</div>
 		</template>
 		<template v-slot:modalBody>
 			<section class="form --has-overflow-y" v-show="isChangelogActive">
 				<p class="form__p --is-centered --has-underline">
 					v.0.1.0
 				</p>
-				<div class="form__field">
-
-				</div>
+				<div class="form__field"></div>
 				<div>(c) CozySoft (aka Arenukvern)</div>
 			</section>
 			<section class="form" v-show="isFeedbackActive">
@@ -41,10 +38,12 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Log } from '@/LogicCore/Debug/Log'
 import NModal from '@/GraphicCore/StatefullWidget/NModal.vue'
 import AppSettings from '@/StorageCore/AppSettings'
-import Changelog from "@/GraphicCore/StatelessWidget/Icons/Changelog.vue";
+import Changelog from '@/GraphicCore/StatelessWidget/Icons/Changelog.vue'
+import Feedback from '@/GraphicCore/StatelessWidget/Icons/Feedback.vue'
+
 @Component({
 	props: ['isActive'],
-	components: { NModal, Changelog },
+	components: { NModal, Changelog, Feedback },
 })
 export default class ModalInfo extends Vue {
 	public get isDarkTheme() {
@@ -52,17 +51,17 @@ export default class ModalInfo extends Vue {
 		return module.getIsDarkTheme
 	}
 	isChangelogActive: boolean = false
-	isFeedbackActive: boolean =  true
+	isFeedbackActive: boolean = true
 	close() {
 		this.$emit('close', false)
 	}
 
-	changeTab(el:number){
-		if(el == 0){
+	changeTab(el: number) {
+		if (el == 0) {
 			this.isChangelogActive = true
 			this.isFeedbackActive = false
 		}
-		if(el== 1){
+		if (el == 1) {
 			this.isFeedbackActive = true
 			this.isChangelogActive = false
 		}
