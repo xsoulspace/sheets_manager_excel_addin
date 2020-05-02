@@ -160,6 +160,8 @@ export default class SettingsModal extends Vue {
 		return this.$data._isTouchDevice
 	}
 	async changeIsNumerated() {
+		const settings = getModule(AppSettings, this.$store)
+		settings.loading(true)
 		const newState = !this.isNumerated
 		let title: string = `${this.$t('alerts.numeration')} ${
 			newState
@@ -170,8 +172,6 @@ export default class SettingsModal extends Vue {
 		if (this.$i18n.locale == Languages.rus) {
 			title = `${title}a`
 		}
-		const settings = getModule(AppSettings, this.$store)
-		settings.loading(true)
 		await settings.switchSheetsNumeration()
 		settings.openAlert({ title, type: AlertTypes.success })
 	}

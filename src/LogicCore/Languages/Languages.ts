@@ -36,6 +36,7 @@ export interface SettingsLangInterface extends LocaleMessageInterface {
     settingsOnStart: string
     openIntroTutorial: string
     tryToRecoverNumeration: string
+    chooseColor: string
 }
 
 export interface AlertLangInterface extends LocaleMessageInterface{

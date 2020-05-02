@@ -13,24 +13,24 @@ export const eng: LangFile = {
 		'header-sync': {
 			title: 'Sync button',
 			content: `Important! Any changes in addin are mirroring to Excel automaticly.  
-			But, in case if you change something in Excel and doesn't see it in addin 
+			But, in case if you change something in Excel and doesn't see it in addin,
 			you can simply click on this Sync Button to synchronize addin and Excel`,
 		},
 		'header-info': {
-			title: 'Additional info',
-			content: `чтобы написать, если что-то не работает или есть идея`,
+			title: 'Feedback',
+			content: `To send a problem or to share idea`,
 		},
 		'header-search': {
 			title: 'Search field',
-			content: `ищет по названиям листов`,
+			content: `is searhing by the name of sheets`,
 		},
 		'header-settings': {
 			title: 'Settings',
-			content: `для добавления нумерации, переключения темы и т.д. больше - по значку вопроса в настройках`,
+			content: `are for numeration options, theme switch and etc`,
 		},
 		'item-whole': {
 			title: 'This is a sheet',
-			content: `simply drag and drop the sheet to change its position `,
+			content: `simply drag and drop it up or down to change its position `,
 		},
 		'item-color': {
 			title: 'Sheet tab color',
@@ -55,12 +55,13 @@ export const eng: LangFile = {
 		settingsOnStart: 'Settings when addin loaded',
 		openIntroTutorial: 'Open intro tutorial',
 		tryToRecoverNumeration: 'Try to recover numeration',
+		chooseColor: 'Choose Color'
 	},
 	item: {
 		nameCannotBeEmpty: 'Name cannot be empty!'
 	},
 	brokenNumeration: {
-		header: 'Восстановление нумерации',
+		header: 'It is possible to recover numeration!',
 		whatWeFound: 'We noticed that sheets may have numeration.',
 		tryToRecover: 'Try to recover numeration? Warning! All Sheets will be numerated!'
 	},
@@ -83,5 +84,5 @@ export const eng: LangFile = {
         onOpenTutorial: 'Open tutorial on start',
         numeration: 'Sheets numeration',
         numerationVisibility: 'Numeration visbility'
-    }
+	},
 }

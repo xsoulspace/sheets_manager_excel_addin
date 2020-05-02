@@ -449,6 +449,23 @@ export default class Sheets extends VuexModule {
 		}
 	}
 	/** ACTIVE SHEET END*/
+	editingElement: EditingElement = {
+		id: '',
+		isEditing: false
+	}
+	
+	@Mutation
+	public setEditing(el: EditingElement){
+		this.editingElement = el
+	}
+	public get getEditingElement(){
+		return this.editingElement
+	}
 
 	// #endregion Public Methods (13)
+}
+
+export interface EditingElement{
+	isEditing: boolean
+	id: string
 }
