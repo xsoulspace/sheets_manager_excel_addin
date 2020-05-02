@@ -35,7 +35,7 @@
     "sass-loader": "8.0.2",
     "typescript": "3.8.3",
     "vue-template-compiler": "2.6.11",
-    "vuex-module-decorators": "0.16.1",
+    "vuex-module-decorators": "0.17.0",
     "@types/sortablejs": "^1.10.4",
     "@vue/cli-plugin-babel": "^4.3.1",
     "@vue/cli-plugin-pwa": "^4.3.1",
