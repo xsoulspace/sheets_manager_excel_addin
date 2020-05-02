@@ -43,7 +43,7 @@
 			:isActive="isColorsOpen"
 			@close="closeColors"
 			@save="saveColors"
-			:title="'Выбор цвета'"
+			:title="$t('settings.chooseColor')"
 			:show-save="false"
 		>
 			<template v-slot:modalBody>

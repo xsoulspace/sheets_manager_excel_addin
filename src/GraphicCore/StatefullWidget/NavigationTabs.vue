@@ -113,7 +113,7 @@ export default class NavigationTabs extends Vue {
 		const module = getModule(Sheets, this.$store)
 		await module.filterSheetsByWord(word)
 	}
-	isInfoActive: boolean = true
+	isInfoActive: boolean = false
 	turnOnInfo() {
 		this.isInfoActive = true
 	}
