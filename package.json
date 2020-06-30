@@ -9,7 +9,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "7.8.3",
+    "@babel/plugin-proposal-class-properties": "7.10.4",
     "hex-to-rgba": "2.0.1",
     "register-service-worker": "1.7.1",
     "vue": "2.6.11",
