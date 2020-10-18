@@ -14,7 +14,7 @@
     "uuid": "8.0.0",
     "vue": "2.6.12",
     "vue-class-component": "7.2.5",
-    "vue-nestable": "2.5.3",
+    "vue-nestable": "2.6.0",
     "vue-tour": "1.5.0",
     "vue-swatches": "2.1.0",
     "vue-router": "3.4.3",
