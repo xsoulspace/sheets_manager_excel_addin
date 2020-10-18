@@ -18,7 +18,7 @@
     "vue-tour": "1.5.0",
     "vue-swatches": "2.1.0",
     "vue-router": "3.4.3",
-    "vue2-touch-events": "2.2.1",
+    "vue2-touch-events": "2.3.2",
     "vuedraggable": "2.23.2",
     "autoprefixer": "^9.7.6",
     "core-js": "^3.6.5",
