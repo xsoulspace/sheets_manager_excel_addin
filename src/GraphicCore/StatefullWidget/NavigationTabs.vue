@@ -94,7 +94,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import AppSettings from '@/StorageCore/AppSettings'
 import { getModule } from 'vuex-module-decorators'
-import Sheets from '../../StorageCore/Sheets'
+import Sheets from '@/StorageCore/Sheets'
 import ModalInfo from '@/GraphicCore/StatefullWidget/ModalInfo.vue'
 import { AlertTypes } from "@/types/SheetManager";
 @Component({
