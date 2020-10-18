@@ -1,4 +1,4 @@
-# sheet_manager_vue_cli
+# Sheets Manager Excel Addin
 
 ## Project setup
 ```
