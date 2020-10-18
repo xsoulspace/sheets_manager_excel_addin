@@ -45,7 +45,7 @@
     "@vue/cli-plugin-vuex": "4.5.4",
     "@vue/cli-service": "4.5.4",
     "@vue/eslint-config-typescript": "^7.0.0",
-    "sass": "^1.26.5",
+    "sass": "^1.27.0",
     "babel-jest": "^26.5.2",
     "eslint": "^7.11.0",
     "eslint-plugin-vue": "^7.0.1",
