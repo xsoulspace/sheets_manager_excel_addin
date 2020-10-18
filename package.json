@@ -36,7 +36,7 @@
     "typescript": "3.8.3",
     "vue-template-compiler": "2.6.11",
     "vuex-module-decorators": "0.16.1",
-    "@types/sortablejs": "^1.10.4",
+    "@types/sortablejs": "^1.10.6",
     "@vue/cli-plugin-babel": "^4.3.1",
     "@vue/cli-plugin-pwa": "^4.3.1",
     "@vue/cli-plugin-router": "^4.3.1",
