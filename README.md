@@ -2,7 +2,7 @@
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 [![Maintainability](https://api.codeclimate.com/v1/badges/ef5319b619fe23f0971d/maintainability)](https://codeclimate.com/github/xsoulspace/sheets_manager_excel_addin/maintainability)
 [![Depfu](https://badges.depfu.com/badges/46834bd0e861ad791a25f2bb256dbe1a/count.svg)](https://depfu.com/github/xsoulspace/sheets_manager_excel_addin?project_id=17111)
-[![GitHub](https://img.shields.io/github/license/xsoulspace/sheets_manager_excel_addin)]
+![GitHub](https://img.shields.io/github/license/xsoulspace/sheets_manager_excel_addin)
 
 ## Project setup
 ```
