@@ -1,6 +1,6 @@
+import Home from '@/GraphicCore/Pages/Home.vue'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/GraphicCore/Pages/Home.vue'
 
 Vue.use(VueRouter)
 
@@ -8,7 +8,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: Home,
   },
   // {
   //   path: '/about',
@@ -21,7 +21,8 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  routes
+  routes,
+  mode: 'hash',
 })
 
 export default router
