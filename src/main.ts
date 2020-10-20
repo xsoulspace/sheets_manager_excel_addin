@@ -20,6 +20,7 @@ import Vue2TouchEvents from 'vue2-touch-events'
 import App from './App.vue'
 import './registerServiceWorker'
 //https://github.com/rhwilr/vue-nestable#vue-nestable
+
 Vue.use(VueNestable)
 require('vue-tour/dist/vue-tour.css')
 
