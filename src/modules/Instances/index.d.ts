@@ -1,4 +1,2 @@
-declare namespace SheetElementsInterface{}
-declare namespace MatrixElementInterface{}
-
-  
+declare namespace SheetElementsInterface {}
+declare namespace MatrixElementInterface {}

@@ -1,4 +1,3 @@
-
 declare namespace SheetManager {
-	type AppSettingsThemeName = 'base' | 'dark'	
+  type AppSettingsThemeName = 'base' | 'dark'
 }

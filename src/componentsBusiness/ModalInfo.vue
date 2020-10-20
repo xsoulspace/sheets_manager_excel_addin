@@ -33,16 +33,15 @@
 </template>
 
 <script lang="ts">
-import { getModule } from "vuex-module-decorators";
-import { Component, Vue, Watch } from "vue-property-decorator";
-import { Log } from "@/LogicCore/Debug/Log";
-import NModal from "@/GraphicCore/StatefullWidget/NModal.vue";
-import AppSettings from "@/StorageCore/AppSettings";
+import { getModule } from 'vuex-module-decorators'
+import { Component, Vue } from 'vue-property-decorator'
+import NModal from '@/GraphicCore/StatefullWidget/NModal.vue'
+import AppSettings from '@/StorageCore/AppSettings'
 // import Changelog from '@/GraphicCore/StatelessWidget/Icons/Changelog.vue'
 // import Feedback from '@/GraphicCore/StatelessWidget/Icons/Feedback.vue'
 
 @Component({
-  props: ["isActive"],
+  props: ['isActive'],
   components: {
     NModal,
     // Changelog, Feedback
@@ -50,23 +49,23 @@ import AppSettings from "@/StorageCore/AppSettings";
 })
 export default class ModalInfo extends Vue {
   public get isDarkTheme() {
-    const module = getModule(AppSettings, this.$store);
-    return module.getIsDarkTheme;
+    const module = getModule(AppSettings, this.$store)
+    return module.getIsDarkTheme
   }
-  isChangelogActive: boolean = false;
-  isFeedbackActive: boolean = true;
+  isChangelogActive = false
+  isFeedbackActive = true
   close() {
-    this.$emit("close", false);
+    this.$emit('close', false)
   }
 
   changeTab(el: number) {
     if (el == 0) {
-      this.isChangelogActive = true;
-      this.isFeedbackActive = false;
+      this.isChangelogActive = true
+      this.isFeedbackActive = false
     }
     if (el == 1) {
-      this.isFeedbackActive = true;
-      this.isChangelogActive = false;
+      this.isFeedbackActive = true
+      this.isChangelogActive = false
     }
   }
 }

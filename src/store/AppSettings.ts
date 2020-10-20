@@ -54,7 +54,7 @@ export default class AppSettings extends VuexModule {
     this.context.commit('setTheme', themeName)
   }
 
-  isTouchDevice: boolean = false
+  isTouchDevice = false
   get getIsTouchDevice() {
     return this.isTouchDevice
   }
@@ -106,7 +106,7 @@ export default class AppSettings extends VuexModule {
       })
     }
   }
-  showNumeration: boolean = true
+  showNumeration = true
   get getShowNumeration() {
     return this.showNumeration
   }
@@ -195,7 +195,7 @@ export default class AppSettings extends VuexModule {
     this.intro.step = value
   }
 
-  runIntroOnOpen: boolean = true
+  runIntroOnOpen = true
   get getRunIntroOnOpen() {
     return this.runIntroOnOpen
   }
