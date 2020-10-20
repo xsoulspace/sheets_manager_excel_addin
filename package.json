@@ -1,12 +1,17 @@
 {
-  "name": "sheet_manager_vue_cli",
-  "version": "0.0.1",
+  "name": "sheets_manager_excel_addin",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --traceResolution",
     "start": "npm run serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "versionUpDevelop": "npm --no-git-tag-version version minor",
+    "versionUpFeature": "npm --no-git-tag-version version prerelease",
+    "versionUpHotFix": "npm --no-git-tag-version version patch",
+    "versionUpPreRelease": "npm --no-git-tag-version version prerelease",
+    "versionUpReleaseMaster": "npm --no-git-tag-version version major"
   },
   "dependencies": {
     "hex-to-rgba": "2.0.1",
