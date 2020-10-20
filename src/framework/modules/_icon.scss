@@ -1,0 +1,30 @@
+@use '../library/_colours.scss';
+
+.icon {
+	&.--has-accent {
+		color: colours.theme-color('accent', 'base');
+	}
+	&.--is-dark {
+		&.--has-accent {
+			color: colours.theme-color('accent', 'dark');
+		}
+	}
+
+	&__refresh {
+		&.--in-progress {
+			animation-duration: 0.7s;
+			animation-name: rotate;
+			animation-fill-mode: both;
+			animation-timing-function: linear;
+			animation-iteration-count: infinite;
+		}
+		@keyframes rotate {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(359deg);
+			}
+		}
+	}
+}

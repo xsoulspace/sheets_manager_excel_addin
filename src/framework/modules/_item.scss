@@ -1,0 +1,116 @@
+@use '../library/colours';
+$color-mark-width: 6px;
+.item {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	margin-right: 1.3em;
+	align-self: stretch;
+	height: 100%;
+	width: 100%;
+	position: relative;
+	&-numeration{
+		position: absolute;
+		top: 0em;
+		left: 3em;
+		font-size: 0.6em;
+		&.v-tour__target--relative{
+			position: absolute !important;
+		}
+	}
+	&.--is-special{
+		background-color: colours.theme-color('background', 'base');
+		.item-numeration{
+			background-color: colours.theme-color('background', 'base');
+			&.v-tour__target--relative{
+				position: absolute !important;
+			}
+		}
+		.item-name{
+			background-color: colours.theme-color('background', 'base');
+		}
+	}
+	&.--is-highlighted{
+		z-index: 200;
+	}
+	&.--on-edit {
+		padding: 0;
+		.item-input {
+			min-width: 2em;
+			width: 100%;
+			word-wrap: break-word;
+			min-height: 3em;
+			border-radius: unset;
+			box-shadow: none;
+			box-sizing: border-box;
+			padding-left: 0px;
+			padding-right: 0px;
+			border: 1px solid colours.theme-color('accent', 'dark', 0.8);
+			font-family: BlinkMacSystemFont, -apple-system, Segoe UI, Roboto,
+				Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+				Helvetica, Arial, sans-serif;
+			font-size: 1em;
+			font-weight: 400;
+			line-height: 1.5;
+			user-select: text;
+			&,
+			&:focus,
+			&:active,
+			&:hover {
+				background-color: colours.theme-color('background', 'base', 1);
+			}
+			&-warning{
+				font-size: 0.9em;
+				font-weight: 100;
+				color: colours.theme-color('accent', 'dark', 1);
+			}
+		}
+		&.--is-dark {
+			.item-input {
+				&,
+				&:focus,
+				&:active,
+				&:hover {
+					background-color: colours.theme-color('primary', 'dark', 1);
+				}
+			}
+		}
+	}
+	&-color {
+		margin: 0 0.5em 0 0;
+		transition: 0.1s;
+		&.--has-corner {
+			border-style: solid;
+			border-left-width: $color-mark-width;
+			border-top-left-radius: 0.4em;
+			border-bottom-left-radius: 0.4em;
+			display: flex;
+			align-self: stretch;
+			cursor: crosshair;
+			&:hover {
+				border-left-width: 20px;
+			}
+			&.has-shadow {
+				// https://www.cssmatic.com/box-shadow
+				box-shadow: 7px 1px 9px -4px rgba(31, 31, 31, 0.41);
+			}
+		}
+		&.--is-rounded {
+			border-style: solid;
+			width: 1.5em;
+			border-top-left-radius: 0.4em;
+			border-bottom-left-radius: 0.4em;
+			border-top-right-radius: 0.4em;
+			border-bottom-right-radius: 0.4em;
+			display: flex;
+			align-self: stretch;
+			cursor: pointer;
+			&.has-shadow {
+				box-shadow: 3px 4px 9px -4px rgba(31, 31, 31, 0.41);
+			}
+		}
+	}
+	&-icon {
+		margin-right: 0.5em;
+	}
+}

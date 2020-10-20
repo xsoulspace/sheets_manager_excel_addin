@@ -1,0 +1,95 @@
+@use '../library/colours';
+%toast {
+	top: 1vh;
+	right: 3vw;
+	left: 3vw;
+	box-shadow: 0px 4px 6px -5px colours.theme-color('foreground', 'base', 0.75);
+	@include colours.corner-radius;
+	min-height: 6em;
+	transition: 0.2s ease-in-out;
+}
+
+.alert {
+	z-index: 10;
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	color: white;
+	background-color: darken(
+		colours.theme-color('background', 'dark', 0.96),
+		10%
+	);
+	visibility: hidden;
+	opacity: 0;
+	transition: visibility 0s, opacity 0.3s ease-in-out;
+	flex-direction: column;
+	align-items: center;
+	font-weight: bold;
+	padding-left: 2em;
+	padding-right: 2em;
+	display: flex;
+
+	&.--is-active {
+		visibility: visible;
+		opacity: 1;
+	}
+
+	&.--is-danger {
+		background-color: colours.theme-color('secondary', 'base', 0.96);
+		@extend %toast;
+	}
+	&.--is-success {
+		background-color: colours.theme-color('accent', 'dark', 0.96);
+		@extend %toast;
+	}
+	&.--is-loading {
+		background-color: darken(
+			colours.theme-color('background', 'dark', 0.8),
+			10%
+		);
+		bottom: 0;
+		transition: 0.2s ease-in-out;
+	}
+	&.--is-dimmer {
+		bottom: 0;
+		transition: 0.2s ease-in-out;
+		background: -webkit-radial-gradient(
+			center,
+			ellipse cover,
+			rgba(0, 0, 0, 0.4) 0,
+			rgba(0, 0, 0, 0.9) 100%
+		);
+	}
+	&-title {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		transition: 0.1s ease-in-out;
+	}
+	&-close {
+		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		transition: 0.2s;
+		position: absolute;
+		right: 0.4em;
+		top: 0.4em;
+		height: 30px;
+		width: 30px;
+		background-color: colours.theme-color('hoverground', 'base', 0.4);
+		border-radius: 30px;
+
+		&:hover {
+			background-color: colours.theme-color('hoverground', 'base', 0.6);
+		}
+	}
+	&-body {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+}

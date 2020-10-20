@@ -1,0 +1,69 @@
+@use '../library/_colours.scss';
+@use '../library/fonts';
+
+@mixin button-simple {
+	position: relative;
+	background: none;
+	min-width: 40px;
+	min-height: 40px;
+	padding: 10px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+    border: 0;
+	color: colours.theme-color('primary', 'base');
+	@include fonts.font('primary');
+	transition: 0.3s linear;
+	cursor: pointer;
+    &.--is-dark {
+		color: colours.theme-color('primary', 'dark');
+		&.--has-accent{
+			color: colours.theme-color('accent', 'dark');
+		}
+		&.--has-border{
+			border: 1px solid colours.theme-color('accent', 'dark', 0.1);
+			&:focus{
+				outline: none;
+				border: 1px solid colours.theme-color('accent', 'dark', 0.4);
+			}
+			&:active{
+				background-color: darken(colours.theme-color('background', 'dark', 0.2),20);
+			}
+		}
+	}
+	&.--has-accent{
+        color: colours.theme-color('accent', 'base');
+	}
+	&.--has-border{
+		border: 1px solid colours.theme-color('accent', 'base', 0.1);
+		&:focus{
+			outline: none;
+			border: 1px solid colours.theme-color('accent', 'base', 0.4);
+		}
+		&:active{
+			background-color: colours.theme-color('accent', 'base', 0.2);
+		}
+		&:hover{
+			background-color: colours.theme-color('foreground', 'base', 0.2);
+		}
+	}
+}
+
+.button {
+	@include button-simple;
+	&__circle {
+		@include button-simple;
+		width: 40px;
+		border-radius: 40px;
+	}
+	&__box{
+		@include button-simple;
+		@include colours.corner-radius;
+
+	}
+}
+.buttons{
+	display: grid;
+	
+}
