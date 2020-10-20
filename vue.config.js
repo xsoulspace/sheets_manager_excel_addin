@@ -1,5 +1,4 @@
 module.exports = {
-  assetsDir: '',
   productionSourceMap: false,
   publicPath:
     process.env.NODE_ENV === 'production'
