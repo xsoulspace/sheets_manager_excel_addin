@@ -15,6 +15,14 @@
     "versionUpReleaseMaster": "npm --no-git-tag-version version major"
   },
   "dependencies": {
+    "hex-to-rgba": "2.0.1",
+    "uuid": "8.3.1",
+    "vue-nestable": "2.6.0",
+    "vue-tour": "1.5.0",
+    "vue-swatches": "2.1.0",
+    "vue2-touch-events": "2.3.2",
+    "vuedraggable": "2.24.2",
+    "autoprefixer": "^10.0.1",
     "core-js": "^3.6.5",
     "register-service-worker": "^1.7.1",
     "vue": "^3.0.0",
