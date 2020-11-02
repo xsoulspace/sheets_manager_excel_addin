@@ -24,7 +24,7 @@
     "vue-swatches": "2.1.0",
     "vue-router": "3.4.7",
     "vue2-touch-events": "2.3.2",
-    "vuedraggable": "2.24.2",
+    "vuedraggable": "2.24.3",
     "autoprefixer": "^10.0.1",
     "core-js": "^3.6.5",
     "vue-i18n": "^8.17.4",
