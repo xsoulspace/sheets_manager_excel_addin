@@ -43,6 +43,22 @@
 			}
 		}
 	}
+	&.--is-excel-default-color {
+		background: colours.theme-color('background','excel');
+		color: colours.theme-color('primary','excel');
+		> .search__input {
+			border-bottom: 1px solid colours.theme-color('foreground','excel');
+		}
+		> .search__icon {
+			background:  colours.theme-color('background','excel');			
+		}
+		&.--has-accent{
+			color: colours.theme-color('accent', 'excel');
+			> .search__input {
+				color: colours.theme-color('accent', 'excel');
+			}
+		}
+	}
 	// &:hover {
 	// 	> .search__input {
     //         @extend %extended-input;

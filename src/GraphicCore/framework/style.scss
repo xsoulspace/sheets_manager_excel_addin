@@ -27,4 +27,8 @@ body {
 		color: colours.theme-color('primary', 'dark');
 		background-color: colours.theme-color('background', 'dark');
 	}
+	&.--is-excel-default-color {
+		color: colours.theme-color('primary', 'excel');
+		background-color: colours.theme-color('background', 'excel');
+	}
 }

@@ -9,6 +9,11 @@
 			color: colours.theme-color('accent', 'dark');
 		}
 	}
+	&.--is-excel-default-color {
+		&.--has-accent {
+			color: colours.theme-color('accent', 'excel');
+		}
+	}
 
 	&__refresh {
 		&.--in-progress {

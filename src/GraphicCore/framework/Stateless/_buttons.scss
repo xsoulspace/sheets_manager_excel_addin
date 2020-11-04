@@ -32,6 +32,22 @@
 			}
 		}
 	}
+	&.--is-excel-default-color {
+		color: colours.theme-color('primary', 'excel');
+		&.--has-accent{
+			color: colours.theme-color('accent', 'excel');
+		}
+		&.--has-border{
+			border: 1px solid colours.theme-color('accent', 'excel', 0.1);
+			&:focus{
+				outline: none;
+				border: 1px solid colours.theme-color('accent', 'excel', 0.4);
+			}
+			&:active{
+				background-color: darken(colours.theme-color('background', 'excel', 0.2),20);
+			}
+		}
+	}
 	&.--has-accent{
         color: colours.theme-color('accent', 'base');
 	}
