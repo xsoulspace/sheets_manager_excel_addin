@@ -23,12 +23,12 @@
     "vue-tour": "1.5.0",
     "vue-swatches": "2.1.0",
     "vue-router": "3.4.9",
-    "vue2-touch-events": "2.3.2",
+    "vue2-touch-events": "3.0.0",
     "vuedraggable": "2.24.3",
     "autoprefixer": "^10.0.2",
     "core-js": "^3.7.0",
-    "vue-i18n": "^8.22.1",
-    "vue-property-decorator": "^9.0.2",
+    "vue-i18n": "^8.22.2",
+    "vue-property-decorator": "^9.1.2",
     "vuex": "3.5.1"
   },
   "devDependencies": {
