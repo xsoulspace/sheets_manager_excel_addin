@@ -25,9 +25,9 @@
     "vue-router": "3.4.9",
     "vue2-touch-events": "3.1.0",
     "vuedraggable": "2.24.3",
-    "autoprefixer": "^10.1.0",
+    "autoprefixer": "^10.2.1",
     "core-js": "^3.8.2",
-    "vue-i18n": "^8.22.2",
+    "vue-i18n": "^8.22.3",
     "vue-property-decorator": "^9.1.2",
     "vuex": "3.6.0"
   },
