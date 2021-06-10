@@ -146,7 +146,7 @@ export default class SettingsModal extends Vue {
 		if (oldValue == true) {
 			module.setTheme('base')
 		} else {
-			module.setTheme('dark')
+			module.setTheme('excel')
 		}
 	}
 	public get isDarkTheme() {

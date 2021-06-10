@@ -41,10 +41,10 @@ export default class AppSettings extends VuexModule {
 			maintainerStatuses.shouldWeRestoreNumeration
 		)
 	}
-	themeName: SheetManager.AppSettingsThemeName = 'dark'
+	themeName: SheetManager.AppSettingsThemeName = 'excel'
 
 	get getIsDarkTheme() {
-		const dark: SheetManager.AppSettingsThemeName = 'dark'
+		const dark: SheetManager.AppSettingsThemeName = 'excel'
 		return this.themeName == dark
 	}
 
