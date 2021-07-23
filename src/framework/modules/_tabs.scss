@@ -25,6 +25,21 @@
 			}
 		}
 	}
+	&.--is-excel-default-color {
+		background: colours.theme-color('background', 'excel');
+		color: colours.theme-color('accent', 'excel');
+		> .tabs__tab {
+			background: colours.theme-color('background', 'excel');
+
+			&::before {
+				border-color: colours.theme-color('foreground', 'excel', 0.5);
+			}
+			&:hover {
+				background-color: colours.theme-color('hoverground', 'excel', 1);
+
+			}
+		}
+	}
 	&__tab {
 		position: relative;
 		padding: 0.2em;

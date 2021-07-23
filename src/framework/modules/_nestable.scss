@@ -1,9 +1,4 @@
 @use '../library/colours';
-
-/*
-* Style for nestable
-*/
-//https://github.com/rhwilr/vue-nestable/blob/master/example/assets/vue-nestable.css
 .nestable {
   position: relative;
   transition: 0.3s;
@@ -74,6 +69,17 @@
         &:hover {
           background-color: darken(
             colours.theme-color('background', 'dark', 1),
+            6%
+          );
+        }
+      }
+      &.--is-excel-default-color {
+        &,
+        &:focus,
+        &:active,
+        &:hover {
+          background-color: darken(
+            colours.theme-color('background', 'excel', 1),
             6%
           );
         }

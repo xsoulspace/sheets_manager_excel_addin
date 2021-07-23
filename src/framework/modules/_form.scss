@@ -54,4 +54,20 @@
 			}
 		}
 	}
+	&.--is-excel-default-color {
+		.form__field {
+			&:hover {
+				background-color: darken(
+					colours.theme-color('foreground', 'excel', 0.2),
+					10
+				);
+				box-shadow: 0px 4px 6px -5px colours.theme-color('background', 'excel', 0.1);
+			}
+		}
+		.form__p {
+			&.--is-iframe-google {
+                background-color: colours.theme-color('background', 'excel');
+			}
+		}
+	}
 }

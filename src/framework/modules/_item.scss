@@ -75,6 +75,16 @@ $color-mark-width: 6px;
 				}
 			}
 		}
+		&.--is-excel-default-color {
+			.item-input {
+				&,
+				&:focus,
+				&:active,
+				&:hover {
+					background-color: colours.theme-color('primary', 'excel', 1);
+				}
+			}
+		}
 	}
 	&-color {
 		margin: 0 0.5em 0 0;

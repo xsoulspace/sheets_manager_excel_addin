@@ -22,6 +22,12 @@
 			fill: colours.theme-color('primary', 'dark');
 		}
 	}
+	&.--is-excel-default-color {
+		fill: colours.theme-color('accent', 'excel');
+		.changelog__text {
+			fill: colours.theme-color('primary', 'excel');
+		}
+	}
 	&:hover {
         animation: fly 8s ease-in-out infinite both;
         .changelog__line{
