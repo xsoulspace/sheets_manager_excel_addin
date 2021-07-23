@@ -1,0 +1,66 @@
+@use '../library/colours';
+.changelog {
+	fill: colours.theme-color('primary', 'base');
+	width: 3em;
+    height: 3em;
+
+    @keyframes parallaxlines {
+		from {
+            transform: translateX(0em);
+		}
+		to {
+            transform: translateX(-22em);
+		}
+	}
+	$deg: 25deg;
+	&.--is-active {
+		animation: down 0.3s forwards ease-in-out;
+	}
+	&.--is-dark {
+		fill: colours.theme-color('accent', 'dark');
+		.changelog__text {
+			fill: colours.theme-color('primary', 'dark');
+		}
+	}
+	&:hover {
+        animation: fly 8s ease-in-out infinite both;
+        .changelog__line{
+            animation: parallaxlines 15s linear infinite;
+        }
+		// animation: down 0.3s forwards ease-in-out;
+    }
+    @keyframes fly {
+        0%, 100%{
+            transform: scale(1);
+        }
+        50%{
+            transform: scale(0.8);
+        }
+    }
+	@keyframes down {
+		from {
+			transform: translateY(0em) rotateZ(0deg);
+		}
+		to {
+			transform: translateY(1em) rotateZ($deg);
+		}
+	}
+	@keyframes up {
+		to {
+			transform: translateY(0em) rotateZ(0deg);
+		}
+		from {
+			transform: translateY(1em) rotateZ($deg);
+		}
+	}
+	&__text {
+		font-size: 0.5em;
+		fill: colours.theme-color('background', 'base');
+		transform: translate(-0.9em, 0.21em) rotateZ(-26deg);
+	}
+	&__line {
+		stroke-width: 1;
+		stroke: colours.theme-color('primary', 'dark');
+    }
+
+}

@@ -1,0 +1,84 @@
+@use '../library/_colours.scss';
+%extended-width{
+	@media screen and (max-width: 750px) {
+		width: 14em;
+	}
+	width: 24em;
+}
+%extended-input{
+	display: block;
+	@media screen and (max-width: 750px) {
+		width: 10em;
+	}
+	width: 20em;
+    padding: 0 6px;
+    margin-right: 10px;
+}
+.search {
+	position: relative;
+	height: 40px;
+	width: 40px;
+	border-radius: 40px;
+	padding: 10px;
+	box-shadow: 0px 4px 6px -5px rgba(0, 0, 0, 0.75);
+	transition: 0.4s;
+	color: colours.theme-color('primary','base');
+	background: colours.theme-color('background','base');
+	&.--has-accent{
+		color: colours.theme-color('accent', 'base');
+	}
+	&.--is-dark {
+		background: colours.theme-color('background','dark');
+		color: colours.theme-color('primary','dark');
+		> .search__input {
+			border-bottom: 1px solid colours.theme-color('foreground','dark');
+		}
+		> .search__icon {
+			background:  colours.theme-color('background','dark');			
+		}
+		&.--has-accent{
+			color: colours.theme-color('accent', 'dark');
+			> .search__input {
+				color: colours.theme-color('accent', 'dark');
+			}
+		}
+	}
+	// &:hover {
+	// 	> .search__input {
+    //         @extend %extended-input;
+	// 	}
+    // }
+    &.--is-open{
+		@extend %extended-width;
+     	> .search__input {
+             @extend %extended-input;
+	 	}
+    }
+	&__input {
+        position: absolute;
+        border: none;
+		background: none;
+		outline: none;
+		top: 50%;
+		left: 42px;
+		transform: translateY(-50%);
+		padding: 0;
+		font-size: 1em;
+		transition: 0.4s;
+		line-height: 40px;
+		width: 0px;
+		border-bottom: 1px solid colours.theme-color('foreground');
+	}
+	&__icon {
+		float: left;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		transition: 0.4s;
+		background: none;
+		cursor: pointer;
+	}
+}

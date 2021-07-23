@@ -1,0 +1,43 @@
+@use '../library/colours';
+@use '../Stateless/buttons';
+
+.vue-swatches {
+  &:focus {
+    outline: none;
+  }
+  .vue-swatches__fallback__button {
+    @include buttons.button-simple;
+    color: colours.theme-color('accent', 'base');
+    border: 1px solid colours.theme-color('accent', 'base', 0.1);
+    margin-top: 2em;
+    width: 100%;
+    &:focus {
+      outline: none;
+      border: 1px solid colours.theme-color('accent', 'base', 0.4);
+    }
+    &:active,
+    &:hover {
+      background-color: colours.theme-color('foreground', 'base', 0.2);
+    }
+  }
+  &.--is-dark {
+    .vue-swatches__container {
+      background-color: colours.theme-color('background', 'dark', 1) !important;
+    }
+    .vue-swatches__fallback__button {
+      @include buttons.button-simple;
+      color: colours.theme-color('accent', 'dark');
+      border: 1px solid colours.theme-color('accent', 'dark', 0.1);
+      margin-top: 2em;
+      width: 100%;
+      &:focus {
+        outline: none;
+        border: 1px solid colours.theme-color('accent', 'dark', 0.4);
+      }
+      &:active,
+      &:hover {
+        background-color: colours.theme-color('foreground', 'base', 0.2);
+      }
+    }
+  }
+}

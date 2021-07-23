@@ -1,0 +1,41 @@
+@use '../library/colours';
+@use '../library/fonts';
+.select{
+    transition: 0.1s;
+    @include colours.corner-radius;
+    @include fonts.font('primary');
+    width: 5rem;
+    text-rendering: auto;
+    color: inherit;
+    background-color: inherit;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 3px;
+    text-shadow: none;
+    padding: 7px;
+    display: inline-block;
+    text-align: start;
+    box-sizing: border-box;
+    align-items: center;
+    white-space: pre;
+    cursor: pointer;
+    margin-left: 1em;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(169, 169, 169);
+    &:hover, &:focus{
+        color: inherit;
+        background-color: inherit;    
+        @include colours.corner-radius;
+        outline: none;
+        border-color: rgb(169, 169, 169);
+    }
+    & > option {
+        color: colours.theme-color('primary','base');
+        background-color: colours.theme-color('background','base');
+        &:focus{
+            outline: none;
+        }
+    }
+}

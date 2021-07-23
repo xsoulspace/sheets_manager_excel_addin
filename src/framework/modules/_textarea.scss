@@ -1,0 +1,27 @@
+@use '../library/colours';
+.textarea {
+  transition: 0.2s;
+  color: inherit;
+  background-color: transparent;
+  padding: 1em;
+  @include colours.corner-radius;
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  outline: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+
+  &:focus {
+    border-color: colours.theme-color(accent, dark);
+  }
+  &:hover {
+    border-color: darken(colours.theme-color(accent, base), 20%);
+  }
+  &.--like-input {
+    height: 3em;
+    resize: none;
+    overflow: hidden;
+  }
+}
