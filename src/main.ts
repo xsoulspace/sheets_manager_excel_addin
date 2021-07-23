@@ -1,10 +1,11 @@
+/// <reference types="@types/office-js" />
+import { AppProvider } from '#/AppProvider'
+import '@xsoulspace/vuefer/style.css'
 import { createApp } from 'vue'
-import App from './App.vue'
 import './registerServiceWorker'
-import router from './router'
-import store from './store'
+import { AppRouter } from './router'
 
-createApp(App)
-  .use(store)
-  .use(router)
+// import vueGridLayout from 'vue-grid-layout'
+createApp(AppProvider)
+  .use(AppRouter)
   .mount('#app')
