@@ -5,7 +5,6 @@ import { createApp } from 'vue'
 import './registerServiceWorker'
 import { AppRouter } from './router'
 
-// import vueGridLayout from 'vue-grid-layout'
 createApp(AppProvider)
   .use(AppRouter)
   .mount('#app')

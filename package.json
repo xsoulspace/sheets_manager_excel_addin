@@ -7,7 +7,8 @@
     "build": "vite build",
     "serve": "vite preview",
     "patch": "yarn version --patch && git push && git push origin --tags",
-    "minor": "yarn version --minor && git push && git push origin --tags"
+    "minor": "yarn version --minor && git push && git push origin --tags",
+    "prepare": "husky install"
   },
   "browserslist": {
     "production": [
@@ -23,14 +24,12 @@
   },
   "dependencies": {
     "hex-to-rgba": "^2.0.1",
-    "uuid": "^8.3.2",
     "register-service-worker": "^1.7.2",
+    "uuid": "^8.3.2",
     "vue": "^3.2.0-beta.5",
     "vue-router": "^4.0.10"
   },
   "devDependencies": {
-    "vite-plugin-pwa": "^0.8.2",
-    "husky": "^7.0.1",
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
     "@types/jest": "^26.0.24",
@@ -46,6 +45,7 @@
     "eslint": "^7.31.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-vue": "^7.14.0",
+    "husky": "^7.0.0",
     "jest": "^27.0.6",
     "prettier": "^2.3.2",
     "sass": "^1.36.0",
@@ -54,6 +54,7 @@
     "typescript": "^4.3.5",
     "vite": "^2.4.3",
     "vite-aliases": "^0.8.4",
+    "vite-plugin-pwa": "^0.8.2",
     "vue-jest": "^5.0.0-alpha.10"
   }
 }
