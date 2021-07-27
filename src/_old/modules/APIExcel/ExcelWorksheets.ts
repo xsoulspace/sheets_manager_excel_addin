@@ -1,8 +1,8 @@
-import { ExcelContextBuilder } from './ExcelContextBuilder'
 import { Log } from '../Debug/Log'
+import { ExcelContextBuilder } from './ExcelContextBuilder'
 
 export class ExcelWorksheets {
-  context!: Excel.RequestContext
+  public context!: Excel.RequestContext
   public async init(context?: Excel.RequestContext) {
     const contextBuilder = new ExcelContextBuilder(context)
     await contextBuilder.build()
