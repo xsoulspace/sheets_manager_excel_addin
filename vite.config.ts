@@ -16,7 +16,9 @@ export default defineConfig({
     port: 5000,
   },
   base:
-    process.env.NODE_ENV === 'production' ? '/sheets_manager_excel_addin/' : '',
+    process.env.NODE_ENV === 'production'
+      ? '/sheets_manager_excel_addin/'
+      : '/',
   plugins: [
     vue(),
     vueJsx(),
