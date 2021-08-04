@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import HelloWorldVue from './HelloWorld.vue'
+  import HelloWorldVue from './hello_world.vue'
   export default {
     name: 'App',
     setup() {
