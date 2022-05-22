@@ -4,8 +4,8 @@ class SheetTile extends StatelessWidget {
   const SheetTile({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ListTile(
+  Widget build(final BuildContext context) {
+    return const ListTile(
       title: Text('This is an list tile'),
     );
   }

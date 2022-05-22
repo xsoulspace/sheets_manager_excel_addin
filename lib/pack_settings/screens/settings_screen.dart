@@ -9,7 +9,7 @@ class SettingsScreen extends HookWidget {
 
     return ScaffoldPage.scrollable(
       header: const PageHeader(title: Text('Settings')),
-      children: [],
+      children: const [],
     );
   }
 }
