@@ -34,7 +34,7 @@
   },
   "hook-widget": {
     "prefix": "hookwidget",
-    "body": "class ${1} extends HookWidget {\n  const ${1}({ Key? key }) : super(key: key);\n\n  @override\n  Widget build(BuildContext context) {\n    final state = use${1}State(); \n    return Container(\n      \n    );\n  }\n}"
+    "body": "class ${1} extends HookWidget {\n  const ${1}({ final super.key });\n\n  @override\n  Widget build(BuildContext context) {\n    final state = use${1}State(); \n    return Container(\n      \n    );\n  }\n}"
   },
   "section-start": {
     "prefix": "section start",

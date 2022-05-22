@@ -1,10 +1,10 @@
 part of pack_sheets;
 
 class SheetsScreen extends StatelessWidget {
-  const SheetsScreen({Key? key}) : super(key: key);
+  const SheetsScreen({final Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container();
   }
 }

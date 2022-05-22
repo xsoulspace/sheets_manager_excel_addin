@@ -6,6 +6,7 @@ class AppScaffold extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return FluentApp(
+      debugShowCheckedModeBanner: false,
       home: const NavigationScreen(),
       builder: (final context, final child) => NavigationPaneTheme(
         data: const NavigationPaneThemeData(),

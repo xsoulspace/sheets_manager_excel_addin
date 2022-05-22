@@ -15,6 +15,19 @@ class NavigationScreen extends HookWidget {
             state: state,
             selected: currentScreen.index,
           ),
+          appBar: NavigationAppBar(
+            automaticallyImplyLeading: false,
+            actions: Center(
+              child: Row(
+                children: [
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 200),
+                    child: const SheetSearchField(),
+                  ),
+                ],
+              ),
+            ),
+          ),
           content: NavigationBody(
             index: currentScreen.index,
             children: const [
@@ -38,18 +51,23 @@ class AppNavigationPane extends NavigationPane {
             NavigationScreens.values
                 .firstWhere((final value) => value.index == index),
           ),
-          displayMode: PaneDisplayMode.top,
+          displayMode: PaneDisplayMode.compact,
           items: [
             PaneItem(
-              icon: const Icon(FluentIcons.info),
-              title: const Text('Info'),
+              icon: const Icon(FluentIcons.home),
+              title: const Text('Home'),
             ),
           ],
+          position: PanePosition.right,
           footerItems: [
             PaneItemSeparator(),
             PaneItem(
               icon: const Icon(FluentIcons.settings),
               title: const Text('Settings'),
+            ),
+            PaneItem(
+              icon: const Icon(FluentIcons.info),
+              title: const Text('Info'),
             ),
           ],
         );
