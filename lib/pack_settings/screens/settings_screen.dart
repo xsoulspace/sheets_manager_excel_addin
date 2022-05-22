@@ -7,6 +7,9 @@ class SettingsScreen extends HookWidget {
   Widget build(final BuildContext context) {
     final state = useSettingsScreenState();
 
-    return Container();
+    return ScaffoldPage.scrollable(
+      header: const PageHeader(title: Text('Settings')),
+      children: [],
+    );
   }
 }

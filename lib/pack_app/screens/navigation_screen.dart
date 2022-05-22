@@ -20,6 +20,7 @@ class NavigationScreen extends HookWidget {
             actions: Center(
               child: Row(
                 children: [
+                  const SizedBox(width: 20),
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 200),
                     child: const SheetSearchField(),
@@ -32,8 +33,8 @@ class NavigationScreen extends HookWidget {
             index: currentScreen.index,
             children: const [
               SheetsScreen(),
-              InfoScreen(),
               SettingsScreen(),
+              InfoScreen(),
             ],
           ),
         );

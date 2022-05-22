@@ -62,7 +62,7 @@ packages:
     description:
       path: "."
       ref: "feat/side-pane-right-position"
-      resolved-ref: a3bd7a31009dee4c4e1ca5480716dc2c20ff7f88
+      resolved-ref: "05da1aff441c885feb88d90ea8dfd28bf85d49fa"
       url: "git@github.com:Arenukvern/fluent_ui.git"
     source: git
     version: "3.12.0"

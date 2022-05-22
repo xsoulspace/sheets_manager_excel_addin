@@ -6,6 +6,10 @@ class InfoScreen extends HookWidget {
   @override
   Widget build(final BuildContext context) {
     final state = useInfoScreenState();
-    return Container();
+
+    return ScaffoldPage.scrollable(
+      header: const PageHeader(title: Text('About')),
+      children: [],
+    );
   }
 }
