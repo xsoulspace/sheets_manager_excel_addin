@@ -17,6 +17,6 @@ class CircularProgress extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return const ProgressRing();
+    return const CircularProgressIndicator.adaptive();
   }
 }

@@ -23,15 +23,18 @@ class AppScaffoldScreen extends StatelessWidget {
           localizationsDelegates: const [
             S.delegate,
             DefaultFluentLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
           ],
-          localeListResolutionCallback:
-              (final locales, final supportedLocales) {
-            final locale = settings.locale;
-            if (locale == null) return null;
-            if (S.delegate.isSupported(locale)) return locale;
+          // localeListResolutionCallback:
+          //     (final locales, final supportedLocales) {
+          //   final locale = settings.locale;
+          //   if (locale == null) return null;
+          //   if (S.delegate.isSupported(locale)) return locale;
 
-            return null;
-          },
+          //   return null;
+          // },
           supportedLocales: Locales.values,
           theme: ThemeData(
             // accentColor: appTheme.color,

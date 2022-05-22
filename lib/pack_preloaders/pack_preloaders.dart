@@ -1,6 +1,6 @@
 library pack_preloaders;
 
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sheet_manager/pack_core/widgets/widgets.dart';
 import 'package:sheet_manager/pack_settings/pack_settings.dart';

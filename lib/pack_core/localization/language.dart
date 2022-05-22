@@ -2,10 +2,10 @@ part of pack_core;
 
 class Locales {
   Locales._();
-  static const en = Locale(Languages.en, 'EN');
-  static const ru = Locale(Languages.ru, 'RU');
-  static const it = Locale(Languages.it, 'IT');
-  static const ga = Locale(Languages.ga, 'GA');
+  static const en = Locale(Languages.en);
+  static const ru = Locale(Languages.ru);
+  static const it = Locale(Languages.it);
+  static const ga = Locale(Languages.ga);
   static const values = <Locale>[en, ru, it];
 }
 
