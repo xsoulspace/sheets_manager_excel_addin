@@ -69,6 +69,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_hooks:
+    dependency: "direct main"
+    description:
+      name: flutter_hooks
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.18.4"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -93,6 +100,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.17.0"
+  life_hooks:
+    dependency: "direct main"
+    description:
+      name: life_hooks
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.7"
   lints:
     dependency: transitive
     description:

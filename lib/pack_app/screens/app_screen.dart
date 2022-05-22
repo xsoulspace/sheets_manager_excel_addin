@@ -1,11 +1,16 @@
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/src/widgets/framework.dart';
+part of pack_app;
 
 class AppScaffold extends StatelessWidget {
-  const AppScaffold({Key? key}) : super(key: key);
+  const AppScaffold({final Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const FluentApp();
+  Widget build(final BuildContext context) {
+    return FluentApp(
+      home: const NavigationScreen(),
+      builder: (final context, final child) => NavigationPaneTheme(
+        data: const NavigationPaneThemeData(),
+        child: child!,
+      ),
+    );
   }
 }
