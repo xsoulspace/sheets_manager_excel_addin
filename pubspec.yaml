@@ -32,7 +32,7 @@ dependencies:
   fluent_ui:
     git:
       url: git@github.com:Arenukvern/fluent_ui.git
-      ref: feat/side-pane-right-position
+      ref: side-pane
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.4

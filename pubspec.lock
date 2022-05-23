@@ -222,8 +222,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "feat/side-pane-right-position"
-      resolved-ref: "05da1aff441c885feb88d90ea8dfd28bf85d49fa"
+      ref: side-pane
+      resolved-ref: "14a7756a0a80fe69c010fcdae937e198a826a1ff"
       url: "git@github.com:Arenukvern/fluent_ui.git"
     source: git
     version: "3.12.0"
