@@ -6,29 +6,34 @@ class NavigationScreen extends HookWidget {
   @override
   Widget build(final BuildContext context) {
     final state = useNavigationScreenState();
-
+    final themeData = FluentTheme.of(context);
     return ValueListenableBuilder<NavigationScreens>(
       valueListenable: state.currentScreen,
       builder: (final context, final currentScreen, final child) {
+        final isSheetsScreen = currentScreen == NavigationScreens.sheets;
         return NavigationView(
           pane: AppNavigationPane(
             state: state,
+            panePaddingRequired: !isSheetsScreen,
+            themeData: themeData,
             selected: currentScreen.index,
           ),
-          appBar: NavigationAppBar(
-            automaticallyImplyLeading: false,
-            actions: Center(
-              child: Row(
-                children: [
-                  const SizedBox(width: 20),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 200),
-                    child: const SheetSearchField(),
+          appBar: isSheetsScreen
+              ? NavigationAppBar(
+                  automaticallyImplyLeading: false,
+                  actions: Center(
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 20),
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 200),
+                          child: const SheetSearchField(),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
+                )
+              : null,
           content: NavigationBody(
             index: currentScreen.index,
             children: const [
@@ -47,10 +52,18 @@ class AppNavigationPane extends NavigationPane {
   AppNavigationPane({
     required final super.selected,
     required final NavigationScreenState state,
+    required final bool panePaddingRequired,
+    required final ThemeData themeData,
   }) : super(
           onChanged: (final index) => state.onNavigationChanged(
             NavigationScreens.values
                 .firstWhere((final value) => value.index == index),
+          ),
+          menuButton: AnimatedSwitcher(
+            duration: themeData.fastAnimationDuration,
+            child: panePaddingRequired
+                ? const SizedBox(height: 50)
+                : const SizedBox(),
           ),
           displayMode: PaneDisplayMode.compact,
           items: [
