@@ -18,6 +18,9 @@ class SheetsScreen extends StatelessWidget {
 
           return SheetTile(
             key: ValueKey(sheet.name),
+            onSelected: sheetsNotifier.selectedSheetController.onSheetSelected,
+            selected: sheetsNotifier.selectedSheetController
+                .checkIsSheetActive(sheet),
             onNameChanged:
                 sheetsNotifier.sheetNameController.addSheetNameUpdate,
             sheet: sheet,

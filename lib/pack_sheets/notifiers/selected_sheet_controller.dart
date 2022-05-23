@@ -3,22 +3,26 @@ part of pack_sheets;
 class SelectedSheetController implements ContextlessLoadable, Disposable {
   SelectedSheetController({
     required this.excelApi,
+    required this.notifyListeners,
   });
   final ExcelApiI excelApi;
-  final selectedSheetModel = ValueNotifier(const SheetModel(name: ''));
+  final VoidCallback notifyListeners;
+  SheetModel selectedSheetModel = const SheetModel(name: '');
 
   bool checkIsSheetActive(final SheetModel sheet) {
-    return selectedSheetModel.value.name == sheet.name;
+    return selectedSheetModel.name == sheet.name;
   }
 
   Future<void> onSheetSelected(final SheetModel sheet) async {
-    selectedSheetModel.value = sheet;
+    selectedSheetModel = sheet;
+    notifyListeners();
     unawaited(excelApi.setActiveSheet(sheet));
   }
 
   Future<void> getActiveSheet() async {
     final sheet = await excelApi.getActiveSheet();
-    selectedSheetModel.value = sheet;
+    selectedSheetModel = sheet;
+    notifyListeners();
   }
 
   @override

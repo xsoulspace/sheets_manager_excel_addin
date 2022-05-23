@@ -30,6 +30,7 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
   );
   late final selectedSheetController = SelectedSheetController(
     excelApi: excelApi,
+    notifyListeners: notifyListeners,
   );
   @override
   Future<void> onLoad(final BuildContext context) async {
