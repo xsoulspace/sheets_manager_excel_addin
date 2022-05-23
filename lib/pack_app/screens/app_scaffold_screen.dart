@@ -36,6 +36,7 @@ class AppScaffoldScreen extends StatelessWidget {
           //   return null;
           // },
           supportedLocales: Locales.values,
+          locale: settings.locale,
           theme: ThemeData(
             // accentColor: appTheme.color,
             visualDensity: VisualDensity.standard,
@@ -43,6 +44,7 @@ class AppScaffoldScreen extends StatelessWidget {
               glowFactor: is10footScreen() ? 2.0 : 0.0,
             ),
           ),
+          themeMode: settings.themeMode,
           home: const NavigationScreen(),
           builder: (final context, final child) {
             return Directionality(

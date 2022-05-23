@@ -14,6 +14,7 @@ class AppStateProvider extends StatelessWidget {
         /// Keep _settings is global is important as it will not lose all
         /// changes during global rebuild
         ChangeNotifierProvider(create: (final context) => _settings),
+        Provider(create: (final context) => AppThemeData.regular()),
       ],
       child: Builder(
         builder: (final context) {

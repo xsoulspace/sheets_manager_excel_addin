@@ -1,1 +1,9 @@
-{}
+{
+  "language": "Lingua",
+  "appearance": "Appearance",
+  "settings": "Impostazioni",
+  "about": "Informazioni",
+  "appearanceSystem": "System",
+  "appearanceLight": "Light",
+  "appearanceDark": "Dark"
+}

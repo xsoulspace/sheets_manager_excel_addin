@@ -8,7 +8,7 @@ class InfoScreen extends HookWidget {
     final state = useInfoScreenState();
 
     return ScaffoldPage.scrollable(
-      header: const PageHeader(title: Text('About')),
+      header: PageHeader(title: Text(S.of(context).about)),
       children: const [],
     );
   }
