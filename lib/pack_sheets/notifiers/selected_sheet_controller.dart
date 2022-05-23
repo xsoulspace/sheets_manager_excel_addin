@@ -27,8 +27,5 @@ class SelectedSheetController implements ContextlessLoadable, Disposable {
   }
 
   @override
-  Future<void> onLoad() {
-    // TODO: implement onLoad
-    throw UnimplementedError();
-  }
+  Future<void> onLoad() async {}
 }

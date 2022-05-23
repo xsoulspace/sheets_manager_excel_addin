@@ -48,10 +48,8 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
   }
 
   Future<void> reloadSheets() async {
-    final sheets = await excelApi.getSheets();
-    _sheets
-      ..clear()
-      ..addAll(sheets);
+    final newSheets = await excelApi.getSheets();
+    updateSheets(newSheets);
   }
 
   void onReorder(final int oldIndex, final int newIndex) {
@@ -62,5 +60,6 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
     final item = _sheets.removeAt(oldIndex);
     _sheets.insert(effectiveNewIndex, item);
     excelApi.reorderSheets(_sheets);
+    notifyListeners();
   }
 }

@@ -16,11 +16,17 @@ class SheetTile extends StatelessWidget {
   Widget build(final BuildContext context) {
     final theme = FluentTheme.of(context);
     return ListTile(
-      title: TextBox(
-        initialValue: sheet.name,
-        onChanged: (final newName) => onNameChanged(sheet, newName),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 12.0,
       ),
-      trailing: AnimatedSwitcher(
+      title: Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: TextBox(
+          initialValue: sheet.name,
+          onChanged: (final newName) => onNameChanged(sheet, newName),
+        ),
+      ),
+      leading: AnimatedSwitcher(
         duration: theme.fastAnimationDuration,
         child: dragEnabled
             ? ReorderableDragStartListener(
