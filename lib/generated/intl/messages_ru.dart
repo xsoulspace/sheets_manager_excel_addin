@@ -23,10 +23,11 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("Информация"),
-        "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
-        "appearanceDark": MessageLookupByLibrary.simpleMessage("Dark"),
-        "appearanceLight": MessageLookupByLibrary.simpleMessage("Light"),
-        "appearanceSystem": MessageLookupByLibrary.simpleMessage("System"),
+        "appearance": MessageLookupByLibrary.simpleMessage("Вид"),
+        "appearanceDark": MessageLookupByLibrary.simpleMessage("Темный"),
+        "appearanceLight": MessageLookupByLibrary.simpleMessage("Светлый"),
+        "appearanceSystem":
+            MessageLookupByLibrary.simpleMessage("Как в системе"),
         "language": MessageLookupByLibrary.simpleMessage("Язык"),
         "settings": MessageLookupByLibrary.simpleMessage("Настройки")
       };

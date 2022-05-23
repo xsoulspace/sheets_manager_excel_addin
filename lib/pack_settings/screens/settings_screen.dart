@@ -15,15 +15,18 @@ class SettingsScreen extends HookWidget {
         ),
       ),
       children: [
-        InfoLabel(
-          label: S.of(context).language,
-          child: Combobox<Locale>(
-            isExpanded: true,
+        SettingsTile(
+          icon: FluentIcons.locale_language,
+          title: S.of(context).language,
+          trailing: Combobox<Locale>(
             items: namedLocalesMap.values
                 .map(
                   (final locale) => ComboboxItem<Locale>(
                     value: locale.locale,
-                    child: Text(locale.name),
+                    child: SizedBox(
+                      width: 100,
+                      child: Text(locale.name),
+                    ),
                   ),
                 )
                 .toList(),
@@ -32,15 +35,18 @@ class SettingsScreen extends HookWidget {
           ),
         ),
         appThemeData.spacedSizedBox.regular,
-        InfoLabel(
-          label: S.of(context).appearance,
-          child: Combobox<ThemeMode>(
-            isExpanded: true,
+        SettingsTile(
+          title: S.of(context).appearance,
+          icon: FluentIcons.brightness,
+          trailing: Combobox<ThemeMode>(
             items: [
               ComboboxItem(
                 key: const ValueKey(ThemeMode.system),
                 value: ThemeMode.system,
-                child: Text(S.current.appearanceSystem),
+                child: SizedBox(
+                  width: 100,
+                  child: Text(S.current.appearanceSystem),
+                ),
               ),
               ComboboxItem(
                 key: const ValueKey(ThemeMode.light),
@@ -58,6 +64,32 @@ class SettingsScreen extends HookWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class SettingsTile extends StatelessWidget {
+  const SettingsTile({
+    required this.icon,
+    required this.title,
+    required this.trailing,
+    this.subtitle,
+    final Key? key,
+  }) : super(key: key);
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final Widget trailing;
+  @override
+  Widget build(final BuildContext context) {
+    return Card(
+      padding: EdgeInsets.zero,
+      child: ListTile(
+        leading: Icon(icon),
+        title: Text(title),
+        subtitle: subtitle != null ? Text(subtitle!) : null,
+        trailing: trailing,
+      ),
     );
   }
 }

@@ -1,9 +1,9 @@
 {
   "language": "Язык",
-  "appearance": "Appearance",
+  "appearance": "Вид",
   "settings": "Настройки",
   "about": "Информация",
-  "appearanceSystem": "System",
-  "appearanceLight": "Light",
-  "appearanceDark": "Dark"
+  "appearanceSystem": "Как в системе",
+  "appearanceLight": "Светлый",
+  "appearanceDark": "Темный"
 }
