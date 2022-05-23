@@ -9,6 +9,16 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
   final ExcelSubscriptionsI excelSubscritions;
 
   final _sheets = <SheetModel>[];
+  List<SheetModel> get sheets =>
+      filter.filteredSheets.isEmpty ? _sheets : filter.filteredSheets;
+  List<SheetModel> getSheets() => [...sheets];
+  void updateSheets(final List<SheetModel> newSheets) {
+    _sheets
+      ..clear()
+      ..addAll(newSheets);
+    notifyListeners();
+  }
+
   late final filter = SheetsFilter(
     notifyListeners: notifyListeners,
     sheets: _sheets,
@@ -21,16 +31,6 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
   late final selectedSheetController = SelectedSheetController(
     excelApi: excelApi,
   );
-  List<SheetModel> get sheets =>
-      filter.filteredSheets.isEmpty ? _sheets : filter.filteredSheets;
-  List<SheetModel> getSheets() => [...sheets];
-  void updateSheets(final List<SheetModel> newSheets) {
-    _sheets
-      ..clear()
-      ..addAll(newSheets);
-    notifyListeners();
-  }
-
   @override
   Future<void> onLoad(final BuildContext context) async {
     await sheetNameController.onLoad();
@@ -63,10 +63,4 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
     _sheets.insert(effectiveNewIndex, item);
     excelApi.reorderSheets(_sheets);
   }
-
-  void onNameChanged(
-    final SheetModel sheet,
-    final String newName,
-  ) =>
-      sheetNameController.addSheetNameUpdate(sheet: sheet, newName: newName);
 }

@@ -18,7 +18,8 @@ class SheetsScreen extends StatelessWidget {
 
           return SheetTile(
             key: ValueKey(sheet.name),
-            onNameChanged: sheetsNotifier.onNameChanged,
+            onNameChanged:
+                sheetsNotifier.sheetNameController.addSheetNameUpdate,
             sheet: sheet,
             index: index,
             dragEnabled: dragEnabled,

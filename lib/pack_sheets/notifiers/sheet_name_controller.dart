@@ -27,10 +27,10 @@ class SheetNameController implements ContextlessLoadable, Disposable {
     );
   }
 
-  void addSheetNameUpdate({
-    required final SheetModel sheet,
-    required final String newName,
-  }) =>
+  void addSheetNameUpdate(
+    final SheetModel sheet,
+    final String newName,
+  ) =>
       updatesController.add(Diff(original: sheet, other: newName));
 
   Future<void> _renameSheet(
