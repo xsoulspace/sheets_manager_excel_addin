@@ -47,17 +47,22 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
 
   void onSearchChanged() {
     // TODO(arenukvern): add bouncer and improve search method
-    final filteredSheets = _sheets
-        .where((final sheet) => sheet.name.contains(searchController.text));
+    if (searchController.text.isEmpty) {
+      _filteredSheets.clear();
+    } else {
+      final filteredSheets = _sheets
+          .where((final sheet) => sheet.name.contains(searchController.text));
 
-    _filteredSheets
-      ..clear()
-      ..addAll(filteredSheets);
+      _filteredSheets
+        ..clear()
+        ..addAll(filteredSheets);
+    }
     notifyListeners();
   }
 
   void onClearFiltered() {
     searchController.clear();
+    _filteredSheets.clear();
     notifyListeners();
   }
 }
