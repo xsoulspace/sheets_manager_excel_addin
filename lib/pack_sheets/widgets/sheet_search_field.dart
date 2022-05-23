@@ -5,15 +5,22 @@ class SheetSearchField extends HookWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final state = useSheetSearchFieldState();
+    final sheetsNotifier = context.read<SheetsNotifier>();
 
     return TextBox(
       placeholder: 'Search',
-      controller: state.controller,
+      controller: sheetsNotifier.searchController,
       textInputAction: TextInputAction.next,
       prefix: const Padding(
         padding: EdgeInsetsDirectional.only(start: 8.0),
         child: Icon(FluentIcons.search),
+      ),
+      suffix: GestureDetector(
+        onTap: sheetsNotifier.onClearFiltered,
+        child: const Padding(
+          padding: EdgeInsetsDirectional.only(start: 8.0),
+          child: Icon(FluentIcons.clear),
+        ),
       ),
     );
   }

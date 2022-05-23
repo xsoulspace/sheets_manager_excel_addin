@@ -13,5 +13,5 @@ abstract class ContextfulLoadable {
 
   /// Use this function to load something on
   /// instance initialization
-  Future<void> onLoad({required final BuildContext context});
+  Future<void> onLoad(final BuildContext context);
 }

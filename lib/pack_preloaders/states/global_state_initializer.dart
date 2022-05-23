@@ -1,13 +1,11 @@
 part of pack_preloaders;
 
 class GlobalStateInitializer implements StateInitializer {
-  GlobalStateInitializer({
-    required this.settings,
-  });
-  final SettingsNotifier settings;
-
   @override
-  Future<void> onLoad({required final BuildContext context}) async {
-    await settings.onLoad(context: context);
+  Future<void> onLoad(final BuildContext context) async {
+    final SettingsNotifier settings = context.read();
+    final SheetsNotifier sheetsNotifier = context.read();
+    await settings.onLoad(context);
+    await sheetsNotifier.onLoad(context);
   }
 }

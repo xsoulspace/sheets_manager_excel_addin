@@ -46,11 +46,26 @@ class SpacedSizedBoxData {
 
 class HorizontalySpacedSizedBoxData {
   HorizontalySpacedSizedBoxData();
-  final Widget small = const SpacedSizedBox(spacing: AppSpacing.small);
-  final Widget semiSmall = const SpacedSizedBox(spacing: AppSpacing.semiSmall);
-  final Widget regular = const SpacedSizedBox(spacing: AppSpacing.regular);
-  final Widget semiBig = const SpacedSizedBox(spacing: AppSpacing.semiBig);
-  final Widget big = const SpacedSizedBox(spacing: AppSpacing.big);
+  final Widget small = const SpacedSizedBox(
+    spacing: AppSpacing.small,
+    axis: Axis.horizontal,
+  );
+  final Widget semiSmall = const SpacedSizedBox(
+    spacing: AppSpacing.semiSmall,
+    axis: Axis.horizontal,
+  );
+  final Widget regular = const SpacedSizedBox(
+    spacing: AppSpacing.regular,
+    axis: Axis.horizontal,
+  );
+  final Widget semiBig = const SpacedSizedBox(
+    spacing: AppSpacing.semiBig,
+    axis: Axis.horizontal,
+  );
+  final Widget big = const SpacedSizedBox(
+    spacing: AppSpacing.big,
+    axis: Axis.horizontal,
+  );
 }
 
 class AppEdgeInsets {

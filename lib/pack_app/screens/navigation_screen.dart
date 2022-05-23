@@ -6,6 +6,7 @@ class NavigationScreen extends HookWidget {
   @override
   Widget build(final BuildContext context) {
     final state = useNavigationScreenState();
+    final appThemeData = context.read<AppThemeData>();
     final themeData = FluentTheme.of(context);
     return ValueListenableBuilder<NavigationScreens>(
       valueListenable: state.currentScreen,
@@ -24,7 +25,7 @@ class NavigationScreen extends HookWidget {
                   actions: Center(
                     child: Row(
                       children: [
-                        const SizedBox(width: 20),
+                        appThemeData.horizontalySpacedSizedBox.semiSmall,
                         ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 200),
                           child: const SheetSearchField(),

@@ -1,12 +1,15 @@
 part of pack_sheets;
 
 class SheetTile extends StatelessWidget {
-  const SheetTile({super.key});
-
+  const SheetTile({
+    required this.sheet,
+    final super.key,
+  });
+  final SheetModel sheet;
   @override
   Widget build(final BuildContext context) {
-    return const ListTile(
-      title: Text('This is an list tile'),
+    return ListTile(
+      title: Text(sheet.name),
     );
   }
 }

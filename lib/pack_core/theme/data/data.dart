@@ -10,10 +10,15 @@ class AppThemeData extends Equatable {
     required this.appEdgeInsets,
     required this.horizontalySpacedSizedBox,
     required this.spacedSizedBox,
+    required this.excelAvailable,
   });
 
-  factory AppThemeData.regular() => AppThemeData(
+  factory AppThemeData.regular({
+    required final bool excelAvailable,
+  }) =>
+      AppThemeData(
         colors: AppColorsData.light(),
+        excelAvailable: excelAvailable,
         borderRadius: AppBorderRadiusData(),
         appEdgeInsets: AppEdgeInsets(),
         horizontalySpacedSizedBox: HorizontalySpacedSizedBoxData(),
@@ -25,6 +30,8 @@ class AppThemeData extends Equatable {
   final SpacedSizedBoxData spacedSizedBox;
   final HorizontalySpacedSizedBoxData horizontalySpacedSizedBox;
   final AppEdgeInsets appEdgeInsets;
+  final bool excelAvailable;
+  bool get useMockData => !excelAvailable;
 
   @override
   List<Object?> get props => [
