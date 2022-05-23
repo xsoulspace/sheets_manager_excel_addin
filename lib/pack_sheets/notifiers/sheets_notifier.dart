@@ -7,25 +7,43 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
   });
   final ExcelApiI excelApi;
   final ExcelSubscriptionsI excelSubscritions;
-  final searchController = TextEditingController();
 
   final _sheets = <SheetModel>[];
-  final _filteredSheets = <SheetModel>[];
-
+  late final filter = SheetsFilter(
+    notifyListeners: notifyListeners,
+    sheets: _sheets,
+  );
+  late final sheetNameController = SheetNameController(
+    excelApi: excelApi,
+    updateSheets: updateSheets,
+    getSheets: getSheets,
+  );
+  late final selectedSheetController = SelectedSheetController(
+    excelApi: excelApi,
+  );
   List<SheetModel> get sheets =>
-      _filteredSheets.isEmpty ? _sheets : _filteredSheets;
+      filter.filteredSheets.isEmpty ? _sheets : filter.filteredSheets;
+  List<SheetModel> getSheets() => [...sheets];
+  void updateSheets(final List<SheetModel> newSheets) {
+    _sheets
+      ..clear()
+      ..addAll(newSheets);
+    notifyListeners();
+  }
 
   @override
   Future<void> onLoad(final BuildContext context) async {
+    await sheetNameController.onLoad();
+    await selectedSheetController.onLoad();
+    await filter.onLoad();
     await reloadSheets();
-    searchController.addListener(onSearchChanged);
   }
 
   @override
   void dispose() {
-    searchController
-      ..removeListener(onSearchChanged)
-      ..dispose();
+    sheetNameController.dispose();
+    selectedSheetController.dispose();
+    filter.dispose();
     super.dispose();
   }
 
@@ -43,26 +61,12 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
     }
     final item = _sheets.removeAt(oldIndex);
     _sheets.insert(effectiveNewIndex, item);
+    excelApi.reorderSheets(_sheets);
   }
 
-  void onSearchChanged() {
-    // TODO(arenukvern): add bouncer and improve search method
-    if (searchController.text.isEmpty) {
-      _filteredSheets.clear();
-    } else {
-      final filteredSheets = _sheets
-          .where((final sheet) => sheet.name.contains(searchController.text));
-
-      _filteredSheets
-        ..clear()
-        ..addAll(filteredSheets);
-    }
-    notifyListeners();
-  }
-
-  void onClearFiltered() {
-    searchController.clear();
-    _filteredSheets.clear();
-    notifyListeners();
-  }
+  void onNameChanged(
+    final SheetModel sheet,
+    final String newName,
+  ) =>
+      sheetNameController.addSheetNameUpdate(sheet: sheet, newName: newName);
 }

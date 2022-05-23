@@ -6,7 +6,7 @@ class SheetsScreen extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final sheetsNotifier = context.watch<SheetsNotifier>();
-    final dragEnabled = sheetsNotifier.searchController.text.isEmpty;
+    final dragEnabled = sheetsNotifier.filter.searchController.text.isEmpty;
     return ScaffoldPage(
       content: ReorderableListView.builder(
         physics: const BouncingScrollPhysics(),
@@ -18,6 +18,7 @@ class SheetsScreen extends StatelessWidget {
 
           return SheetTile(
             key: ValueKey(sheet.name),
+            onNameChanged: sheetsNotifier.onNameChanged,
             sheet: sheet,
             index: index,
             dragEnabled: dragEnabled,

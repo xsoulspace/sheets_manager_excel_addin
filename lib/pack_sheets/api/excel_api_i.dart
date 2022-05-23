@@ -7,4 +7,6 @@ abstract class ExcelApiI {
     required final String oldName,
   });
   Future<void> reorderSheets(final List<SheetModel> sheets);
+  Future<void> setActiveSheet(final SheetModel sheet);
+  Future<SheetModel> getActiveSheet();
 }

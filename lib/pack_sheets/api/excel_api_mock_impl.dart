@@ -29,4 +29,14 @@ class ExcelApiMockImpl implements ExcelApiI {
       ..clear()
       ..addAll(sheets);
   }
+
+  @override
+  Future<SheetModel> getActiveSheet() async {
+    return _sheets.first;
+  }
+
+  @override
+  Future<void> setActiveSheet(final SheetModel sheet) async {
+    return;
+  }
 }
