@@ -4,7 +4,6 @@ abstract class ExcelApiI {
   Future<List<SheetModel>> getSheets();
   Future<void> renameSheet({
     required final SheetModel sheet,
-    required final String oldName,
   });
   Future<void> reorderSheets(final List<SheetModel> sheets);
   Future<void> setActiveSheet(final SheetModel sheet);

@@ -39,13 +39,14 @@ class SheetNameController implements ContextlessLoadable, Disposable {
     final sheet = diff.original;
     final newName = diff.other;
     final newSheet = sheet.copyWith(name: newName);
-    final sheets = getSheets();
-    final index = sheets.indexWhere((final el) => el.name == sheet.name);
-    sheets
+    final newSheets = getSheets();
+    final index = newSheets.indexWhere((final el) => el.id == sheet.id);
+    if (index < 0) return;
+    newSheets
       ..removeAt(index)
-      ..insert(index, sheet);
-    updateSheets(sheets);
-    unawaited(excelApi.renameSheet(sheet: newSheet, oldName: sheet.name));
+      ..insert(index, newSheet);
+    updateSheets(newSheets);
+    unawaited(excelApi.renameSheet(sheet: newSheet));
   }
 
   @override

@@ -37,7 +37,21 @@ class SheetTile extends HookWidget {
                 }
               },
               child: TextBox(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.transparent,
+                    width: 0,
+                  ),
+                  color: Colors.transparent,
+                ),
+                cursorColor: theme.accentColor,
+                padding: const EdgeInsets.only(
+                  top: 6,
+                ),
                 autofocus: true,
+                style: theme.typography.body?.copyWith(
+                  fontSize: 16,
+                ),
                 initialValue: sheet.name,
                 onEditingComplete: () {
                   state.editing = false;

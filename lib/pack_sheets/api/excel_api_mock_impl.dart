@@ -3,9 +3,9 @@ import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
 
 class ExcelApiMockImpl implements ExcelApiI {
   final _sheets = <SheetModel>[
-    const SheetModel(name: 'Products'),
-    const SheetModel(name: 'Stock'),
-    const SheetModel(name: 'Total'),
+    const SheetModel(name: 'Products', id: '1'),
+    const SheetModel(name: 'Stock', id: '2'),
+    const SheetModel(name: 'Total', id: '3'),
   ];
   @override
   Future<List<SheetModel>> getSheets() async {
@@ -15,9 +15,9 @@ class ExcelApiMockImpl implements ExcelApiI {
   @override
   Future<void> renameSheet({
     required final SheetModel sheet,
-    required final String oldName,
   }) async {
-    final index = _sheets.indexWhere((final el) => el.name == oldName);
+    final index = _sheets.indexWhere((final el) => el.id == sheet.id);
+    if (index < 0) return;
     _sheets
       ..removeAt(index)
       ..insert(index, sheet);

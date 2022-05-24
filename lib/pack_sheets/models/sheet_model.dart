@@ -11,6 +11,7 @@ part of pack_sheets;
 class SheetModel with _$SheetModel {
   const factory SheetModel({
     required final String name,
+    required final String id,
   }) = _SheetModel;
   const SheetModel._();
 }

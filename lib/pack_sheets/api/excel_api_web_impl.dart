@@ -11,7 +11,6 @@ class ExcelApiWebImpl implements ExcelApiI {
   @override
   Future<void> renameSheet({
     required final SheetModel sheet,
-    required final String oldName,
   }) async {
     // TODO: implement renameSheet
     throw UnimplementedError();

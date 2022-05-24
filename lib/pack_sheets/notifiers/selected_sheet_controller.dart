@@ -7,7 +7,7 @@ class SelectedSheetController implements ContextlessLoadable, Disposable {
   });
   final ExcelApiI excelApi;
   final VoidCallback notifyListeners;
-  SheetModel selectedSheetModel = const SheetModel(name: '');
+  SheetModel selectedSheetModel = const SheetModel(name: '', id: '');
 
   bool checkIsSheetActive(final SheetModel sheet) {
     return selectedSheetModel.name == sheet.name;

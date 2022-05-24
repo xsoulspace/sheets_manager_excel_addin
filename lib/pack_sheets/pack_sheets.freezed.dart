@@ -162,6 +162,7 @@ abstract class _Diff<T, TOther> extends Diff<T, TOther> {
 /// @nodoc
 mixin _$SheetModel {
   String get name => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SheetModelCopyWith<SheetModel> get copyWith =>
@@ -173,7 +174,7 @@ abstract class $SheetModelCopyWith<$Res> {
   factory $SheetModelCopyWith(
           SheetModel value, $Res Function(SheetModel) then) =
       _$SheetModelCopyWithImpl<$Res>;
-  $Res call({String name});
+  $Res call({String name, String id});
 }
 
 /// @nodoc
@@ -187,11 +188,16 @@ class _$SheetModelCopyWithImpl<$Res> implements $SheetModelCopyWith<$Res> {
   @override
   $Res call({
     Object? name = freezed,
+    Object? id = freezed,
   }) {
     return _then(_value.copyWith(
       name: name == freezed
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -204,7 +210,7 @@ abstract class _$$_SheetModelCopyWith<$Res>
           _$_SheetModel value, $Res Function(_$_SheetModel) then) =
       __$$_SheetModelCopyWithImpl<$Res>;
   @override
-  $Res call({String name});
+  $Res call({String name, String id});
 }
 
 /// @nodoc
@@ -220,11 +226,16 @@ class __$$_SheetModelCopyWithImpl<$Res> extends _$SheetModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = freezed,
+    Object? id = freezed,
   }) {
     return _then(_$_SheetModel(
       name: name == freezed
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -233,14 +244,16 @@ class __$$_SheetModelCopyWithImpl<$Res> extends _$SheetModelCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_SheetModel extends _SheetModel with DiagnosticableTreeMixin {
-  const _$_SheetModel({required this.name}) : super._();
+  const _$_SheetModel({required this.name, required this.id}) : super._();
 
   @override
   final String name;
+  @override
+  final String id;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SheetModel(name: $name)';
+    return 'SheetModel(name: $name, id: $id)';
   }
 
   @override
@@ -248,7 +261,8 @@ class _$_SheetModel extends _SheetModel with DiagnosticableTreeMixin {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'SheetModel'))
-      ..add(DiagnosticsProperty('name', name));
+      ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('id', id));
   }
 
   @override
@@ -256,12 +270,15 @@ class _$_SheetModel extends _SheetModel with DiagnosticableTreeMixin {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SheetModel &&
-            const DeepCollectionEquality().equals(other.name, name));
+            const DeepCollectionEquality().equals(other.name, name) &&
+            const DeepCollectionEquality().equals(other.id, id));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(name));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(name),
+      const DeepCollectionEquality().hash(id));
 
   @JsonKey(ignore: true)
   @override
@@ -270,11 +287,14 @@ class _$_SheetModel extends _SheetModel with DiagnosticableTreeMixin {
 }
 
 abstract class _SheetModel extends SheetModel {
-  const factory _SheetModel({required final String name}) = _$_SheetModel;
+  const factory _SheetModel(
+      {required final String name, required final String id}) = _$_SheetModel;
   const _SheetModel._() : super._();
 
   @override
   String get name => throw _privateConstructorUsedError;
+  @override
+  String get id => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_SheetModelCopyWith<_$_SheetModel> get copyWith =>
