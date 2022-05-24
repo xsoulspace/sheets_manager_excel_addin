@@ -104,23 +104,6 @@
           .then(function (appRunner) {
             loading.classList.add("init_done");
             return appRunner.runApp();
-          })
-          .then(function () {
-            window.setTimeout(function () {
-              loading.remove();
-            }, 200);
-
-            console.log("intializing office");
-            const officeEl = document.getElementById("office");
-            if (officeEl != null) return;
-            const scriptTag = document.createElement("script");
-            scriptTag.src =
-              "https://appsforoffice.microsoft.com/lib/1/hosted/office.js";
-            scriptTag.id = "office";
-            scriptTag.addEventListener("load", () => {
-              console.log("office loaded");
-            });
-            document.getElementsByTagName("head")[0].appendChild(scriptTag);
           }) /** Initialize office **/
           .then(function () {
             console.log("intializing office");
