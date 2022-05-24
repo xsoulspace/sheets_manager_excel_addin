@@ -20,9 +20,12 @@ class AppColorsData extends Equatable {
 
   factory AppColorsData.dark() => AppColorsData(
         accent: ExcelPrimaryPalette.primary.value,
-        hoveredTileColor: ExcelColorfulPrimaryPalette.gray140.value,
-        pressedTileColor: ExcelColorfulPrimaryPalette.gray140.value,
-        selectedTileColor: ExcelColorfulPrimaryPalette.gray140.value,
+        hoveredTileColor:
+            ExcelColorfulPrimaryPalette.gray140.value.withOpacity(0.7),
+        pressedTileColor:
+            ExcelColorfulPrimaryPalette.gray140.value.withOpacity(0.6),
+        selectedTileColor:
+            ExcelColorfulPrimaryPalette.gray140.value.withOpacity(0.9),
       );
 
   final Color accent;

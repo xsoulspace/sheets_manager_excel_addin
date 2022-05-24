@@ -107,8 +107,7 @@ class SheetTile extends HookWidget {
 
         return Stack(
           children: [
-            AnimatedContainer(
-              duration: theme.fasterAnimationDuration,
+            Container(
               margin: const EdgeInsets.only(
                 top: 2,
                 bottom: 2,
