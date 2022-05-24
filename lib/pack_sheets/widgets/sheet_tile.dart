@@ -20,7 +20,7 @@ class SheetTile extends HookWidget {
   Widget build(final BuildContext context) {
     final state = useSheetTileState();
     final theme = FluentTheme.of(context);
-    final appThemeData = context.read<AppThemeData>();
+    final appThemeData = AppTheme.of(context);
 
     return HoverButton(
       cursor: state.editing ? null : SystemMouseCursors.click,
@@ -53,7 +53,9 @@ class SheetTile extends HookWidget {
           titleWidget = Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(sheet.name),
+              Text(
+                sheet.name,
+              ),
               appThemeData.horizontalySpacedSizedBox.regular,
               Visibility(
                 visible: states.isHovering,
@@ -89,30 +91,97 @@ class SheetTile extends HookWidget {
           );
         }
 
-        return AnimatedContainer(
-          duration: theme.fastAnimationDuration,
-          color: selected ? theme.cardColor : theme.inactiveBackgroundColor,
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12.0,
+        return Stack(
+          children: [
+            AnimatedContainer(
+              duration: theme.fasterAnimationDuration,
+              margin: const EdgeInsets.only(
+                top: 2,
+                bottom: 2,
+                left: 8,
+                right: 5,
+              ),
+              padding: EdgeInsets.zero,
+              decoration: BoxDecoration(
+                color: () {
+                  if (states.isPressing) {
+                    return appThemeData.colors.pressedTileColor;
+                  }
+                  if (states.isHovering) {
+                    return appThemeData.colors.hoveredTileColor;
+                  }
+                  return selected
+                      ? appThemeData.colors.selectedTileColor
+                      : theme.scaffoldBackgroundColor;
+                }(),
+                borderRadius: appThemeData.borderRadius.small,
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12.0,
+                ),
+                title: titleWidget,
+                leading: AnimatedSwitcher(
+                  duration: theme.fastAnimationDuration,
+                  child: dragEnabled
+                      ? ReorderableDragStartListener(
+                          index: index,
+                          enabled: dragEnabled,
+                          child: const Icon(material.Icons.drag_handle_rounded),
+                        )
+                      : Icon(
+                          material.Icons.drag_handle_rounded,
+                          color: theme.disabledColor,
+                        ),
+                ),
+              ),
             ),
-            title: titleWidget,
-            leading: AnimatedSwitcher(
-              duration: theme.fastAnimationDuration,
-              child: dragEnabled
-                  ? ReorderableDragStartListener(
-                      index: index,
-                      enabled: dragEnabled,
-                      child: const Icon(material.Icons.drag_handle_rounded),
-                    )
-                  : Icon(
-                      material.Icons.drag_handle_rounded,
-                      color: theme.disabledColor,
-                    ),
+            Positioned(
+              top: 0,
+              left: 2,
+              bottom: 0,
+              child: NavigatorIndicator(
+                selected: selected,
+              ),
             ),
-          ),
+          ],
         );
       },
+    );
+  }
+}
+
+class NavigatorIndicator extends StatelessWidget {
+  const NavigatorIndicator({
+    this.verticalPadding = 12.0,
+    this.horizontalPadding = 10.0,
+    this.isHorizontal = false,
+    this.selected = false,
+    final Key? key,
+  }) : super(key: key);
+  final bool isHorizontal;
+  final double verticalPadding;
+  final double horizontalPadding;
+  final bool selected;
+  @override
+  Widget build(final BuildContext context) {
+    final theme = FluentTheme.of(context);
+    final decoration = BoxDecoration(
+      color: selected ? theme.accentColor : theme.scaffoldBackgroundColor,
+      borderRadius: BorderRadius.circular(100),
+    );
+    return Align(
+      alignment: isHorizontal
+          ? AlignmentDirectional.centerStart
+          : Alignment.bottomCenter,
+      child: AnimatedContainer(
+        duration: theme.mediumAnimationDuration,
+        width: 4,
+        decoration: decoration,
+        margin: EdgeInsets.symmetric(
+          vertical: verticalPadding,
+        ),
+      ),
     );
   }
 }

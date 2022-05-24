@@ -29,7 +29,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.png" />
 
-    <title>sheet_manager</title>
+    <title>Sheet Manager</title>
     <link rel="manifest" href="manifest.json" />
 
     <script>
@@ -88,17 +88,6 @@
       <img src="icons/Icon-192.png" alt="Loading indicator..." />
     </div>
     <script>
-      window.runExcel = () => {
-        return Excel.run((ctx) => new Promise((resolve) => resolve(ctx)));
-      };
-
-      window.getOfficeInfo = () => {
-        /// get Office info if available
-        return Office.onReady(
-          (info) => new Promise((resolve) => resolve(info))
-        );
-      };
-
       window.addEventListener("load", function (ev) {
         var loading = document.querySelector("#loading");
         // Download main.dart.js
@@ -130,6 +119,26 @@
             scriptTag.id = "office";
             scriptTag.addEventListener("load", () => {
               console.log("office loaded");
+            });
+            document.getElementsByTagName("head")[0].appendChild(scriptTag);
+          }) /** Initialize office **/
+          .then(function () {
+            console.log("intializing office");
+            const officeEl = document.getElementById("office");
+            if (officeEl != null) return;
+
+            const scriptTag = document.createElement("script");
+            scriptTag.src =
+              "https://appsforoffice.microsoft.com/lib/1/hosted/office.js";
+            scriptTag.id = "office";
+            scriptTag.addEventListener("load", () => {
+              console.log("office loaded");
+              class OfficeHelpers {
+                runExcel = Excel.run;
+                officeOnReady = Office.onReady;
+              }
+              window["getOfficeHelpers"] = () => new OfficeHelpers();
+              console.log("helpers injected");
             });
             document.getElementsByTagName("head")[0].appendChild(scriptTag);
           });

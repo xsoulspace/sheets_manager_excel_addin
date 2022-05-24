@@ -7,7 +7,7 @@ class SettingsScreen extends HookWidget {
   Widget build(final BuildContext context) {
     final settingsNotifier = context.watch<SettingsNotifier>();
     final state = useSettingsScreenState();
-    final appThemeData = context.read<AppThemeData>();
+    final appThemeData = AppTheme.of(context);
     return ScaffoldPage.scrollable(
       header: PageHeader(
         title: Text(

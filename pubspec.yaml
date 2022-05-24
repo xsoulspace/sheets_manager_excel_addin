@@ -33,6 +33,10 @@ dependencies:
     git:
       url: git@github.com:Arenukvern/fluent_ui.git
       ref: side-pane
+  officejs:
+    git:
+      url: git@github.com:xsoulspace/officejs_dart.git
+      ref: 0.1.0
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.4

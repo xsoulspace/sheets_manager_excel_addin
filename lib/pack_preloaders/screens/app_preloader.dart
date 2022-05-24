@@ -14,24 +14,21 @@ class AppStateProvider extends StatelessWidget {
         /// Keep _settings is global is important as it will not lose all
         /// changes during global rebuild
         ChangeNotifierProvider(create: (final context) => _settings),
-        Provider(
-          create: (final context) => AppThemeData.regular(
-            excelAvailable: false,
-          ),
-        ),
+
         Provider<ExcelApiI>(
           create: (final context) {
-            final appDataTheme = context.read<AppThemeData>();
-            if (appDataTheme.useMockData) return ExcelApiMockImpl();
+            final settingsNotifier = context.read<SettingsNotifier>();
+            if (settingsNotifier.useMockData) return ExcelApiMockImpl();
 
             return ExcelApiWebImpl();
           },
         ),
         Provider<ExcelSubscriptionsI>(
           create: (final context) {
-            final appDataTheme = context.read<AppThemeData>();
-            if (appDataTheme.useMockData) return ExcelSubscriptionMockImpl();
-
+            final settingsNotifier = context.read<SettingsNotifier>();
+            if (settingsNotifier.useMockData) {
+              return ExcelSubscriptionMockImpl();
+            }
             return ExcelSubscriptionWebImpl();
           },
         ),

@@ -1,14 +1,17 @@
 part of pack_settings;
 
 class SettingsNotifier extends ChangeNotifier implements ContextfulLoadable {
-  SettingsNotifier({required final this.settingsService});
+  SettingsNotifier({
+    required final this.settingsService,
+    required final this.excelAvailable,
+  });
 
   // Make SettingsService a private variable so it is not used directly.
   final PersistentSettingsService settingsService;
 
   // Make ThemeMode a private variable so it is not updated directly without
   // also persisting the changes with the SettingsService.
-  ThemeMode _themeMode = ThemeMode.dark;
+  ThemeMode _themeMode = ThemeMode.system;
 
   // Allow Widgets to read the user's preferred ThemeMode.
   ThemeMode get themeMode => _themeMode;
@@ -22,7 +25,6 @@ class SettingsNotifier extends ChangeNotifier implements ContextfulLoadable {
 
     // Otherwise, store the new theme mode in memory
     _themeMode = newThemeMode;
-
     // Important! Inform listeners a change has occurred.
     notify();
 
@@ -44,6 +46,9 @@ class SettingsNotifier extends ChangeNotifier implements ContextfulLoadable {
 
     await settingsService.setLocale(locale);
   }
+
+  final bool excelAvailable;
+  bool get useMockData => !excelAvailable;
 
   /// Load the user's settings from the SettingsService. It may load from a
   /// local database or the internet. The controller only knows it can load the

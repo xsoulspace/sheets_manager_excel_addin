@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:sheet_manager/pack_core/theme/data/colors.dart';
 import 'package:sheet_manager/pack_core/theme/data/radius.dart';
 import 'package:sheet_manager/pack_core/theme/data/spacing.dart';
@@ -10,15 +11,17 @@ class AppThemeData extends Equatable {
     required this.appEdgeInsets,
     required this.horizontalySpacedSizedBox,
     required this.spacedSizedBox,
-    required this.excelAvailable,
+    required this.brightness,
   });
 
   factory AppThemeData.regular({
-    required final bool excelAvailable,
+    required final Brightness brightness,
   }) =>
       AppThemeData(
-        colors: AppColorsData.light(),
-        excelAvailable: excelAvailable,
+        brightness: brightness,
+        colors: brightness == Brightness.light
+            ? AppColorsData.light()
+            : AppColorsData.dark(),
         borderRadius: AppBorderRadiusData(),
         appEdgeInsets: AppEdgeInsets(),
         horizontalySpacedSizedBox: HorizontalySpacedSizedBoxData(),
@@ -30,8 +33,7 @@ class AppThemeData extends Equatable {
   final SpacedSizedBoxData spacedSizedBox;
   final HorizontalySpacedSizedBoxData horizontalySpacedSizedBox;
   final AppEdgeInsets appEdgeInsets;
-  final bool excelAvailable;
-  bool get useMockData => !excelAvailable;
+  final Brightness brightness;
 
   @override
   List<Object?> get props => [

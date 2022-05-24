@@ -1,7 +1,7 @@
 import 'package:flutter/rendering.dart';
 
 enum AppRadiusData {
-  small(Radius.circular(10.0)),
+  small(Radius.circular(8.0)),
   regular(Radius.circular(12.0)),
   big(Radius.circular(16.0));
 

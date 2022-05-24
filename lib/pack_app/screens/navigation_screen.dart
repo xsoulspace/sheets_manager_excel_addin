@@ -6,7 +6,7 @@ class NavigationScreen extends HookWidget {
   @override
   Widget build(final BuildContext context) {
     final state = useNavigationScreenState();
-    final appThemeData = context.read<AppThemeData>();
+    final appThemeData = AppTheme.of(context);
     final themeData = FluentTheme.of(context);
     return ValueListenableBuilder<NavigationScreens>(
       valueListenable: state.currentScreen,

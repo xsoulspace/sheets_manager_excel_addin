@@ -5,6 +5,7 @@ class GlobalStateInitializer implements StateInitializer {
   Future<void> onLoad(final BuildContext context) async {
     final SettingsNotifier settings = context.read();
     final SheetsNotifier sheetsNotifier = context.read();
+
     await settings.onLoad(context);
     await sheetsNotifier.onLoad(context);
   }

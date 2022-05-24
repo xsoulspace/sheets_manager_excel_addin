@@ -436,6 +436,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  officejs:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "0.1.0"
+      resolved-ref: a7b34a72af65fc1b4153b743feab1352de0ea95a
+      url: "git@github.com:xsoulspace/officejs_dart.git"
+    source: git
+    version: "0.1.0"
   package_config:
     dependency: transitive
     description:
