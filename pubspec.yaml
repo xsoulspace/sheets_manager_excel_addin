@@ -27,17 +27,13 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  collection: ^1.16.0
   cupertino_icons: ^1.0.2
   equatable: ^2.0.3
   fluent_ui:
     git:
       url: git@github.com:Arenukvern/fluent_ui.git
       ref: side-pane
-  officejs:
-    path: ../officejs_dart
-    # git:
-    # url: git@github.com:xsoulspace/officejs_dart.git
-    # ref: 0.1.0
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.4
@@ -45,6 +41,8 @@ dependencies:
     sdk: flutter
   freezed_annotation: ^2.0.3
   life_hooks: ^0.0.7
+  officejs:
+    path: ../officejs_dart
   provider: ^6.0.3
   rxdart: ^0.27.3
   shared_preferences: ^2.0.15

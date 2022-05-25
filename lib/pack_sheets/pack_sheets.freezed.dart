@@ -161,26 +161,31 @@ abstract class _Diff<T, TOther> extends Diff<T, TOther> {
 
 /// @nodoc
 mixin _$SheetModel<TWorksheet> {
+  int get position => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String name, String id) mockSheetModel,
-    required TResult Function(String name, String id, TWorksheet worksheet)
+    required TResult Function(int position, String name, String id)
+        mockSheetModel,
+    required TResult Function(
+            int position, String name, String id, TWorksheet worksheet)
         excelSheetModel,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String name, String id)? mockSheetModel,
-    TResult Function(String name, String id, TWorksheet worksheet)?
+    TResult Function(int position, String name, String id)? mockSheetModel,
+    TResult Function(
+            int position, String name, String id, TWorksheet worksheet)?
         excelSheetModel,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name, String id)? mockSheetModel,
-    TResult Function(String name, String id, TWorksheet worksheet)?
+    TResult Function(int position, String name, String id)? mockSheetModel,
+    TResult Function(
+            int position, String name, String id, TWorksheet worksheet)?
         excelSheetModel,
     required TResult orElse(),
   }) =>
@@ -216,7 +221,7 @@ abstract class $SheetModelCopyWith<TWorksheet, $Res> {
   factory $SheetModelCopyWith(SheetModel<TWorksheet> value,
           $Res Function(SheetModel<TWorksheet>) then) =
       _$SheetModelCopyWithImpl<TWorksheet, $Res>;
-  $Res call({String name, String id});
+  $Res call({int position, String name, String id});
 }
 
 /// @nodoc
@@ -230,10 +235,15 @@ class _$SheetModelCopyWithImpl<TWorksheet, $Res>
 
   @override
   $Res call({
+    Object? position = freezed,
     Object? name = freezed,
     Object? id = freezed,
   }) {
     return _then(_value.copyWith(
+      position: position == freezed
+          ? _value.position
+          : position // ignore: cast_nullable_to_non_nullable
+              as int,
       name: name == freezed
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -253,7 +263,7 @@ abstract class _$$MockSheetModelCopyWith<TWorksheet, $Res>
           $Res Function(_$MockSheetModel<TWorksheet>) then) =
       __$$MockSheetModelCopyWithImpl<TWorksheet, $Res>;
   @override
-  $Res call({String name, String id});
+  $Res call({int position, String name, String id});
 }
 
 /// @nodoc
@@ -270,10 +280,15 @@ class __$$MockSheetModelCopyWithImpl<TWorksheet, $Res>
 
   @override
   $Res call({
+    Object? position = freezed,
     Object? name = freezed,
     Object? id = freezed,
   }) {
     return _then(_$MockSheetModel<TWorksheet>(
+      position: position == freezed
+          ? _value.position
+          : position // ignore: cast_nullable_to_non_nullable
+              as int,
       name: name == freezed
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -291,8 +306,11 @@ class __$$MockSheetModelCopyWithImpl<TWorksheet, $Res>
 class _$MockSheetModel<TWorksheet>
     with DiagnosticableTreeMixin
     implements MockSheetModel<TWorksheet> {
-  const _$MockSheetModel({required this.name, required this.id});
+  const _$MockSheetModel(
+      {required this.position, required this.name, required this.id});
 
+  @override
+  final int position;
   @override
   final String name;
   @override
@@ -300,7 +318,7 @@ class _$MockSheetModel<TWorksheet>
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SheetModel<$TWorksheet>.mockSheetModel(name: $name, id: $id)';
+    return 'SheetModel<$TWorksheet>.mockSheetModel(position: $position, name: $name, id: $id)';
   }
 
   @override
@@ -309,6 +327,7 @@ class _$MockSheetModel<TWorksheet>
     properties
       ..add(
           DiagnosticsProperty('type', 'SheetModel<$TWorksheet>.mockSheetModel'))
+      ..add(DiagnosticsProperty('position', position))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('id', id));
   }
@@ -318,6 +337,7 @@ class _$MockSheetModel<TWorksheet>
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MockSheetModel<TWorksheet> &&
+            const DeepCollectionEquality().equals(other.position, position) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.id, id));
   }
@@ -325,6 +345,7 @@ class _$MockSheetModel<TWorksheet>
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(position),
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(id));
 
@@ -337,33 +358,37 @@ class _$MockSheetModel<TWorksheet>
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String name, String id) mockSheetModel,
-    required TResult Function(String name, String id, TWorksheet worksheet)
+    required TResult Function(int position, String name, String id)
+        mockSheetModel,
+    required TResult Function(
+            int position, String name, String id, TWorksheet worksheet)
         excelSheetModel,
   }) {
-    return mockSheetModel(name, id);
+    return mockSheetModel(position, name, id);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String name, String id)? mockSheetModel,
-    TResult Function(String name, String id, TWorksheet worksheet)?
+    TResult Function(int position, String name, String id)? mockSheetModel,
+    TResult Function(
+            int position, String name, String id, TWorksheet worksheet)?
         excelSheetModel,
   }) {
-    return mockSheetModel?.call(name, id);
+    return mockSheetModel?.call(position, name, id);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name, String id)? mockSheetModel,
-    TResult Function(String name, String id, TWorksheet worksheet)?
+    TResult Function(int position, String name, String id)? mockSheetModel,
+    TResult Function(
+            int position, String name, String id, TWorksheet worksheet)?
         excelSheetModel,
     required TResult orElse(),
   }) {
     if (mockSheetModel != null) {
-      return mockSheetModel(name, id);
+      return mockSheetModel(position, name, id);
     }
     return orElse();
   }
@@ -403,9 +428,12 @@ class _$MockSheetModel<TWorksheet>
 
 abstract class MockSheetModel<TWorksheet> implements SheetModel<TWorksheet> {
   const factory MockSheetModel(
-      {required final String name,
+      {required final int position,
+      required final String name,
       required final String id}) = _$MockSheetModel<TWorksheet>;
 
+  @override
+  int get position => throw _privateConstructorUsedError;
   @override
   String get name => throw _privateConstructorUsedError;
   @override
@@ -423,7 +451,7 @@ abstract class _$$ExcelSheetModelCopyWith<TWorksheet, $Res>
           $Res Function(_$ExcelSheetModel<TWorksheet>) then) =
       __$$ExcelSheetModelCopyWithImpl<TWorksheet, $Res>;
   @override
-  $Res call({String name, String id, TWorksheet worksheet});
+  $Res call({int position, String name, String id, TWorksheet worksheet});
 }
 
 /// @nodoc
@@ -440,11 +468,16 @@ class __$$ExcelSheetModelCopyWithImpl<TWorksheet, $Res>
 
   @override
   $Res call({
+    Object? position = freezed,
     Object? name = freezed,
     Object? id = freezed,
     Object? worksheet = freezed,
   }) {
     return _then(_$ExcelSheetModel<TWorksheet>(
+      position: position == freezed
+          ? _value.position
+          : position // ignore: cast_nullable_to_non_nullable
+              as int,
       name: name == freezed
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -467,8 +500,13 @@ class _$ExcelSheetModel<TWorksheet>
     with DiagnosticableTreeMixin
     implements ExcelSheetModel<TWorksheet> {
   const _$ExcelSheetModel(
-      {required this.name, required this.id, required this.worksheet});
+      {required this.position,
+      required this.name,
+      required this.id,
+      required this.worksheet});
 
+  @override
+  final int position;
   @override
   final String name;
   @override
@@ -478,7 +516,7 @@ class _$ExcelSheetModel<TWorksheet>
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SheetModel<$TWorksheet>.excelSheetModel(name: $name, id: $id, worksheet: $worksheet)';
+    return 'SheetModel<$TWorksheet>.excelSheetModel(position: $position, name: $name, id: $id, worksheet: $worksheet)';
   }
 
   @override
@@ -487,6 +525,7 @@ class _$ExcelSheetModel<TWorksheet>
     properties
       ..add(DiagnosticsProperty(
           'type', 'SheetModel<$TWorksheet>.excelSheetModel'))
+      ..add(DiagnosticsProperty('position', position))
       ..add(DiagnosticsProperty('name', name))
       ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('worksheet', worksheet));
@@ -497,6 +536,7 @@ class _$ExcelSheetModel<TWorksheet>
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ExcelSheetModel<TWorksheet> &&
+            const DeepCollectionEquality().equals(other.position, position) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.worksheet, worksheet));
@@ -505,6 +545,7 @@ class _$ExcelSheetModel<TWorksheet>
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(position),
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(worksheet));
@@ -518,33 +559,37 @@ class _$ExcelSheetModel<TWorksheet>
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String name, String id) mockSheetModel,
-    required TResult Function(String name, String id, TWorksheet worksheet)
+    required TResult Function(int position, String name, String id)
+        mockSheetModel,
+    required TResult Function(
+            int position, String name, String id, TWorksheet worksheet)
         excelSheetModel,
   }) {
-    return excelSheetModel(name, id, worksheet);
+    return excelSheetModel(position, name, id, worksheet);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(String name, String id)? mockSheetModel,
-    TResult Function(String name, String id, TWorksheet worksheet)?
+    TResult Function(int position, String name, String id)? mockSheetModel,
+    TResult Function(
+            int position, String name, String id, TWorksheet worksheet)?
         excelSheetModel,
   }) {
-    return excelSheetModel?.call(name, id, worksheet);
+    return excelSheetModel?.call(position, name, id, worksheet);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String name, String id)? mockSheetModel,
-    TResult Function(String name, String id, TWorksheet worksheet)?
+    TResult Function(int position, String name, String id)? mockSheetModel,
+    TResult Function(
+            int position, String name, String id, TWorksheet worksheet)?
         excelSheetModel,
     required TResult orElse(),
   }) {
     if (excelSheetModel != null) {
-      return excelSheetModel(name, id, worksheet);
+      return excelSheetModel(position, name, id, worksheet);
     }
     return orElse();
   }
@@ -584,10 +629,13 @@ class _$ExcelSheetModel<TWorksheet>
 
 abstract class ExcelSheetModel<TWorksheet> implements SheetModel<TWorksheet> {
   const factory ExcelSheetModel(
-      {required final String name,
+      {required final int position,
+      required final String name,
       required final String id,
       required final TWorksheet worksheet}) = _$ExcelSheetModel<TWorksheet>;
 
+  @override
+  int get position => throw _privateConstructorUsedError;
   @override
   String get name => throw _privateConstructorUsedError;
   @override

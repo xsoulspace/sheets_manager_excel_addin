@@ -2,19 +2,20 @@ import 'package:sheet_manager/pack_analytics/analytics/notifiers/analytics_notif
 import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';
 import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
 
-class ExcelApiMock extends ExcelApi {
-  ExcelApiMock({required final super.analyticsNotifier});
+class ExcelApiMockImpl extends ExcelApiImpl {
+  ExcelApiMockImpl({required final super.analyticsNotifier});
 }
 
-class ExcelApi implements ExcelApiI {
-  ExcelApi({
+class ExcelApiImpl extends ExcelApiI {
+  ExcelApiImpl({
     required this.analyticsNotifier,
   });
+
   final AnalyticsNotifier analyticsNotifier;
   final _sheets = <SheetModel>[
-    const SheetModel.mockSheetModel(name: 'Products', id: '1'),
-    const SheetModel.mockSheetModel(name: 'Stock', id: '2'),
-    const SheetModel.mockSheetModel(name: 'Total', id: '3'),
+    const SheetModel.mockSheetModel(name: 'Products', id: '1', position: 0),
+    const SheetModel.mockSheetModel(name: 'Stock', id: '2', position: 0),
+    const SheetModel.mockSheetModel(name: 'Total', id: '3', position: 0),
   ];
   @override
   Future<List<SheetModel>> getSheets() async {
@@ -59,5 +60,10 @@ class ExcelApi implements ExcelApiI {
   @override
   Future<void> onLoad() async {
     return;
+  }
+
+  @override
+  Future<SheetModel> getSheetById(final String id) async {
+    return _sheets.firstWhere((final sheet) => sheet.id == id);
   }
 }

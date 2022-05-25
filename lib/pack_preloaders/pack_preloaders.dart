@@ -11,6 +11,7 @@ import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';
 import 'package:sheet_manager/pack_sheets/api/excel_helper.dart';
 import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
 import 'package:sheet_manager/pack_sheets/services/excel_subscriptions_i.dart';
+import 'package:sheet_manager/pack_sheets/services/sheets_subscriber.dart';
 
 part 'screens/app_loader.dart';
 part 'screens/app_loading_screen.dart';

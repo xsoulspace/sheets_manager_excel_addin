@@ -138,14 +138,11 @@ class SheetTile extends HookWidget {
                 leading: AnimatedSwitcher(
                   duration: theme.fastAnimationDuration,
                   child: dragEnabled
-                      ? MouseRegion(
-                          cursor: SystemMouseCursors.grab,
-                          child: ReorderableDragStartListener(
-                            index: index,
-                            enabled: dragEnabled,
-                            child: const Icon(
-                              material.Icons.drag_indicator_rounded,
-                            ),
+                      ? ReorderableDragStartListener(
+                          index: index,
+                          enabled: dragEnabled,
+                          child: const Icon(
+                            material.Icons.drag_indicator_rounded,
                           ),
                         )
                       : Icon(

@@ -6,7 +6,8 @@ class GlobalStateInitializer extends StateInitializer {
     final completer = Completer();
     final SheetsNotifier sheetsNotifier = context.read();
     final SettingsNotifier settings = context.read();
-    final ExcelApiI excelApiI = context.read();
+    final ExcelApiI excelApi = context.read();
+    final SheetsSubscriber sheetsSubscriber = context.read();
     WidgetsBinding.instance.addPostFrameCallback((final timeStamp) async {
       try {
         await Future.delayed(const Duration(milliseconds: 800));
@@ -17,8 +18,9 @@ class GlobalStateInitializer extends StateInitializer {
           settings.excelAvailable.value =
               await ExcelHelper.checkIsExcelAvailable();
         }
-        await excelApiI.onLoad();
-        await sheetsNotifier.onLoad(context);
+        await excelApi.onLoad();
+        await sheetsNotifier.onLoad();
+        await sheetsSubscriber.onLoad();
       } finally {
         completer.complete();
       }

@@ -5,16 +5,17 @@ import 'package:sheet_manager/pack_sheets/api/excel_api_mock.dart'
     as excel_api_mock;
 import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
 
-class ExcelApiMock extends excel_api_mock.ExcelApi {
-  ExcelApiMock({required final super.analyticsNotifier});
+class ExcelApiMockImpl extends excel_api_mock.ExcelApiImpl {
+  ExcelApiMockImpl({required final super.analyticsNotifier});
 }
 
-class ExcelApi implements ExcelApiI {
-  ExcelApi({
+class ExcelApiImpl implements ExcelApiI {
+  ExcelApiImpl({
     required this.analyticsNotifier,
   });
   final AnalyticsNotifier analyticsNotifier;
   late RequestContext context;
+  @override
   Future<void> sync() async => context.sync();
 
   @override
@@ -30,7 +31,7 @@ class ExcelApi implements ExcelApiI {
     await sync();
     final sheets = context.workbook.worksheets.items;
     for (final sheet in sheets) {
-      sheet.load(['name', 'id']);
+      sheet.loadProperties();
     }
     await sync();
     analyticsNotifier
@@ -63,9 +64,8 @@ class ExcelApi implements ExcelApiI {
 
   @override
   Future<SheetModel> getActiveSheet() async {
-    final sheetModel = context.workbook.worksheets.getActiveWorksheet();
-    await sync();
-    sheetModel.load(['name', 'id']);
+    final sheetModel = context.workbook.worksheets.getActiveWorksheet()
+      ..loadProperties();
     await sync();
     return sheetModel.toSheetModel();
   }
@@ -75,6 +75,13 @@ class ExcelApi implements ExcelApiI {
     final excelSheet = checkSheetType(sheet);
     excelSheet.worksheet.activate();
     await sync();
+  }
+
+  @override
+  Future<SheetModel> getSheetById(final String id) async {
+    final sheet = context.workbook.worksheets.getItem(id)..loadProperties();
+    await sync();
+    return sheet.toSheetModel();
   }
 }
 
@@ -93,9 +100,14 @@ ExcelSheetModel<Worksheet> checkSheetType(
 }
 
 extension WorksheetExt on Worksheet {
+  void loadProperties() {
+    load(SheetModel.excelProps);
+  }
+
   SheetModel<Worksheet> toSheetModel() => SheetModel<Worksheet>.excelSheetModel(
         name: name,
         id: id,
         worksheet: this,
+        position: position,
       );
 }

@@ -2,6 +2,7 @@ library pack_sheets;
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
@@ -15,7 +16,6 @@ import 'package:sheet_manager/pack_analytics/debug/widgets/debug_pane.dart';
 import 'package:sheet_manager/pack_core/pack_core.dart';
 import 'package:sheet_manager/pack_settings/pack_settings.dart';
 import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';
-import 'package:sheet_manager/pack_sheets/services/excel_subscriptions_i.dart';
 
 part 'models/diff.dart';
 part 'models/sheet_model.dart';

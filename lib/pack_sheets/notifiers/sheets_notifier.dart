@@ -1,13 +1,11 @@
 part of pack_sheets;
 
-class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
+class SheetsNotifier extends ChangeNotifier implements ContextlessLoadable {
   SheetsNotifier({
     required this.excelApi,
-    required this.excelSubscritions,
     required this.settingsNotifier,
     required this.analyticsNotifier,
   });
-  final ExcelSubscriptionsI excelSubscritions;
   final SettingsNotifier settingsNotifier;
   final ExcelApiI excelApi;
   final AnalyticsNotifier analyticsNotifier;
@@ -21,6 +19,20 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
       ..clear()
       ..addAll(newSheets);
     notifyListeners();
+  }
+
+  void addSheet(final SheetModel sheet) {
+    _sheets.insert(sheet.position, sheet);
+    notifyListeners();
+  }
+
+  SheetModel? getSheetById(final String id) {
+    return _sheets.firstWhereOrNull((final sheet) => sheet.id == id);
+  }
+
+  void deleteSheetById(final String id) {
+    final index = _sheets.indexWhere((final sheet) => sheet.id == id);
+    _sheets.removeAt(index);
   }
 
   late final filter = SheetsFilter(
@@ -37,7 +49,7 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
     excelApi: excelApi,
   );
   @override
-  Future<void> onLoad(final BuildContext context) async {
+  Future<void> onLoad() async {
     await sheetNameController.onLoad();
     await selectedSheetController.onLoad();
     await filter.onLoad();
