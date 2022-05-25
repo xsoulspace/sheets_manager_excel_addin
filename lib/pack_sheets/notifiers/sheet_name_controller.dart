@@ -4,11 +4,12 @@ typedef _SheetNameDiff = Diff<SheetModel, String>;
 
 class SheetNameController implements ContextlessLoadable, Disposable {
   SheetNameController({
-    required this.excelApi,
     required this.updateSheets,
     required this.getSheets,
+    required this.excelApi,
   });
   final ExcelApiI excelApi;
+
   final ValueChanged<List<SheetModel>> updateSheets;
   List<SheetModel> Function() getSheets;
   final updatesController = StreamController<_SheetNameDiff>();

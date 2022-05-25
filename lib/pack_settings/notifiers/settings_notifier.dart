@@ -3,7 +3,6 @@ part of pack_settings;
 class SettingsNotifier extends ChangeNotifier implements ContextfulLoadable {
   SettingsNotifier({
     required final this.settingsService,
-    required final this.excelAvailable,
   });
 
   // Make SettingsService a private variable so it is not used directly.
@@ -47,8 +46,9 @@ class SettingsNotifier extends ChangeNotifier implements ContextfulLoadable {
     await settingsService.setLocale(locale);
   }
 
-  final bool excelAvailable;
-  bool get useMockData => !excelAvailable;
+  final excelAvailable = ValueNotifier<bool>(false);
+  final devinfo = ValueNotifier<String>('');
+  final useMockData = ValueNotifier<bool>(true);
 
   /// Load the user's settings from the SettingsService. It may load from a
   /// local database or the internet. The controller only knows it can load the
@@ -59,6 +59,14 @@ class SettingsNotifier extends ChangeNotifier implements ContextfulLoadable {
     _locale = await settingsService.locale();
     // Important! Inform listeners a change has occurred.
     notify();
+  }
+
+  @override
+  void dispose() {
+    excelAvailable.dispose();
+    devinfo.dispose();
+    useMockData.dispose();
+    super.dispose();
   }
 
   void notify() => notifyListeners();

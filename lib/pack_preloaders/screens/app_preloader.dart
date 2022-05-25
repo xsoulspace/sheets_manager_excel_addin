@@ -3,53 +3,59 @@ part of pack_preloaders;
 class AppStateProvider extends StatelessWidget {
   const AppStateProvider({
     required final this.builder,
+    // required final this.settings,
     final Key? key,
   }) : super(key: key);
   final WidgetBuilder builder;
-  SettingsNotifier get _settings => GlobalStateNotifiers.settings;
+  // final SettingsNotifier settings;
   @override
   Widget build(final BuildContext context) {
-    final child = MultiProvider(
-      providers: [
-        /// Keep _settings is global is important as it will not lose all
-        /// changes during global rebuild
-        ChangeNotifierProvider(create: (final context) => _settings),
+    final settings = context.read<SettingsNotifier>();
 
-        Provider<ExcelApiI>(
-          create: (final context) {
-            final settingsNotifier = context.read<SettingsNotifier>();
-            if (settingsNotifier.useMockData) return ExcelApiMockImpl();
-
-            return ExcelApiWebImpl();
-          },
-        ),
-        Provider<ExcelSubscriptionsI>(
-          create: (final context) {
-            final settingsNotifier = context.read<SettingsNotifier>();
-            if (settingsNotifier.useMockData) {
-              return ExcelSubscriptionMockImpl();
-            }
-            return ExcelSubscriptionWebImpl();
-          },
-        ),
-        ChangeNotifierProvider(
-          create: (final context) => SheetsNotifier(
-            excelApi: context.read(),
-            excelSubscritions: context.read(),
+    return ValueListenableBuilder<bool>(
+      valueListenable: settings.useMockData,
+      builder: (final context, final useMockData, final child) {
+        return MultiProvider(
+          providers: [
+            if (useMockData)
+              Provider<ExcelApiI>(
+                key: const ValueKey('ExcelApiMock'),
+                create: (final context) => ExcelApiMock(),
+              )
+            else
+              Provider<ExcelApiI>(
+                key: const ValueKey('ExcelApi'),
+                create: (final context) => ExcelApi(),
+              ),
+            if (useMockData)
+              Provider<ExcelSubscriptionsI>(
+                key: const ValueKey('ExcelSubscriptionMock'),
+                create: (final context) => ExcelSubscriptionMock(),
+              )
+            else
+              Provider<ExcelSubscriptionsI>(
+                key: const ValueKey('ExcelSubscription'),
+                create: (final context) => ExcelSubscriptions(),
+              ),
+            ChangeNotifierProvider(
+              create: (final context) => SheetsNotifier(
+                settingsNotifier: settings,
+                excelApi: context.read(),
+                excelSubscritions: context.read(),
+              ),
+            )
+          ],
+          child: Builder(
+            builder: (final context) {
+              return StateLoader(
+                initializer: GlobalStateInitializer(),
+                loader: const AppLoadingScreen(),
+                child: builder(context),
+              );
+            },
           ),
-        )
-      ],
-      child: Builder(
-        builder: (final context) {
-          return StateLoader(
-            initializer: GlobalStateInitializer(),
-            loader: const AppLoadingScreen(),
-            child: builder(context),
-          );
-        },
-      ),
+        );
+      },
     );
-
-    return child;
   }
 }

@@ -6,7 +6,6 @@ class AppScaffoldScreen extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final settings = context.read<SettingsNotifier>();
-
     return AnimatedBuilder(
       animation: settings,
       builder: (final context, final child) {

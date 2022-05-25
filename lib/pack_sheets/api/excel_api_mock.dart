@@ -1,7 +1,9 @@
 import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';
 import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
 
-class ExcelApiMockImpl implements ExcelApiI {
+class ExcelApiMock extends ExcelApi {}
+
+class ExcelApi implements ExcelApiI {
   final _sheets = <SheetModel>[
     const SheetModel(name: 'Products', id: '1'),
     const SheetModel(name: 'Stock', id: '2'),

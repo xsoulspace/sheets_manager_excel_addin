@@ -1,11 +1,14 @@
 import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';
+import 'package:sheet_manager/pack_sheets/api/excel_api_mock.dart'
+    as excel_api_mock;
 import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
 
-class ExcelApiWebImpl implements ExcelApiI {
+class ExcelApiMock extends excel_api_mock.ExcelApi {}
+
+class ExcelApi implements ExcelApiI {
   @override
   Future<List<SheetModel>> getSheets() async {
-    // TODO: implement getSheets
-    throw UnimplementedError();
+    return [];
   }
 
   @override
@@ -24,8 +27,7 @@ class ExcelApiWebImpl implements ExcelApiI {
 
   @override
   Future<SheetModel> getActiveSheet() async {
-    // TODO: implement getActiveSheet
-    throw UnimplementedError();
+    return const SheetModel(name: '', id: '');
   }
 
   @override

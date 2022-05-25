@@ -11,7 +11,7 @@ import 'package:life_hooks/life_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sheet_manager/pack_core/pack_core.dart';
-import 'package:sheet_manager/pack_core/theme/data/data.dart';
+import 'package:sheet_manager/pack_settings/pack_settings.dart';
 import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';
 import 'package:sheet_manager/pack_sheets/services/excel_subscriptions_i.dart';
 

@@ -2,10 +2,11 @@ part of pack_sheets;
 
 class SelectedSheetController implements ContextlessLoadable, Disposable {
   SelectedSheetController({
-    required this.excelApi,
     required this.notifyListeners,
+    required this.excelApi,
   });
   final ExcelApiI excelApi;
+
   final VoidCallback notifyListeners;
   SheetModel selectedSheetModel = const SheetModel(name: '', id: '');
 

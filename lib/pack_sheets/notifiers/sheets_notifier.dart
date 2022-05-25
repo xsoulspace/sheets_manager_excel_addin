@@ -4,9 +4,11 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
   SheetsNotifier({
     required this.excelApi,
     required this.excelSubscritions,
+    required this.settingsNotifier,
   });
-  final ExcelApiI excelApi;
   final ExcelSubscriptionsI excelSubscritions;
+  final SettingsNotifier settingsNotifier;
+  final ExcelApiI excelApi;
 
   final _sheets = <SheetModel>[];
   List<SheetModel> get sheets =>
@@ -24,13 +26,13 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
     sheets: _sheets,
   );
   late final sheetNameController = SheetNameController(
-    excelApi: excelApi,
     updateSheets: updateSheets,
     getSheets: getSheets,
+    excelApi: excelApi,
   );
   late final selectedSheetController = SelectedSheetController(
-    excelApi: excelApi,
     notifyListeners: notifyListeners,
+    excelApi: excelApi,
   );
   @override
   Future<void> onLoad(final BuildContext context) async {
