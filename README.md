@@ -5,6 +5,8 @@
 [![GitHub](https://img.shields.io/github/license/xsoulspace/sheets_manager_excel_addin)](LICENSE)
 [![Discord](https://img.shields.io/discord/696688204476055592)](https://discord.gg/y54DpJwmAn)
 
+This is a Web Addin for the MS Excel to manage sheets in workbook.
+
 ## Getting Started
 
 A few resources to get you started if this is your first Flutter project:
