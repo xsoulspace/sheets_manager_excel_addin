@@ -11,4 +11,5 @@ class GlobalStateNotifiers {
       _settingsNotifierInstance ??= SettingsNotifier(
         settingsService: PersistentSettingsService(),
       );
+  static AnalyticsNotifier getAnalytics() => AnalyticsNotifier();
 }

@@ -56,14 +56,25 @@ class SettingsNotifier extends ChangeNotifier implements ContextfulLoadable {
   @override
   Future<void> onLoad(final BuildContext context) async {
     _themeMode = await settingsService.themeMode();
+    excelAvailable.addListener(_onExcelAvailableChanged);
     _locale = await settingsService.locale();
     // Important! Inform listeners a change has occurred.
     notify();
   }
 
+  void _onExcelAvailableChanged() {
+    if (excelAvailable.value) {
+      useMockData.value = false;
+    } else {
+      useMockData.value = true;
+    }
+  }
+
   @override
   void dispose() {
-    excelAvailable.dispose();
+    excelAvailable
+      ..removeListener(_onExcelAvailableChanged)
+      ..dispose();
     devinfo.dispose();
     useMockData.dispose();
     super.dispose();

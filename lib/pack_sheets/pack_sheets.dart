@@ -10,6 +10,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:life_hooks/life_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sheet_manager/pack_analytics/debug/widgets/debug_pane.dart';
 import 'package:sheet_manager/pack_core/pack_core.dart';
 import 'package:sheet_manager/pack_settings/pack_settings.dart';
 import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';

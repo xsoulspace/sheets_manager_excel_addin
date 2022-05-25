@@ -1,6 +1,6 @@
 part of pack_preloaders;
 
-class GlobalStateInitializer implements StateInitializer {
+class GlobalStateInitializer extends StateInitializer {
   @override
   Future<void> onLoad(final BuildContext context) async {
     final SettingsNotifier settings = context.read();

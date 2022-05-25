@@ -1,6 +1,9 @@
 part of widgets;
 
-abstract class StateInitializer extends ContextfulLoadable {}
+abstract class StateInitializer extends ContextfulLoadable {
+  @override
+  Future<void> onLoad(final BuildContext context) async {}
+}
 
 class StateLoader extends HookWidget {
   const StateLoader({
@@ -32,12 +35,17 @@ class StateLoader extends HookWidget {
         return true;
       }(),
       builder: (final context, final snapshot) {
-        if (snapshot.connectionState != ConnectionState.done ||
-            snapshot.data == false) {
-          return loader;
-        }
-
-        return child;
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: Stack(
+            children: [
+              child,
+              // if (snapshot.connectionState != ConnectionState.done ||
+              //     snapshot.data == false)
+              //   Positioned.fill(child: loader),
+            ],
+          ),
+        );
       },
     );
   }

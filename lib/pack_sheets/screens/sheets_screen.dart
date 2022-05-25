@@ -6,24 +6,13 @@ class SheetsScreen extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final sheetsNotifier = context.watch<SheetsNotifier>();
-    final settings = context.watch<SettingsNotifier>();
     final dragEnabled = sheetsNotifier.filter.searchController.text.isEmpty;
 
     return ScaffoldPage(
       content: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (kDebugMode) ...[
-            Text(
-              'excelAvailable ${settings.excelAvailable.value} '
-              '\ndevinfo ${settings.devinfo.value}',
-            ),
-            material.Switch.adaptive(
-              value: settings.useMockData.value,
-              onChanged: (final newValue) {
-                settings.useMockData.value = newValue;
-              },
-            ),
-          ],
+          if (kDebugMode) const Expanded(child: DebugPane()),
           Expanded(
             child: ReorderableListView.builder(
               physics: const BouncingScrollPhysics(),

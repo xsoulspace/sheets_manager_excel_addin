@@ -6,12 +6,18 @@ import 'package:sheet_manager/pack_preloaders/pack_preloaders.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(
-    SheetManagerApp(
-      settings: GlobalStateNotifiers.getSettings(
-        excelAvailable: false,
-      ),
-    ),
+  final analytics = GlobalStateNotifiers.getAnalytics();
+  runZonedGuarded(
+    () {
+      runApp(
+        SheetManagerApp(
+          settings: GlobalStateNotifiers.getSettings(
+            excelAvailable: false,
+          ),
+          analytics: analytics,
+        ),
+      );
+    },
+    analytics.recordError,
   );
 }
