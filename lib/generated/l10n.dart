@@ -119,6 +119,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Thank you for using this addin! \n\nIf you have any ideas or features, please reach out in discord server. \n\nHave a nice day!\n`
+  String get thankYou {
+    return Intl.message(
+      'Thank you for using this addin! \n\nIf you have any ideas or features, please reach out in discord server. \n\nHave a nice day!\n',
+      name: 'thankYou',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy Policy`
+  String get privacyPolicy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'privacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

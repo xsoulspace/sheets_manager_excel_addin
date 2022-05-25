@@ -5,5 +5,7 @@
   "about": "Информация",
   "appearanceSystem": "Как в системе",
   "appearanceLight": "Светлый",
-  "appearanceDark": "Темный"
+  "appearanceDark": "Темный",
+  "thankYou": "Спасибо что используете этот addin! \n\nХорошего дня!\n",
+  "privacyPolicy": "Политика Конфиденциальности"
 }

@@ -11,13 +11,15 @@ class GlobalStateInitializer extends StateInitializer {
     final ExcelSubscriptionsI excelSubscriptions = context.read();
     WidgetsBinding.instance.addPostFrameCallback((final timeStamp) async {
       try {
-        await Future.delayed(const Duration(milliseconds: 800));
-        settings.excelAvailable.value =
-            await ExcelHelper.checkIsExcelAvailable();
-        if (!settings.excelAvailable.value) {
-          await Future.delayed(const Duration(seconds: 1));
+        Future<void> check() async {
           settings.excelAvailable.value =
               await ExcelHelper.checkIsExcelAvailable();
+        }
+
+        for (var i = 0; i < 4; i++) {
+          await Future.delayed(const Duration(milliseconds: 300));
+          await check();
+          if (settings.excelAvailable.value) break;
         }
         await excelApi.onLoad();
         await sheetsNotifier.onLoad();

@@ -13,6 +13,7 @@ import 'package:sheet_manager/pack_core/pack_core.dart';
 import 'package:sheet_manager/pack_preloaders/pack_preloaders.dart';
 import 'package:sheet_manager/pack_settings/pack_settings.dart';
 import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 part 'screens/app_scaffold_screen.dart';
 part 'screens/info_screen.dart';

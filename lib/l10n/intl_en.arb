@@ -5,5 +5,7 @@
   "about": "About",
   "appearanceSystem": "System",
   "appearanceLight": "Light",
-  "appearanceDark": "Dark"
+  "appearanceDark": "Dark",
+  "thankYou": "Thank you for using this addin! \n\nIf you have any ideas or features, please reach out in discord server. \n\nHave a nice day!\n",
+  "privacyPolicy": "Privacy Policy"
 }

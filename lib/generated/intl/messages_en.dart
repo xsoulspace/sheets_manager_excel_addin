@@ -28,6 +28,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "appearanceLight": MessageLookupByLibrary.simpleMessage("Light"),
         "appearanceSystem": MessageLookupByLibrary.simpleMessage("System"),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
-        "settings": MessageLookupByLibrary.simpleMessage("Settings")
+        "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "thankYou": MessageLookupByLibrary.simpleMessage(
+            "Thank you for using this addin! \n\nIf you have any ideas or features, please reach out in discord server. \n\nHave a nice day!\n")
       };
 }

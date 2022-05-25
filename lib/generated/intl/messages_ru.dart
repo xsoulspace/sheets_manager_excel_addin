@@ -29,6 +29,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "appearanceSystem":
             MessageLookupByLibrary.simpleMessage("Как в системе"),
         "language": MessageLookupByLibrary.simpleMessage("Язык"),
-        "settings": MessageLookupByLibrary.simpleMessage("Настройки")
+        "privacyPolicy":
+            MessageLookupByLibrary.simpleMessage("Политика Конфиденциальности"),
+        "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
+        "thankYou": MessageLookupByLibrary.simpleMessage(
+            "Спасибо что используете этот addin! \n\nХорошего дня!\n")
       };
 }

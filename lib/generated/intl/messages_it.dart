@@ -24,10 +24,14 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("Informazioni"),
         "appearance": MessageLookupByLibrary.simpleMessage("Apparenza"),
-        "appearanceDark": MessageLookupByLibrary.simpleMessage("Dark"),
-        "appearanceLight": MessageLookupByLibrary.simpleMessage("Light"),
-        "appearanceSystem": MessageLookupByLibrary.simpleMessage("System"),
+        "appearanceDark": MessageLookupByLibrary.simpleMessage("Buia"),
+        "appearanceLight": MessageLookupByLibrary.simpleMessage("Leggera"),
+        "appearanceSystem": MessageLookupByLibrary.simpleMessage("Sistema"),
         "language": MessageLookupByLibrary.simpleMessage("Lingua"),
-        "settings": MessageLookupByLibrary.simpleMessage("Impostazioni")
+        "privacyPolicy":
+            MessageLookupByLibrary.simpleMessage("Politica sulla riservatezza"),
+        "settings": MessageLookupByLibrary.simpleMessage("Impostazioni"),
+        "thankYou": MessageLookupByLibrary.simpleMessage(
+            "Grazie per aver utilizzato questo componente aggiuntivo! \n\nSe hai idee o funzionalità, contatta il server discord. \n\nBuona giornata!\n")
       };
 }
