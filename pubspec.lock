@@ -263,9 +263,11 @@ packages:
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
-      name: flutter_launcher_icons
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "fixMinSdkParseFlutter2.8"
+      resolved-ref: bef9412c0c529e19892e302f4f098d7a2f21e45d
+      url: "https://github.com/Davenchy/flutter_launcher_icons.git"
+    source: git
     version: "0.9.2"
   flutter_lints:
     dependency: "direct dev"

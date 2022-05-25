@@ -101,7 +101,7 @@
         <bt:String id="TaskpaneButton.Label" DefaultValue="Sheet Manager" />
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="GetStarted.Description" DefaultValue="Sheet Manager add-in is loaded succesfully. Go to the HOME tab and click the 'Sheet Manager' button to get started." />
+        <bt:String id="GetStarted.Description" DefaultValue="Sheet Manager is loaded succesfully. Go to the HOME tab and click the 'Sheet Manager' button to get started." />
         <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Click to Sheet Manager" />
       </bt:LongStrings>
     </Resources>
