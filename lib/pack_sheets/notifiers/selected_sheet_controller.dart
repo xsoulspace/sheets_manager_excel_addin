@@ -15,7 +15,7 @@ class SelectedSheetController implements ContextlessLoadable, Disposable {
   );
 
   bool checkIsSheetActive(final SheetModel sheet) {
-    return selectedSheetModel.name == sheet.name;
+    return selectedSheetModel.id == sheet.id;
   }
 
   Future<void> onSheetSelected(

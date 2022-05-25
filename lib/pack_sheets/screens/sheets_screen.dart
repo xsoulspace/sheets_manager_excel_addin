@@ -6,14 +6,19 @@ class SheetsScreen extends HookWidget {
   @override
   Widget build(final BuildContext context) {
     final sheetsNotifier = context.watch<SheetsNotifier>();
-    final dragEnabled = sheetsNotifier.filter.searchController.text.isEmpty;
+    final dragEnabled = sheetsNotifier.filter.searchText.isEmpty;
     final scrollController = useScrollController();
 
     return ScaffoldPage(
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (kDebugMode) const Expanded(child: DebugPane()),
+          const DebugPane(),
+          if (sheetsNotifier.sheets.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(14.0),
+              child: Text('No items found'),
+            ),
           Expanded(
             child: ReorderableListView.builder(
               scrollController: scrollController,

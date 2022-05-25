@@ -8,41 +8,58 @@ class NavigationScreen extends HookWidget {
     final state = useNavigationScreenState();
     final appThemeData = AppTheme.of(context);
     final themeData = FluentTheme.of(context);
+    final screenSize = MediaQuery.of(context).size;
+
     return ValueListenableBuilder<NavigationScreens>(
       valueListenable: state.currentScreen,
       builder: (final context, final currentScreen, final child) {
         final isSheetsScreen = currentScreen == NavigationScreens.sheets;
-        return NavigationView(
-          pane: AppNavigationPane(
-            state: state,
-            panePaddingRequired: !isSheetsScreen,
-            themeData: themeData,
-            selected: currentScreen.index,
-          ),
-          appBar: isSheetsScreen
-              ? NavigationAppBar(
-                  automaticallyImplyLeading: false,
-                  actions: Center(
-                    child: Row(
-                      children: [
-                        appThemeData.horizontalySpacedSizedBox.semiSmall,
-                        ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 200),
+        return Stack(
+          children: [
+            NavigationView(
+              pane: AppNavigationPane(
+                state: state,
+                panePaddingRequired: !isSheetsScreen,
+                themeData: themeData,
+                selected: currentScreen.index,
+              ),
+              appBar: isSheetsScreen
+                  ? const NavigationAppBar(
+                      automaticallyImplyLeading: false,
+                    )
+                  : null,
+              content: NavigationBody(
+                index: currentScreen.index,
+                children: const [
+                  SheetsScreen(),
+                  SettingsScreen(),
+                  InfoScreen(),
+                ],
+              ),
+            ),
+            if (isSheetsScreen)
+              Positioned(
+                top: 10,
+                left: 0,
+                child: Row(
+                  children: [
+                    appThemeData.horizontalySpacedSizedBox.semiSmall,
+                    Builder(
+                      builder: (final context) {
+                        final screenWidth = screenSize.width;
+
+                        final width = math.min(screenWidth - 58, 328 + 58.0);
+                        return ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: width),
                           child: const SheetSearchField(),
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                  ),
-                )
-              : null,
-          content: NavigationBody(
-            index: currentScreen.index,
-            children: const [
-              SheetsScreen(),
-              SettingsScreen(),
-              InfoScreen(),
-            ],
-          ),
+                    const SizedBox(width: 58),
+                  ],
+                ),
+              ),
+          ],
         );
       },
     );

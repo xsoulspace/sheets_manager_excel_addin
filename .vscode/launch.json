@@ -14,13 +14,15 @@
       "name": "front_dart (profile mode)",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "profile",
+      "args": ["--web-port=3000"]
     },
     {
       "name": "front_dart (release mode)",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release"
+      "flutterMode": "release",
+      "args": ["--web-port=3000"]
     }
   ]
 }

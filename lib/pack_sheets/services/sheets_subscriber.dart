@@ -34,6 +34,10 @@ class SheetsSubscriber implements ContextlessLoadable {
     final id = args.worksheetId;
     final sheet = await excelApi.getSheetById(id);
     sheetsNotifier.addSheetToCache(sheet);
+    await sheetsNotifier.selectedSheetController.onSheetSelected(
+      sheet,
+      syncWithExcel: false,
+    );
   }
 
   Future<void> _onMoved(final WorksheetMovedEventArgs args) async {

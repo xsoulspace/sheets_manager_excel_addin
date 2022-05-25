@@ -146,7 +146,7 @@ class SheetTile extends HookWidget {
                           ),
                         )
                       : Icon(
-                          material.Icons.drag_handle_rounded,
+                          material.Icons.drag_indicator_rounded,
                           color: theme.disabledColor,
                         ),
                 ),

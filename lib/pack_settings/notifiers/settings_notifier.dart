@@ -48,6 +48,7 @@ class SettingsNotifier extends ChangeNotifier implements ContextlessLoadable {
 
   final excelAvailable = ValueNotifier<bool>(false);
   final devinfo = ValueNotifier<String>('');
+  final debugPaneEnabled = ValueNotifier(false);
   final useMockData = ValueNotifier<bool>(true);
 
   /// Load the user's settings from the SettingsService. It may load from a
@@ -72,6 +73,7 @@ class SettingsNotifier extends ChangeNotifier implements ContextlessLoadable {
 
   @override
   void dispose() {
+    debugPaneEnabled.dispose();
     excelAvailable
       ..removeListener(_onExcelAvailableChanged)
       ..dispose();

@@ -8,8 +8,8 @@ class AppStateProvider extends StatelessWidget {
   final WidgetBuilder builder;
   @override
   Widget build(final BuildContext context) {
-    final settings = context.read<SettingsNotifier>();
-    final analyticsNotifier = context.read<AnalyticsNotifier>();
+    final settings = context.watch<SettingsNotifier>();
+    final analyticsNotifier = context.watch<AnalyticsNotifier>();
 
     return ValueListenableBuilder<bool>(
       valueListenable: settings.useMockData,

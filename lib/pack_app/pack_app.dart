@@ -1,5 +1,7 @@
 library pack_app;
 
+import 'dart:math' as math;
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

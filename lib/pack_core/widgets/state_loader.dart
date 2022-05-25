@@ -19,6 +19,7 @@ class StateLoader extends HookWidget {
   final Widget loader;
   @override
   Widget build(final BuildContext context) {
+    final theme = FluentTheme.of(context);
     final loaded = useIsBool();
     final loading = useIsBool();
 
@@ -50,7 +51,7 @@ class StateLoader extends HookWidget {
               if (loading.value)
                 Positioned.fill(
                   child: ColoredBox(
-                    color: Colors.white.withOpacity(0.5),
+                    color: theme.micaBackgroundColor.withOpacity(0.5),
                     child: loader,
                   ),
                 ),

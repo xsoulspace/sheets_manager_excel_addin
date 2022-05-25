@@ -12,7 +12,9 @@ class SheetsNotifier extends ChangeNotifier implements ContextlessLoadable {
 
   final _sheets = <SheetModel>[];
   List<SheetModel> get sheets =>
-      filter.filteredSheets.isEmpty ? _sheets : filter.filteredSheets;
+      filter.filteredSheets.isEmpty && filter.searchText.isEmpty
+          ? _sheets
+          : filter.filteredSheets;
   List<SheetModel> getSheets() => [...sheets];
   void updateSheets(final List<SheetModel> newSheets) {
     _sheets
@@ -39,6 +41,7 @@ class SheetsNotifier extends ChangeNotifier implements ContextlessLoadable {
   late final filter = SheetsFilter(
     notifyListeners: notifyListeners,
     sheets: _sheets,
+    settingsNotifier: settingsNotifier,
   );
   late final sheetNameController = SheetNameController(
     updateSheets: updateSheets,

@@ -5,6 +5,9 @@ class AnalyticsNotifier extends ChangeNotifier implements ContextlessLoadable {
   final logs = <String>[];
 
   void log(final String value) {
+    if (logs.length == 15) {
+      logs.removeLast();
+    }
     logs.insert(0, value);
     notifyListeners();
   }

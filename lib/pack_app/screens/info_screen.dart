@@ -9,7 +9,14 @@ class InfoScreen extends HookWidget {
 
     return ScaffoldPage.scrollable(
       header: PageHeader(title: Text(S.of(context).about)),
-      children: const [],
+      children: const [
+        Card(
+          child: ListTile(
+            title: Text(''),
+            subtitle: Text(''),
+          ),
+        )
+      ],
     );
   }
 }
