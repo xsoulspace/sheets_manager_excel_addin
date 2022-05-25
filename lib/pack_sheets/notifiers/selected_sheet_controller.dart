@@ -33,5 +33,7 @@ class SelectedSheetController implements ContextlessLoadable, Disposable {
   }
 
   @override
-  Future<void> onLoad() async {}
+  Future<void> onLoad() async {
+    await getActiveSheet();
+  }
 }

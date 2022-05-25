@@ -45,7 +45,7 @@ class DebugPane extends HookWidget {
                 CommandBarBuilderItem(
                   builder: (final context, final mode, final child) {
                     return Tooltip(
-                      message: 'Edit name',
+                      message: 'Clear log messages',
                       child: child,
                     );
                   },

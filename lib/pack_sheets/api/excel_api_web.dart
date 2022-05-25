@@ -28,6 +28,11 @@ class ExcelApi implements ExcelApiI {
   Future<List<SheetModel>> getSheets() async {
     context.workbook.worksheets.load(['items']);
     await sync();
+    final sheets = context.workbook.worksheets.items;
+    for (final sheet in sheets) {
+      sheet.load(['name', 'id']);
+    }
+    await sync();
     analyticsNotifier
         .log('items length: ${context.workbook.worksheets.items.length}');
     return context.workbook.worksheets.items
@@ -60,6 +65,8 @@ class ExcelApi implements ExcelApiI {
   Future<SheetModel> getActiveSheet() async {
     final sheetModel = context.workbook.worksheets.getActiveWorksheet();
     await sync();
+    sheetModel.load(['name', 'id']);
+    await sync();
     return sheetModel.toSheetModel();
   }
 
@@ -86,7 +93,7 @@ ExcelSheetModel<Worksheet> checkSheetType(
 }
 
 extension WorksheetExt on Worksheet {
-  SheetModel toSheetModel() => SheetModel.excelSheetModel(
+  SheetModel<Worksheet> toSheetModel() => SheetModel<Worksheet>.excelSheetModel(
         name: name,
         id: id,
         worksheet: this,

@@ -37,6 +37,7 @@ class SheetTile extends HookWidget {
                 }
               },
               child: TextBox(
+                maxLength: 31,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.transparent,
@@ -137,10 +138,15 @@ class SheetTile extends HookWidget {
                 leading: AnimatedSwitcher(
                   duration: theme.fastAnimationDuration,
                   child: dragEnabled
-                      ? ReorderableDragStartListener(
-                          index: index,
-                          enabled: dragEnabled,
-                          child: const Icon(material.Icons.drag_handle_rounded),
+                      ? MouseRegion(
+                          cursor: SystemMouseCursors.grab,
+                          child: ReorderableDragStartListener(
+                            index: index,
+                            enabled: dragEnabled,
+                            child: const Icon(
+                              material.Icons.drag_indicator_rounded,
+                            ),
+                          ),
                         )
                       : Icon(
                           material.Icons.drag_handle_rounded,
