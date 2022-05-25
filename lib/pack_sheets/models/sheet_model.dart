@@ -7,11 +7,16 @@ part of pack_sheets;
   equal: true,
   addImplicitFinal: true,
   copyWith: true,
+  unionValueCase: FreezedUnionCase.pascal,
 )
-class SheetModel with _$SheetModel {
-  const factory SheetModel({
+class SheetModel<TWorksheet> with _$SheetModel<TWorksheet> {
+  const factory SheetModel.mockSheetModel({
     required final String name,
     required final String id,
-  }) = _SheetModel;
-  const SheetModel._();
+  }) = MockSheetModel<TWorksheet>;
+  const factory SheetModel.excelSheetModel({
+    required final String name,
+    required final String id,
+    required final TWorksheet worksheet,
+  }) = ExcelSheetModel<TWorksheet>;
 }

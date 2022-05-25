@@ -62,7 +62,10 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
     }
     final item = _sheets.removeAt(oldIndex);
     _sheets.insert(effectiveNewIndex, item);
-    excelApi.reorderSheets(_sheets);
+    excelApi.reorderSheet(
+      position: effectiveNewIndex,
+      sheet: item,
+    );
     notifyListeners();
   }
 }

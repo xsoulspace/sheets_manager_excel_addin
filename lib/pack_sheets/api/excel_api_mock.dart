@@ -5,9 +5,9 @@ class ExcelApiMock extends ExcelApi {}
 
 class ExcelApi implements ExcelApiI {
   final _sheets = <SheetModel>[
-    const SheetModel(name: 'Products', id: '1'),
-    const SheetModel(name: 'Stock', id: '2'),
-    const SheetModel(name: 'Total', id: '3'),
+    const SheetModel.mockSheetModel(name: 'Products', id: '1'),
+    const SheetModel.mockSheetModel(name: 'Stock', id: '2'),
+    const SheetModel.mockSheetModel(name: 'Total', id: '3'),
   ];
   @override
   Future<List<SheetModel>> getSheets() async {
@@ -26,10 +26,17 @@ class ExcelApi implements ExcelApiI {
   }
 
   @override
-  Future<void> reorderSheets(final List<SheetModel> sheets) async {
-    _sheets
-      ..clear()
-      ..addAll(sheets);
+  Future<void> reorderSheet({
+    required final SheetModel sheet,
+    required final int position,
+  }) async {
+    final oldIndex = _sheets.indexWhere((final el) => el.id == sheet.id);
+    int effectiveNewIndex = position;
+    if (oldIndex < effectiveNewIndex) {
+      effectiveNewIndex -= 1;
+    }
+    final item = _sheets.removeAt(oldIndex);
+    _sheets.insert(effectiveNewIndex, item);
   }
 
   @override
@@ -39,6 +46,11 @@ class ExcelApi implements ExcelApiI {
 
   @override
   Future<void> setActiveSheet(final SheetModel sheet) async {
+    return;
+  }
+
+  @override
+  Future<void> onLoad() async {
     return;
   }
 }
