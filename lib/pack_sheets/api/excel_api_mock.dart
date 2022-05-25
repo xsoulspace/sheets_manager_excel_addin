@@ -1,9 +1,16 @@
+import 'package:sheet_manager/pack_analytics/analytics/notifiers/analytics_notifier.dart';
 import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';
 import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
 
-class ExcelApiMock extends ExcelApi {}
+class ExcelApiMock extends ExcelApi {
+  ExcelApiMock({required final super.analyticsNotifier});
+}
 
 class ExcelApi implements ExcelApiI {
+  ExcelApi({
+    required this.analyticsNotifier,
+  });
+  final AnalyticsNotifier analyticsNotifier;
   final _sheets = <SheetModel>[
     const SheetModel.mockSheetModel(name: 'Products', id: '1'),
     const SheetModel.mockSheetModel(name: 'Stock', id: '2'),

@@ -5,10 +5,12 @@ class SheetsNotifier extends ChangeNotifier implements ContextfulLoadable {
     required this.excelApi,
     required this.excelSubscritions,
     required this.settingsNotifier,
+    required this.analyticsNotifier,
   });
   final ExcelSubscriptionsI excelSubscritions;
   final SettingsNotifier settingsNotifier;
   final ExcelApiI excelApi;
+  final AnalyticsNotifier analyticsNotifier;
 
   final _sheets = <SheetModel>[];
   List<SheetModel> get sheets =>

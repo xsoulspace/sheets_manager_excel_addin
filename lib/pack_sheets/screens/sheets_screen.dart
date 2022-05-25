@@ -1,12 +1,13 @@
 part of pack_sheets;
 
-class SheetsScreen extends StatelessWidget {
+class SheetsScreen extends HookWidget {
   const SheetsScreen({final Key? key}) : super(key: key);
 
   @override
   Widget build(final BuildContext context) {
     final sheetsNotifier = context.watch<SheetsNotifier>();
     final dragEnabled = sheetsNotifier.filter.searchController.text.isEmpty;
+    final scrollController = useScrollController();
 
     return ScaffoldPage(
       content: Column(
@@ -15,6 +16,7 @@ class SheetsScreen extends StatelessWidget {
           if (kDebugMode) const Expanded(child: DebugPane()),
           Expanded(
             child: ReorderableListView.builder(
+              scrollController: scrollController,
               physics: const BouncingScrollPhysics(),
               buildDefaultDragHandles: false,
               shrinkWrap: true,

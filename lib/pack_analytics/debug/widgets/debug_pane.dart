@@ -1,15 +1,17 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:sheet_manager/pack_analytics/analytics/notifiers/analytics_notifier.dart';
 import 'package:sheet_manager/pack_settings/pack_settings.dart';
 import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
 
-class DebugPane extends StatelessWidget {
+class DebugPane extends HookWidget {
   const DebugPane({final Key? key}) : super(key: key);
 
   @override
   Widget build(final BuildContext context) {
+    final scrollController = useScrollController();
     final analytics = context.watch<AnalyticsNotifier>();
     final settings = context.read<SettingsNotifier>();
     final sheetsNotifier = context.read<SheetsNotifier>();
@@ -60,6 +62,7 @@ class DebugPane extends StatelessWidget {
           Expanded(
             child: Card(
               child: ListView.builder(
+                controller: scrollController,
                 itemCount: analytics.logs.length,
                 itemBuilder: (final context, final index) {
                   final log = analytics.logs[index];

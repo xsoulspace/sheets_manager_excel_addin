@@ -2,19 +2,28 @@ part of pack_preloaders;
 
 class GlobalStateInitializer extends StateInitializer {
   @override
-  Future<void> onLoad(final BuildContext context) async {
-    final SettingsNotifier settings = context.read();
+  Future<void> onPostBindingLoad(final BuildContext context) {
+    final completer = Completer();
     final SheetsNotifier sheetsNotifier = context.read();
+    final SettingsNotifier settings = context.read();
+    final ExcelApiI excelApiI = context.read();
     WidgetsBinding.instance.addPostFrameCallback((final timeStamp) async {
-      await Future.delayed(const Duration(milliseconds: 800));
-      settings.excelAvailable.value = await ExcelHelper.checkIsExcelAvailable();
-      if (!settings.excelAvailable.value) {
-        await Future.delayed(const Duration(seconds: 1));
+      try {
+        await Future.delayed(const Duration(milliseconds: 800));
         settings.excelAvailable.value =
             await ExcelHelper.checkIsExcelAvailable();
+        if (!settings.excelAvailable.value) {
+          await Future.delayed(const Duration(seconds: 1));
+          settings.excelAvailable.value =
+              await ExcelHelper.checkIsExcelAvailable();
+        }
+        await excelApiI.onLoad();
+        await sheetsNotifier.onLoad(context);
+      } finally {
+        completer.complete();
       }
     });
-    await settings.onLoad(context);
-    await sheetsNotifier.onLoad(context);
+
+    return completer.future;
   }
 }

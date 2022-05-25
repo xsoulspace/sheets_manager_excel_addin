@@ -1,6 +1,6 @@
 part of pack_settings;
 
-class SettingsNotifier extends ChangeNotifier implements ContextfulLoadable {
+class SettingsNotifier extends ChangeNotifier implements ContextlessLoadable {
   SettingsNotifier({
     required final this.settingsService,
   });
@@ -54,7 +54,7 @@ class SettingsNotifier extends ChangeNotifier implements ContextfulLoadable {
   /// local database or the internet. The controller only knows it can load the
   /// settings from the service.
   @override
-  Future<void> onLoad(final BuildContext context) async {
+  Future<void> onLoad() async {
     _themeMode = await settingsService.themeMode();
     excelAvailable.addListener(_onExcelAvailableChanged);
     _locale = await settingsService.locale();

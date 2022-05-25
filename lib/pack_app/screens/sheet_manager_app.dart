@@ -20,11 +20,7 @@ class SheetManagerApp extends StatelessWidget {
         ),
       ],
       builder: (final context, final child) {
-        return AppStateProvider(
-          builder: (final context) {
-            return const AppScaffoldScreen();
-          },
-        );
+        return const AppScaffoldScreen();
       },
     );
   }

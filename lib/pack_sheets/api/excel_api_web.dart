@@ -1,24 +1,35 @@
 import 'package:officejs/officejs.dart';
+import 'package:sheet_manager/pack_analytics/analytics/notifiers/analytics_notifier.dart';
 import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';
 import 'package:sheet_manager/pack_sheets/api/excel_api_mock.dart'
     as excel_api_mock;
 import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
 
-class ExcelApiMock extends excel_api_mock.ExcelApi {}
+class ExcelApiMock extends excel_api_mock.ExcelApi {
+  ExcelApiMock({required final super.analyticsNotifier});
+}
 
 class ExcelApi implements ExcelApiI {
+  ExcelApi({
+    required this.analyticsNotifier,
+  });
+  final AnalyticsNotifier analyticsNotifier;
   late RequestContext context;
   Future<void> sync() async => context.sync();
 
   @override
   Future<void> onLoad() async {
     context = await Excel.run();
+
+    analyticsNotifier.log('ExcelApi onLoaded');
   }
 
   @override
   Future<List<SheetModel>> getSheets() async {
     context.workbook.worksheets.load(['items']);
     await sync();
+    analyticsNotifier
+        .log('items length: ${context.workbook.worksheets.items.length}');
     return context.workbook.worksheets.items
         .map(
           (final sheet) => sheet.toSheetModel(),

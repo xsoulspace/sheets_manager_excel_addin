@@ -5,9 +5,7 @@ class GlobalStateNotifiers {
   static SettingsNotifier? _settingsNotifierInstance;
   // Set up the SettingsController, which will glue user settings to multiple
   // Flutter Widgets.
-  static SettingsNotifier getSettings({
-    required final bool excelAvailable,
-  }) =>
+  static SettingsNotifier getSettings() =>
       _settingsNotifierInstance ??= SettingsNotifier(
         settingsService: PersistentSettingsService(),
       );

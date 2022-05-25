@@ -49,9 +49,13 @@ class AppScaffoldScreen extends StatelessWidget {
             return AppThemeBuilder(
               child: Directionality(
                 textDirection: TextDirection.ltr,
-                child: NavigationPaneTheme(
-                  data: const NavigationPaneThemeData(),
-                  child: child!,
+                child: AppStateProvider(
+                  builder: (final context) {
+                    return NavigationPaneTheme(
+                      data: const NavigationPaneThemeData(),
+                      child: child!,
+                    );
+                  },
                 ),
               ),
             );

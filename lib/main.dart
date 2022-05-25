@@ -7,13 +7,17 @@ import 'package:sheet_manager/pack_preloaders/pack_preloaders.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final analytics = GlobalStateNotifiers.getAnalytics();
+  final settings = GlobalStateNotifiers.getSettings();
+  await Future.wait([
+    settings.onLoad(),
+    analytics.onLoad(),
+  ]);
+
   runZonedGuarded(
     () {
       runApp(
         SheetManagerApp(
-          settings: GlobalStateNotifiers.getSettings(
-            excelAvailable: false,
-          ),
+          settings: settings,
           analytics: analytics,
         ),
       );

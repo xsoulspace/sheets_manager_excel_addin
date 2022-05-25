@@ -3,6 +3,8 @@ part of widgets;
 abstract class StateInitializer extends ContextfulLoadable {
   @override
   Future<void> onLoad(final BuildContext context) async {}
+
+  Future<void> onPostBindingLoad(final BuildContext context) async {}
 }
 
 class StateLoader extends HookWidget {
@@ -30,7 +32,12 @@ class StateLoader extends HookWidget {
         loading.value = true;
         loaded.value = true;
         await initializer.onLoad(context);
-        loading.value = false;
+        unawaited(
+          // ignore: use_build_context_synchronously
+          initializer.onPostBindingLoad(context).then((final _) {
+            loading.value = false;
+          }),
+        );
 
         return true;
       }(),
@@ -40,9 +47,13 @@ class StateLoader extends HookWidget {
           child: Stack(
             children: [
               child,
-              // if (snapshot.connectionState != ConnectionState.done ||
-              //     snapshot.data == false)
-              //   Positioned.fill(child: loader),
+              if (loading.value)
+                Positioned.fill(
+                  child: ColoredBox(
+                    color: Colors.white.withOpacity(0.5),
+                    child: loader,
+                  ),
+                ),
             ],
           ),
         );

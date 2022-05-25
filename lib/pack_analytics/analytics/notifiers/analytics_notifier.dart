@@ -1,16 +1,27 @@
 import 'package:flutter/foundation.dart';
+import 'package:sheet_manager/pack_core/pack_core.dart';
 
-class AnalyticsNotifier extends ChangeNotifier {
+class AnalyticsNotifier extends ChangeNotifier implements ContextlessLoadable {
   final logs = <String>[];
 
-  void recordError(
+  void log(final String value) {
+    logs.insert(0, value);
+    notifyListeners();
+  }
+
+  void clearLogs() {
+    logs.clear();
+    notifyListeners();
+  }
+
+  Future<void> recordError(
     final dynamic exception,
     final StackTrace? stack, {
     final dynamic reason,
     final Iterable<DiagnosticsNode> information = const [],
     final bool fatal = false,
     bool? printDetails,
-  }) {
+  }) async {
     // Use the debug flag if printDetails is not provided
     printDetails ??= kDebugMode;
     final errorDetails = StringBuffer();
@@ -46,13 +57,32 @@ class AnalyticsNotifier extends ChangeNotifier {
     log(errorDetailsStr);
   }
 
-  void log(final String value) {
-    logs.add(value);
-    notifyListeners();
+  /// Use [fatal] to indicate whether the error is a fatal or not.
+  Future<void> recordFlutterError(
+    final FlutterErrorDetails flutterErrorDetails, {
+    final bool fatal = false,
+  }) {
+    FlutterError.presentError(flutterErrorDetails);
+
+    return recordError(
+      flutterErrorDetails.exceptionAsString(),
+      flutterErrorDetails.stack,
+      reason: flutterErrorDetails.context,
+      information: flutterErrorDetails.informationCollector == null
+          ? []
+          : flutterErrorDetails.informationCollector!(),
+      printDetails: false,
+      fatal: fatal,
+    );
   }
 
-  void clearLogs() {
-    logs.clear();
-    notifyListeners();
+  @override
+  Future<void> onLoad() async {
+    final originalOnError = FlutterError.onError;
+    FlutterError.onError = (final errorDetails) async {
+      await recordFlutterError(errorDetails);
+      // Forward to original handler.
+      originalOnError?.call(errorDetails);
+    };
   }
 }

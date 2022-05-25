@@ -3,14 +3,13 @@ part of pack_preloaders;
 class AppStateProvider extends StatelessWidget {
   const AppStateProvider({
     required final this.builder,
-    // required final this.settings,
     final Key? key,
   }) : super(key: key);
   final WidgetBuilder builder;
-  // final SettingsNotifier settings;
   @override
   Widget build(final BuildContext context) {
     final settings = context.read<SettingsNotifier>();
+    final analyticsNotifier = context.read<AnalyticsNotifier>();
 
     return ValueListenableBuilder<bool>(
       valueListenable: settings.useMockData,
@@ -20,12 +19,16 @@ class AppStateProvider extends StatelessWidget {
             if (useMockData)
               Provider<ExcelApiI>(
                 key: const ValueKey('ExcelApiMock'),
-                create: (final context) => ExcelApiMock(),
+                create: (final context) => ExcelApiMock(
+                  analyticsNotifier: analyticsNotifier,
+                ),
               )
             else
               Provider<ExcelApiI>(
                 key: const ValueKey('ExcelApi'),
-                create: (final context) => ExcelApi(),
+                create: (final context) => ExcelApi(
+                  analyticsNotifier: analyticsNotifier,
+                ),
               ),
             if (useMockData)
               Provider<ExcelSubscriptionsI>(
@@ -39,6 +42,7 @@ class AppStateProvider extends StatelessWidget {
               ),
             ChangeNotifierProvider(
               create: (final context) => SheetsNotifier(
+                analyticsNotifier: analyticsNotifier,
                 settingsNotifier: settings,
                 excelApi: context.read(),
                 excelSubscritions: context.read(),

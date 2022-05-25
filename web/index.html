@@ -109,9 +109,13 @@
           })
           .then(function (appRunner) {
             loading.classList.add("init_done");
-            return appRunner.runApp();
-          }) /** Initialize office **/
+            return appRunner.runApp(); /** Initialize office **/
+          })
           .then(function () {
+            window.setTimeout(function () {
+              loading.remove();
+            }, 200);
+
             console.log("intializing office");
             const officeEl = document.getElementById("office");
             if (officeEl != null) return;
@@ -122,9 +126,11 @@
             scriptTag.id = "office";
             scriptTag.addEventListener("load", () => {
               console.log("office loaded");
-
-              window["getOfficeHelpers"] = () =>
-                new OfficeHelpers(Excel.run, Office.onReady);
+              class OfficeHelpers {
+                runExcel = Excel.run;
+                officeOnReady = Office.onReady;
+              }
+              window["getOfficeHelpers"] = () => new OfficeHelpers();
               console.log("helpers injected");
             });
             document.getElementsByTagName("head")[0].appendChild(scriptTag);
