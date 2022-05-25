@@ -439,9 +439,11 @@ packages:
   officejs:
     dependency: "direct main"
     description:
-      path: "../officejs_dart"
-      relative: true
-    source: path
+      path: "."
+      ref: "0.1.0"
+      resolved-ref: "1cf2331ccdef71b43c9b3cb22892c4fe2cedcc3a"
+      url: "git@github.com:xsoulspace/officejs_dart.git"
+    source: git
     version: "0.1.0"
   package_config:
     dependency: transitive

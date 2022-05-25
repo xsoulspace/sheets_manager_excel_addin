@@ -21,18 +21,19 @@ class SheetsNotifier extends ChangeNotifier implements ContextlessLoadable {
     notifyListeners();
   }
 
-  void addSheet(final SheetModel sheet) {
+  void addSheetToCache(final SheetModel sheet) {
     _sheets.insert(sheet.position, sheet);
     notifyListeners();
   }
 
-  SheetModel? getSheetById(final String id) {
+  SheetModel? getCachedSheetById(final String id) {
     return _sheets.firstWhereOrNull((final sheet) => sheet.id == id);
   }
 
-  void deleteSheetById(final String id) {
+  void deleteCachedSheetById(final String id) {
     final index = _sheets.indexWhere((final sheet) => sheet.id == id);
     _sheets.removeAt(index);
+    notifyListeners();
   }
 
   late final filter = SheetsFilter(
@@ -69,17 +70,23 @@ class SheetsNotifier extends ChangeNotifier implements ContextlessLoadable {
     updateSheets(newSheets);
   }
 
-  void onReorder(final int oldIndex, final int newIndex) {
+  void onReorder(
+    final int oldIndex,
+    final int newIndex, {
+    final bool syncWithExcel = true,
+  }) {
     int effectiveNewIndex = newIndex;
     if (oldIndex < effectiveNewIndex) {
       effectiveNewIndex -= 1;
     }
     final item = _sheets.removeAt(oldIndex);
     _sheets.insert(effectiveNewIndex, item);
-    excelApi.reorderSheet(
-      position: effectiveNewIndex,
-      sheet: item,
-    );
+    if (syncWithExcel) {
+      excelApi.reorderSheet(
+        position: effectiveNewIndex,
+        sheet: item,
+      );
+    }
     notifyListeners();
   }
 }

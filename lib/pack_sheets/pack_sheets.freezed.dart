@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$Diff<T, TOther> {
   T get original => throw _privateConstructorUsedError;
   TOther get other => throw _privateConstructorUsedError;
+  bool get syncWithExcel => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DiffCopyWith<T, TOther, Diff<T, TOther>> get copyWith =>
@@ -29,7 +30,7 @@ abstract class $DiffCopyWith<T, TOther, $Res> {
   factory $DiffCopyWith(
           Diff<T, TOther> value, $Res Function(Diff<T, TOther>) then) =
       _$DiffCopyWithImpl<T, TOther, $Res>;
-  $Res call({T original, TOther other});
+  $Res call({T original, TOther other, bool syncWithExcel});
 }
 
 /// @nodoc
@@ -45,6 +46,7 @@ class _$DiffCopyWithImpl<T, TOther, $Res>
   $Res call({
     Object? original = freezed,
     Object? other = freezed,
+    Object? syncWithExcel = freezed,
   }) {
     return _then(_value.copyWith(
       original: original == freezed
@@ -55,6 +57,10 @@ class _$DiffCopyWithImpl<T, TOther, $Res>
           ? _value.other
           : other // ignore: cast_nullable_to_non_nullable
               as TOther,
+      syncWithExcel: syncWithExcel == freezed
+          ? _value.syncWithExcel
+          : syncWithExcel // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -66,7 +72,7 @@ abstract class _$$_DiffCopyWith<T, TOther, $Res>
           _$_Diff<T, TOther> value, $Res Function(_$_Diff<T, TOther>) then) =
       __$$_DiffCopyWithImpl<T, TOther, $Res>;
   @override
-  $Res call({T original, TOther other});
+  $Res call({T original, TOther other, bool syncWithExcel});
 }
 
 /// @nodoc
@@ -84,6 +90,7 @@ class __$$_DiffCopyWithImpl<T, TOther, $Res>
   $Res call({
     Object? original = freezed,
     Object? other = freezed,
+    Object? syncWithExcel = freezed,
   }) {
     return _then(_$_Diff<T, TOther>(
       original: original == freezed
@@ -94,6 +101,10 @@ class __$$_DiffCopyWithImpl<T, TOther, $Res>
           ? _value.other
           : other // ignore: cast_nullable_to_non_nullable
               as TOther,
+      syncWithExcel: syncWithExcel == freezed
+          ? _value.syncWithExcel
+          : syncWithExcel // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -101,16 +112,22 @@ class __$$_DiffCopyWithImpl<T, TOther, $Res>
 /// @nodoc
 
 class _$_Diff<T, TOther> extends _Diff<T, TOther> with DiagnosticableTreeMixin {
-  const _$_Diff({required this.original, required this.other}) : super._();
+  const _$_Diff(
+      {required this.original,
+      required this.other,
+      required this.syncWithExcel})
+      : super._();
 
   @override
   final T original;
   @override
   final TOther other;
+  @override
+  final bool syncWithExcel;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Diff<$T, $TOther>(original: $original, other: $other)';
+    return 'Diff<$T, $TOther>(original: $original, other: $other, syncWithExcel: $syncWithExcel)';
   }
 
   @override
@@ -119,7 +136,8 @@ class _$_Diff<T, TOther> extends _Diff<T, TOther> with DiagnosticableTreeMixin {
     properties
       ..add(DiagnosticsProperty('type', 'Diff<$T, $TOther>'))
       ..add(DiagnosticsProperty('original', original))
-      ..add(DiagnosticsProperty('other', other));
+      ..add(DiagnosticsProperty('other', other))
+      ..add(DiagnosticsProperty('syncWithExcel', syncWithExcel));
   }
 
   @override
@@ -128,14 +146,17 @@ class _$_Diff<T, TOther> extends _Diff<T, TOther> with DiagnosticableTreeMixin {
         (other.runtimeType == runtimeType &&
             other is _$_Diff<T, TOther> &&
             const DeepCollectionEquality().equals(other.original, original) &&
-            const DeepCollectionEquality().equals(other.other, this.other));
+            const DeepCollectionEquality().equals(other.other, this.other) &&
+            const DeepCollectionEquality()
+                .equals(other.syncWithExcel, syncWithExcel));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(original),
-      const DeepCollectionEquality().hash(other));
+      const DeepCollectionEquality().hash(other),
+      const DeepCollectionEquality().hash(syncWithExcel));
 
   @JsonKey(ignore: true)
   @override
@@ -146,13 +167,16 @@ class _$_Diff<T, TOther> extends _Diff<T, TOther> with DiagnosticableTreeMixin {
 abstract class _Diff<T, TOther> extends Diff<T, TOther> {
   const factory _Diff(
       {required final T original,
-      required final TOther other}) = _$_Diff<T, TOther>;
+      required final TOther other,
+      required final bool syncWithExcel}) = _$_Diff<T, TOther>;
   const _Diff._() : super._();
 
   @override
   T get original => throw _privateConstructorUsedError;
   @override
   TOther get other => throw _privateConstructorUsedError;
+  @override
+  bool get syncWithExcel => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_DiffCopyWith<T, TOther, _$_Diff<T, TOther>> get copyWith =>

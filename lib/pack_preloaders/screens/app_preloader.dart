@@ -33,12 +33,12 @@ class AppStateProvider extends StatelessWidget {
             if (useMockData)
               ChangeNotifierProvider<ExcelSubscriptionsI>(
                 key: const ValueKey('ExcelSubscriptionMock'),
-                create: (final context) => ExcelSubscriptionMock(),
+                create: (final context) => ExcelSubscriptionMockImpl(),
               )
             else
               ChangeNotifierProvider<ExcelSubscriptionsI>(
                 key: const ValueKey('ExcelSubscription'),
-                create: (final context) => ExcelSubscriptions(),
+                create: (final context) => ExcelSubscriptionsImpl(),
               ),
             ChangeNotifierProvider(
               create: (final context) => SheetsNotifier(
@@ -51,6 +51,7 @@ class AppStateProvider extends StatelessWidget {
               create: (final context) => SheetsSubscriber(
                 excelSubscriptions: context.read(),
                 excelApi: context.read(),
+                analyticsNotifier: analyticsNotifier,
                 sheetsNotifier: context.read(),
               ),
             )

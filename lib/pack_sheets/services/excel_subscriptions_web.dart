@@ -4,10 +4,10 @@ import 'package:sheet_manager/pack_sheets/services/excel_subscriptions_i.dart';
 import 'package:sheet_manager/pack_sheets/services/excel_subscriptions_mock.dart'
     as excel_subscriptions_mock;
 
-class ExcelSubscriptionMock
-    extends excel_subscriptions_mock.ExcelSubscriptions {}
+class ExcelSubscriptionMockImpl
+    extends excel_subscriptions_mock.ExcelSubscriptionsImpl {}
 
-class ExcelSubscriptions extends ExcelSubscriptionsI {
+class ExcelSubscriptionsImpl extends ExcelSubscriptionsI {
   late RequestContext context;
   @override
   Future<void> sync() async => context.sync();

@@ -42,7 +42,10 @@ dependencies:
   freezed_annotation: ^2.0.3
   life_hooks: ^0.0.7
   officejs:
-    path: ../officejs_dart
+    git:
+      url: git@github.com:xsoulspace/officejs_dart.git
+      ref: 0.1.0
+  #   path: ../officejs_dart
   provider: ^6.0.3
   rxdart: ^0.27.3
   shared_preferences: ^2.0.15

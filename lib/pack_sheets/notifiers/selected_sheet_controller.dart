@@ -18,10 +18,13 @@ class SelectedSheetController implements ContextlessLoadable, Disposable {
     return selectedSheetModel.name == sheet.name;
   }
 
-  Future<void> onSheetSelected(final SheetModel sheet) async {
+  Future<void> onSheetSelected(
+    final SheetModel sheet, {
+    final bool syncWithExcel = true,
+  }) async {
     selectedSheetModel = sheet;
     notifyListeners();
-    unawaited(excelApi.setActiveSheet(sheet));
+    if (syncWithExcel) unawaited(excelApi.setActiveSheet(sheet));
   }
 
   Future<void> getActiveSheet() async {

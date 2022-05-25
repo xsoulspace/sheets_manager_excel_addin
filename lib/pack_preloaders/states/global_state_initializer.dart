@@ -8,6 +8,7 @@ class GlobalStateInitializer extends StateInitializer {
     final SettingsNotifier settings = context.read();
     final ExcelApiI excelApi = context.read();
     final SheetsSubscriber sheetsSubscriber = context.read();
+    final ExcelSubscriptionsI excelSubscriptions = context.read();
     WidgetsBinding.instance.addPostFrameCallback((final timeStamp) async {
       try {
         await Future.delayed(const Duration(milliseconds: 800));
@@ -20,6 +21,7 @@ class GlobalStateInitializer extends StateInitializer {
         }
         await excelApi.onLoad();
         await sheetsNotifier.onLoad();
+        await excelSubscriptions.onLoad();
         await sheetsSubscriber.onLoad();
       } finally {
         completer.complete();

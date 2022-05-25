@@ -35,7 +35,7 @@ class ExcelApiImpl implements ExcelApiI {
     }
     await sync();
     analyticsNotifier
-        .log('items length: ${context.workbook.worksheets.items.length}');
+        .log('getSheets - length: ${context.workbook.worksheets.items.length}');
     return context.workbook.worksheets.items
         .map(
           (final sheet) => sheet.toSheetModel(),

@@ -2,9 +2,9 @@ import 'package:officejs/office_typedefs.dart';
 import 'package:sheet_manager/pack_core/pack_core.dart';
 import 'package:sheet_manager/pack_sheets/services/excel_subscriptions_i.dart';
 
-class ExcelSubscriptionMock extends ExcelSubscriptions {}
+class ExcelSubscriptionMockImpl extends ExcelSubscriptionsImpl {}
 
-class ExcelSubscriptions extends ExcelSubscriptionsI {
+class ExcelSubscriptionsImpl extends ExcelSubscriptionsI {
   @override
   Future<void> onLoad() async {
     // TODO: implement onLoad

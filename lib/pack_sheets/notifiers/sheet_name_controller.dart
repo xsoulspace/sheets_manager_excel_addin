@@ -30,9 +30,16 @@ class SheetNameController implements ContextlessLoadable, Disposable {
 
   void addSheetNameUpdate(
     final SheetModel sheet,
-    final String newName,
-  ) =>
-      updatesController.add(Diff(original: sheet, other: newName));
+    final String newName, {
+    final bool syncWithExcel = true,
+  }) =>
+      updatesController.add(
+        Diff(
+          original: sheet,
+          other: newName,
+          syncWithExcel: syncWithExcel,
+        ),
+      );
 
   Future<void> _renameSheet(
     final _SheetNameDiff diff,
@@ -47,7 +54,7 @@ class SheetNameController implements ContextlessLoadable, Disposable {
       ..removeAt(index)
       ..insert(index, newSheet);
     updateSheets(newSheets);
-    unawaited(excelApi.renameSheet(sheet: newSheet));
+    if (diff.syncWithExcel) unawaited(excelApi.renameSheet(sheet: newSheet));
   }
 
   @override

@@ -12,6 +12,7 @@ class Diff<T, TOther> with _$Diff<T, TOther> {
   const factory Diff({
     required final T original,
     required final TOther other,
+    required final bool syncWithExcel,
   }) = _Diff<T, TOther>;
   const Diff._();
 }
