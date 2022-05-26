@@ -29,7 +29,7 @@ class SheetsFilter implements ContextlessLoadable, Disposable {
       filteredSheets.clear();
     } else {
       final newFilteredSheets = sheets.where(
-        (final sheet) => sheet.name.contains(value),
+        (final sheet) => sheet.name.clear().contains(value.clear()),
       );
 
       filteredSheets
@@ -44,4 +44,8 @@ class SheetsFilter implements ContextlessLoadable, Disposable {
     filteredSheets.clear();
     notifyListeners();
   }
+}
+
+extension StringExt on String {
+  String clear() => toLowerCase();
 }
