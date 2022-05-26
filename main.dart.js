@@ -68347,7 +68347,7 @@ A.a2C.prototype={
 $0(){var s=0,r=A.L(t.H)
 var $async$$0=A.M(function(a,b){if(a===1)return A.I(b,r)
 while(true)switch(s){case 0:s=2
-return A.N(A.vc(""),$async$$0)
+return A.N(A.vc("https://github.com/xsoulspace/sheets_manager_excel_addin/blob/develop/PRIVACY_POLICY.md"),$async$$0)
 case 2:return A.J(null,r)}})
 return A.K($async$$0,r)},
 $S:17}
@@ -68355,7 +68355,7 @@ A.a2D.prototype={
 $0(){var s=0,r=A.L(t.H)
 var $async$$0=A.M(function(a,b){if(a===1)return A.I(b,r)
 while(true)switch(s){case 0:s=2
-return A.N(A.vc(""),$async$$0)
+return A.N(A.vc("https://github.com/xsoulspace/sheets_manager_excel_addin"),$async$$0)
 case 2:return A.J(null,r)}})
 return A.K($async$$0,r)},
 $S:17}
@@ -68363,7 +68363,7 @@ A.a2E.prototype={
 $0(){var s=0,r=A.L(t.H)
 var $async$$0=A.M(function(a,b){if(a===1)return A.I(b,r)
 while(true)switch(s){case 0:s=2
-return A.N(A.vc(""),$async$$0)
+return A.N(A.vc("https://discord.gg/y54DpJwmAn"),$async$$0)
 case 2:return A.J(null,r)}})
 return A.K($async$$0,r)},
 $S:17}
