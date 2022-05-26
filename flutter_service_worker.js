@@ -9,8 +9,8 @@ const RESOURCES = {
 "canvaskit/profiling/canvaskit.js": "ae2949af4efc61d28a4a80fffa1db900",
 "canvaskit/canvaskit.js": "c2b4e5f3d7a3d82aed024e7249a78487",
 "flutter.js": "0816e65a103ba8ba51b174eeeeb2cb67",
-"index.html": "fb58926dfc89b19372580bb0d22b6e84",
-"/": "fb58926dfc89b19372580bb0d22b6e84",
+"index.html": "490c7c5525b39ec5bfdca8febd20a857",
+"/": "490c7c5525b39ec5bfdca8febd20a857",
 "favicon.png": "bd0816afa90451563260fe6be482b84d",
 "commands/commands.js": "9c01037d4f94508e7e6faa56e3121c32",
 "commands/commands.html": "58059ef6885059ca39665b16fa156598",
@@ -26,6 +26,7 @@ const RESOURCES = {
 "icons/icon-80.png": "bcb1221d7f2c4554af293603671e2c6c",
 "icons/icon-192.png": "08033ef6adb93515d6f90fbe4f4465f9",
 "icons/icon-512.png": "bd0816afa90451563260fe6be482b84d",
+"icons/icon-64.png": "f275408b74eceb9206c13e16d78a58df",
 "icons/icon-16.png": "e037accab69f99f00cd14cf7702d6443",
 "icons/icon-32.png": "55cc53c9b19e878ddf548d74b7cc3f59",
 "icons/icon.svg": "8469c2eaf0ad065ba7bc80c09e3159af"
