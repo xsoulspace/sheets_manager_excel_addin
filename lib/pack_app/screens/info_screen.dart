@@ -2,9 +2,11 @@ part of pack_app;
 
 class InfoScreen extends HookWidget {
   const InfoScreen({final Key? key}) : super(key: key);
-  static const privacyPolicyLink = '';
-  static const githubLink = '';
-  static const discordLink = '';
+  static const privacyPolicyLink =
+      'https://github.com/xsoulspace/sheets_manager_excel_addin/blob/develop/PRIVACY_POLICY.md';
+  static const githubLink =
+      'https://github.com/xsoulspace/sheets_manager_excel_addin';
+  static const discordLink = 'https://discord.gg/y54DpJwmAn';
   @override
   Widget build(final BuildContext context) {
     final state = useInfoScreenState();
