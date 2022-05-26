@@ -68961,7 +68961,7 @@ else{r=q.c
 B.b.sn(s,0)
 B.b.K(s,new A.aJ(r,new A.a9n(a),A.aa(r).h("aJ<1>")))}q.a.$0()}}
 A.a9n.prototype={
-$1(a){return B.d.v(a.gaq(a),this.a)},
+$1(a){return B.d.v(a.gaq(a).toLowerCase(),this.a.toLowerCase())},
 $S:32}
 A.mg.prototype={
 gre(){var s=this
