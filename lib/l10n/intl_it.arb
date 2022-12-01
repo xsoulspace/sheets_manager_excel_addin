@@ -6,6 +6,20 @@
   "appearanceSystem": "Sistema",
   "appearanceLight": "Leggera",
   "appearanceDark": "Buia",
-  "thankYou": "Grazie per aver utilizzato questo componente aggiuntivo! \n\nSe hai idee o funzionalità, contatta il server discord. \n\nBuona giornata!\n",
-  "privacyPolicy": "Politica sulla riservatezza"
+  "thankYou": "Grazie per aver utilizzato questo componente aggiuntivo, il tuo supporto e buona giornata! 🌄 ",
+  "thankYouTitle": "Grazie!",
+  "donations": "Donazioni / Sponsor",
+  "considerSponsor": "Si prega di sponsorizzare o donare al creatore su",
+  "or": "o",
+  "gettingHelp": "Se hai bisogno di aiuto per iniziare o hai domande, dai un'occhiata al nostro",
+  "gettingHelpTitle": "Ottenere aiuto",
+  "contributingTitle": "Contribuire",
+  "all": "Tutto ",
+  "and": "e ",
+  "areWelcome": "prego.",
+  "privacyPolicy": "Politica sulla riservatezza",
+  "termsOfUse": "Termini di utilizzo",
+  "purpose": "Lo scopo principale di questo componente aggiuntivo è gestire i fogli di lavoro nella cartella di lavoro di Excel nel modo più efficiente.",
+  "oss": "Questo è un software open source. Significa che puoi vedere il codice sorgente e contribuire - e per questo",
+  "contributors": "Community Contributors"
 }

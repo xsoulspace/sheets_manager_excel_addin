@@ -20,8 +20,8 @@
   <Description DefaultValue="Manage your worksheets easily"/>
 
   <!-- Icon for your add-in. Used on installation screens and the add-ins dialog. -->
-  <IconUrl DefaultValue="https://xsoulspace.dev/sheets_manager_excel_addin/icons/icon-192.png" />
-  <HighResolutionIconUrl DefaultValue="https://xsoulspace.dev/sheets_manager_excel_addin/icons/icon-512.png"/>
+  <IconUrl DefaultValue="https://xsoulspace.dev/sheets_manager_excel_addin/icons/icon-32.png" />
+  <HighResolutionIconUrl DefaultValue="https://xsoulspace.dev/sheets_manager_excel_addin/icons/icon-64.png"/>
 
   <!--If you plan to submit this add-in to the Office Store, uncomment the SupportUrl element below-->
   <SupportUrl DefaultValue="https://xsoulspace.dev/" />

@@ -15,11 +15,12 @@ class SheetsNotifier extends ChangeNotifier implements ContextlessLoadable {
       filter.filteredSheets.isEmpty && filter.searchText.isEmpty
           ? _sheets
           : filter.filteredSheets;
-  List<SheetModel> getSheets() => [...sheets];
+  List<SheetModel> getSheets() => [..._sheets];
   void updateSheets(final List<SheetModel> newSheets) {
     _sheets
       ..clear()
       ..addAll(newSheets);
+    filter.onSearchChanged(filter.searchText);
     notifyListeners();
   }
 
