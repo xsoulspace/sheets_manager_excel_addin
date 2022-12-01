@@ -23,16 +23,36 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("Информация"),
+        "all": MessageLookupByLibrary.simpleMessage("Все "),
+        "and": MessageLookupByLibrary.simpleMessage("и "),
         "appearance": MessageLookupByLibrary.simpleMessage("Вид"),
         "appearanceDark": MessageLookupByLibrary.simpleMessage("Темный"),
         "appearanceLight": MessageLookupByLibrary.simpleMessage("Светлый"),
         "appearanceSystem":
             MessageLookupByLibrary.simpleMessage("Как в системе"),
+        "areWelcome": MessageLookupByLibrary.simpleMessage("приветствуются."),
+        "considerSponsor": MessageLookupByLibrary.simpleMessage(
+            "Станьте спонсором или поддержите разработчика на"),
+        "contributingTitle":
+            MessageLookupByLibrary.simpleMessage("Contributing"),
+        "donations": MessageLookupByLibrary.simpleMessage("Поддержка"),
+        "gettingHelp": MessageLookupByLibrary.simpleMessage(
+            "Если вам нужна помощь в начале работы или у вас есть какие-либо вопросы, посетите наш"),
+        "gettingHelpTitle":
+            MessageLookupByLibrary.simpleMessage("Получение помощи"),
         "language": MessageLookupByLibrary.simpleMessage("Язык"),
+        "or": MessageLookupByLibrary.simpleMessage("или"),
+        "oss": MessageLookupByLibrary.simpleMessage(
+            "Это программное обеспечение с открытым исходным кодом. Это означает, что вы можете видеть исходный код и вносить свой вклад, и поэтому"),
         "privacyPolicy":
-            MessageLookupByLibrary.simpleMessage("Политика Конфиденциальности"),
+            MessageLookupByLibrary.simpleMessage("Политика конфиденциальности"),
+        "purpose": MessageLookupByLibrary.simpleMessage(
+            "Основная цель этой надстройки — наиболее эффективное управление рабочими листами в книге Excel."),
         "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
+        "termsOfUse":
+            MessageLookupByLibrary.simpleMessage("Условия использования"),
         "thankYou": MessageLookupByLibrary.simpleMessage(
-            "Спасибо что используете этот addin! \n\nХорошего дня!\n")
+            "Спасибо за использование этого дополнения, вашу поддержку и хорошего дня! 🌄"),
+        "thankYouTitle": MessageLookupByLibrary.simpleMessage("Спасибо!")
       };
 }

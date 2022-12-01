@@ -23,14 +23,34 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("About"),
+        "all": MessageLookupByLibrary.simpleMessage("All "),
+        "and": MessageLookupByLibrary.simpleMessage("and "),
         "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
         "appearanceDark": MessageLookupByLibrary.simpleMessage("Dark"),
         "appearanceLight": MessageLookupByLibrary.simpleMessage("Light"),
         "appearanceSystem": MessageLookupByLibrary.simpleMessage("System"),
+        "areWelcome": MessageLookupByLibrary.simpleMessage("are welcome."),
+        "considerSponsor": MessageLookupByLibrary.simpleMessage(
+            "Please sponsor or donate to the creator on"),
+        "contributingTitle":
+            MessageLookupByLibrary.simpleMessage("Contributing"),
+        "donations":
+            MessageLookupByLibrary.simpleMessage("Donations / Sponsor"),
+        "gettingHelp": MessageLookupByLibrary.simpleMessage(
+            "If you need help getting started or have any questions, check out our"),
+        "gettingHelpTitle":
+            MessageLookupByLibrary.simpleMessage("Getting Help"),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
+        "or": MessageLookupByLibrary.simpleMessage("or"),
+        "oss": MessageLookupByLibrary.simpleMessage(
+            "This is Open Source Software. It means you can see the source code and contribute - and because of that"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+        "purpose": MessageLookupByLibrary.simpleMessage(
+            "The primary purpose of this addin is to manage Worksheets in Excel Workbook in the most efficient way."),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "termsOfUse": MessageLookupByLibrary.simpleMessage("Terms of Use"),
         "thankYou": MessageLookupByLibrary.simpleMessage(
-            "Thank you for using this addin! \n\nIf you have any ideas or features, please reach out in discord server. \n\nHave a nice day!\n")
+            "Thank you for using this addin, your support and have a great day! 🌄  "),
+        "thankYouTitle": MessageLookupByLibrary.simpleMessage("Thank you!")
       };
 }

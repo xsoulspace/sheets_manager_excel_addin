@@ -68,7 +68,7 @@ class NavigationScreen extends HookWidget {
 
 class AppNavigationPane extends NavigationPane {
   AppNavigationPane({
-    required final super.selected,
+    required super.selected,
     required final NavigationScreenState state,
     required final bool panePaddingRequired,
     required final ThemeData themeData,

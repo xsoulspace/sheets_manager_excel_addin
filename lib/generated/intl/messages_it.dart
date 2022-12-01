@@ -23,15 +23,36 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("Informazioni"),
+        "all": MessageLookupByLibrary.simpleMessage("Tutto "),
+        "and": MessageLookupByLibrary.simpleMessage("e "),
         "appearance": MessageLookupByLibrary.simpleMessage("Apparenza"),
         "appearanceDark": MessageLookupByLibrary.simpleMessage("Buia"),
         "appearanceLight": MessageLookupByLibrary.simpleMessage("Leggera"),
         "appearanceSystem": MessageLookupByLibrary.simpleMessage("Sistema"),
+        "areWelcome": MessageLookupByLibrary.simpleMessage("prego."),
+        "considerSponsor": MessageLookupByLibrary.simpleMessage(
+            "Si prega di sponsorizzare o donare al creatore su"),
+        "contributingTitle":
+            MessageLookupByLibrary.simpleMessage("Contribuire"),
+        "donations":
+            MessageLookupByLibrary.simpleMessage("Donazioni / Sponsor"),
+        "gettingHelp": MessageLookupByLibrary.simpleMessage(
+            "Se hai bisogno di aiuto per iniziare o hai domande, dai un\'occhiata al nostro"),
+        "gettingHelpTitle":
+            MessageLookupByLibrary.simpleMessage("Ottenere aiuto"),
         "language": MessageLookupByLibrary.simpleMessage("Lingua"),
+        "or": MessageLookupByLibrary.simpleMessage("o"),
+        "oss": MessageLookupByLibrary.simpleMessage(
+            "Questo è un software open source. Significa che puoi vedere il codice sorgente e contribuire - e per questo"),
         "privacyPolicy":
             MessageLookupByLibrary.simpleMessage("Politica sulla riservatezza"),
+        "purpose": MessageLookupByLibrary.simpleMessage(
+            "Lo scopo principale di questo componente aggiuntivo è gestire i fogli di lavoro nella cartella di lavoro di Excel nel modo più efficiente."),
         "settings": MessageLookupByLibrary.simpleMessage("Impostazioni"),
+        "termsOfUse":
+            MessageLookupByLibrary.simpleMessage("Termini di utilizzo"),
         "thankYou": MessageLookupByLibrary.simpleMessage(
-            "Grazie per aver utilizzato questo componente aggiuntivo! \n\nSe hai idee o funzionalità, contatta il server discord. \n\nBuona giornata!\n")
+            "Grazie per aver utilizzato questo componente aggiuntivo, il tuo supporto e buona giornata! 🌄 "),
+        "thankYouTitle": MessageLookupByLibrary.simpleMessage("Grazie!")
       };
 }

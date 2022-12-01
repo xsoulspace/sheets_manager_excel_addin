@@ -120,11 +120,111 @@ class S {
     );
   }
 
-  /// `Thank you for using this addin! \n\nIf you have any ideas or features, please reach out in discord server. \n\nHave a nice day!\n`
+  /// `Thank you for using this addin, your support and have a great day! 🌄  `
   String get thankYou {
     return Intl.message(
-      'Thank you for using this addin! \n\nIf you have any ideas or features, please reach out in discord server. \n\nHave a nice day!\n',
+      'Thank you for using this addin, your support and have a great day! 🌄  ',
       name: 'thankYou',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thank you!`
+  String get thankYouTitle {
+    return Intl.message(
+      'Thank you!',
+      name: 'thankYouTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Donations / Sponsor`
+  String get donations {
+    return Intl.message(
+      'Donations / Sponsor',
+      name: 'donations',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please sponsor or donate to the creator on`
+  String get considerSponsor {
+    return Intl.message(
+      'Please sponsor or donate to the creator on',
+      name: 'considerSponsor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `or`
+  String get or {
+    return Intl.message(
+      'or',
+      name: 'or',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If you need help getting started or have any questions, check out our`
+  String get gettingHelp {
+    return Intl.message(
+      'If you need help getting started or have any questions, check out our',
+      name: 'gettingHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Getting Help`
+  String get gettingHelpTitle {
+    return Intl.message(
+      'Getting Help',
+      name: 'gettingHelpTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contributing`
+  String get contributingTitle {
+    return Intl.message(
+      'Contributing',
+      name: 'contributingTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All `
+  String get all {
+    return Intl.message(
+      'All ',
+      name: 'all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `and `
+  String get and {
+    return Intl.message(
+      'and ',
+      name: 'and',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `are welcome.`
+  String get areWelcome {
+    return Intl.message(
+      'are welcome.',
+      name: 'areWelcome',
       desc: '',
       args: [],
     );
@@ -135,6 +235,36 @@ class S {
     return Intl.message(
       'Privacy Policy',
       name: 'privacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms of Use`
+  String get termsOfUse {
+    return Intl.message(
+      'Terms of Use',
+      name: 'termsOfUse',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The primary purpose of this addin is to manage Worksheets in Excel Workbook in the most efficient way.`
+  String get purpose {
+    return Intl.message(
+      'The primary purpose of this addin is to manage Worksheets in Excel Workbook in the most efficient way.',
+      name: 'purpose',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is Open Source Software. It means you can see the source code and contribute - and because of that`
+  String get oss {
+    return Intl.message(
+      'This is Open Source Software. It means you can see the source code and contribute - and because of that',
+      name: 'oss',
       desc: '',
       args: [],
     );

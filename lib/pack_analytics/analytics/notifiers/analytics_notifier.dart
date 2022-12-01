@@ -2,19 +2,25 @@ import 'package:flutter/foundation.dart';
 import 'package:sheet_manager/pack_core/pack_core.dart';
 
 class AnalyticsNotifier extends ChangeNotifier implements ContextlessLoadable {
-  final logs = <String>[];
+  final logsNotifier = ValueNotifier<List<String>>([]);
 
+  @override
+  void dispose() {
+    super.dispose();
+    logsNotifier.dispose();
+  }
+
+  List<String> get logs => logsNotifier.value;
   void log(final String value) {
+    if (!kDebugMode) return;
     if (logs.length == 15) {
       logs.removeLast();
     }
     logs.insert(0, value);
-    notifyListeners();
   }
 
   void clearLogs() {
     logs.clear();
-    notifyListeners();
   }
 
   Future<void> recordError(
