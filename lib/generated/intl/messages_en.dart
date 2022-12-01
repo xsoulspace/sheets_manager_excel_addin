@@ -34,6 +34,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please sponsor or donate to the creator on"),
         "contributingTitle":
             MessageLookupByLibrary.simpleMessage("Contributing"),
+        "contributors":
+            MessageLookupByLibrary.simpleMessage("Community Contributors"),
         "donations":
             MessageLookupByLibrary.simpleMessage("Donations / Sponsor"),
         "gettingHelp": MessageLookupByLibrary.simpleMessage(

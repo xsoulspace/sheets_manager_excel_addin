@@ -94,6 +94,22 @@ class InfoScreen extends HookWidget {
               appTheme.spacedSizedBox.regular,
               Text(S.current.thankYou),
               appTheme.spacedSizedBox.big,
+              appTheme.spacedSizedBox.big,
+              Text(
+                S.current.contributors,
+                style: typography.title,
+              ),
+              appTheme.spacedSizedBox.regular,
+              ...[
+                _ContributorModel(
+                  title: '@mixev - thank you for testing',
+                  url: 'https://github.com/mixev',
+                )
+              ].map(
+                (final e) => _ContributorTile(
+                  contributor: e,
+                ),
+              )
             ],
           ),
         ),
@@ -153,6 +169,29 @@ class _TextDivider extends StatelessWidget {
       style: typography.body?.copyWith(
         color: theme.activeColor.withOpacity(0.2),
       ),
+    );
+  }
+}
+
+class _ContributorModel {
+  _ContributorModel({
+    required this.title,
+    required this.url,
+  });
+  final String title;
+  final String url;
+}
+
+class _ContributorTile extends StatelessWidget {
+  const _ContributorTile({required this.contributor, super.key});
+  final _ContributorModel contributor;
+  @override
+  Widget build(final BuildContext context) {
+    return Row(
+      children: [
+        Text(contributor.title),
+        UrlButton(text: 'GitHub', url: contributor.url),
+      ],
     );
   }
 }

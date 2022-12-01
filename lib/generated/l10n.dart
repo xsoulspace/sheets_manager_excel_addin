@@ -269,6 +269,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Community Contributors`
+  String get contributors {
+    return Intl.message(
+      'Community Contributors',
+      name: 'contributors',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

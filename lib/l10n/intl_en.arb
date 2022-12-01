@@ -20,5 +20,6 @@
   "privacyPolicy": "Privacy Policy",
   "termsOfUse": "Terms of Use",
   "purpose": "The primary purpose of this addin is to manage Worksheets in Excel Workbook in the most efficient way.",
-  "oss": "This is Open Source Software. It means you can see the source code and contribute - and because of that"
+  "oss": "This is Open Source Software. It means you can see the source code and contribute - and because of that",
+  "contributors": "Community Contributors"
 }
