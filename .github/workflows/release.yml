@@ -19,7 +19,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.COMMIT_SECRET }}
-          publish_dir: ./build/web
+          publish_dir: ./release/web
 
       # - run: |
       #     cd build/web
