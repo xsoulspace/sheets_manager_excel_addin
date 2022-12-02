@@ -45,6 +45,7 @@ class AppScaffoldScreen extends StatelessWidget {
           ),
           themeMode: settings.themeMode,
           home: const NavigationScreen(),
+          initialRoute: '/',
           builder: (final context, final child) {
             return AppThemeBuilder(
               child: Directionality(

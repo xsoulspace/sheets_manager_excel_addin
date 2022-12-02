@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sheet_manager/pack_analytics/analytics/firebase/firebase_plugin.dart';
 import 'package:sheet_manager/pack_analytics/analytics/notifiers/analytics_notifier.dart';
 import 'package:sheet_manager/pack_core/widgets/widgets.dart';
 import 'package:sheet_manager/pack_settings/pack_settings.dart';
