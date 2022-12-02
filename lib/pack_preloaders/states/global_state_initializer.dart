@@ -5,6 +5,7 @@ class GlobalStateInitializer extends StateInitializer {
   Future<void> onPostBindingLoad(final BuildContext context) {
     final completer = Completer();
     final SheetsNotifier sheetsNotifier = context.read();
+    final AnalyticsNotifier analyticsNotifier = context.read();
     final SettingsNotifier settings = context.read();
     final ExcelApiI excelApi = context.read();
     final SheetsSubscriber sheetsSubscriber = context.read();
@@ -25,6 +26,13 @@ class GlobalStateInitializer extends StateInitializer {
         await sheetsNotifier.onLoad();
         await excelSubscriptions.onLoad();
         await sheetsSubscriber.onLoad();
+        await FirebaseInitializer().onDelayedLoad();
+        await analyticsNotifier.onDelayedLoad();
+        if (settings.excelAvailable.value) {
+          unawaited(analyticsNotifier.logEvent(AnalyticEvents.usedInExcel));
+        } else {
+          unawaited(analyticsNotifier.logEvent(AnalyticEvents.usedInWeb));
+        }
       } finally {
         completer.complete();
       }

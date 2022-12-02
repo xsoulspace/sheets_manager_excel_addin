@@ -2,7 +2,7 @@ part of pack_preloaders;
 
 class AppStateProvider extends StatelessWidget {
   const AppStateProvider({
-    required final this.builder,
+    required this.builder,
     final Key? key,
   }) : super(key: key);
   final WidgetBuilder builder;
