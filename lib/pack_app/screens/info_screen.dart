@@ -151,7 +151,7 @@ class InfoScreen extends HookWidget {
 }
 
 Future<void> launchUrl(final String url) async {
-  final uri = Uri.dataFromString(url);
+  final uri = Uri.parse(url);
   if (await url_launcher.canLaunchUrl(uri)) {
     await url_launcher.launchUrl(uri);
   }
