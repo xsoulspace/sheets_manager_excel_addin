@@ -21,7 +21,7 @@ The primary purpose of this addin is to manage Worksheets in Excel Workbook in t
 
 [Learn more about Excel Addins on Microsoft](https://learn.microsoft.com/en-us/office/dev/add-ins/excel/excel-add-ins-overview)
 
-![Preview](/promo/usage.gif)
+![Preview](/assets/promo/usage.gif)
 
 ## How to install
 
