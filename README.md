@@ -34,9 +34,22 @@ The primary purpose of this addin is to manage Worksheets in Excel Workbook in t
 
 Where <username> is the name of your system user.
 
-Copy the following add-in's manifest file to this wef folder.
+3. Copy the following add-in's manifest file to this wef folder.
 
 https://raw.githubusercontent.com/xsoulspace/sheets_manager_excel_addin/develop/manifests/office_manifest.xml
+
+4. Open Excel, and then open any document or restart Excel if it's already running.
+
+5. In Excel, choose Insert > Add-ins > My Add-ins (drop-down menu), and then choose "Sheet Manager".
+
+! Important
+The addin will not show up in the My Add-ins dialog box. They are only visible within the drop-down menu (small down-arrow to the right of My Add-ins on the Insert tab).
+
+### Additional information:
+
+https://learn.microsoft.com/en-us/office/dev/add-ins/testing/sideload-an-office-add-in-on-mac
+
+### Windows
 
 _work in progress_
 
