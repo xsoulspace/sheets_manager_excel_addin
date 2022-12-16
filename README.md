@@ -25,6 +25,8 @@ The primary purpose of this addin is to manage Worksheets in Excel Workbook in t
 
 ### macOS
 
+Video instruction: https://www.youtube.com/watch?v=lvBIJXGeWu4
+
 - Finder way
 
 1. Open Finder and then enter Command+Shift+G to open the Go to folder dialog
