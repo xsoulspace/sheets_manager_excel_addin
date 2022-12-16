@@ -28,13 +28,21 @@ The primary purpose of this addin is to manage Worksheets in Excel Workbook in t
 - Finder way
 
 1. Open Finder and then enter Command+Shift+G to open the Go to folder dialog
-2. Enter the following path, the wef folder doesn't exist on your computer, create it.
+2. Enter the following path:
 
 `/Users/<username>/Library/Containers/com.microsoft.Excel/Data/Documents/wef`
 
 Where <username> is the name of your system user.
 
-3. Copy the following add-in's manifest file to this wef folder.
+If the `wef` folder doesn't exist on your computer, create it:
+
+- Open Finder and then enter Command+Shift+G to open the Go to folder dialog
+- Enter the following path:
+  `/Users/<username>/Library/Containers/com.microsoft.Excel/Data/Documents/`
+
+Create `wef` folder.
+
+3. Copy the following add-in's manifest file to this `wef` folder.
 
 https://raw.githubusercontent.com/xsoulspace/sheets_manager_excel_addin/develop/manifests/office_manifest.xml
 
