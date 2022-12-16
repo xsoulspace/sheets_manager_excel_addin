@@ -10,17 +10,16 @@ jobs:
       my_secret: ${{secrets.COMMIT_SECRET}}
     runs-on: ubuntu-latest
     steps:
-      # - uses: actions/checkout@v3
-      # - uses: subosito/flutter-action@v2
-      # - run: flutter pub get
-      # - run: flutter test
-      # - run: flutter build web --release
+      - uses: actions/checkout@v3
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.COMMIT_SECRET }}
-          publish_dir: ./build/web
-
+          publish_dir: ./release/web
+      # - uses: subosito/flutter-action@v2
+      # - run: flutter pub get
+      # - run: flutter test
+      # - run: flutter build web --release
       # - run: |
       #     cd build/web
       #     git init
