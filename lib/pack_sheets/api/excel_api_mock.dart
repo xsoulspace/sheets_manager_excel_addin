@@ -3,7 +3,7 @@ import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';
 import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
 
 class ExcelApiMockImpl extends ExcelApiImpl {
-  ExcelApiMockImpl({required final super.analyticsNotifier});
+  ExcelApiMockImpl({required super.analyticsNotifier});
 }
 
 class ExcelApiImpl extends ExcelApiI {
@@ -13,9 +13,10 @@ class ExcelApiImpl extends ExcelApiI {
 
   final AnalyticsNotifier analyticsNotifier;
   final _sheets = <SheetModel>[
-    const SheetModel.mockSheetModel(name: 'Products', id: '1', position: 0),
     const SheetModel.mockSheetModel(name: 'Stock', id: '2', position: 0),
+    const SheetModel.mockSheetModel(name: 'Products', id: '1', position: 0),
     const SheetModel.mockSheetModel(name: 'Total', id: '3', position: 0),
+    const SheetModel.mockSheetModel(name: 'Report', id: '4', position: 0),
   ];
   @override
   Future<List<SheetModel>> getSheets() async {
@@ -45,6 +46,13 @@ class ExcelApiImpl extends ExcelApiI {
     }
     final item = _sheets.removeAt(oldIndex);
     _sheets.insert(effectiveNewIndex, item);
+  }
+
+  @override
+  Future<void> reorderSheets({required final List<SheetModel> sheets}) async {
+    _sheets
+      ..clear()
+      ..addAll(sheets);
   }
 
   @override

@@ -1,5 +1,3 @@
-library pack_sheets;
-
 import 'dart:async';
 
 import 'package:collection/collection.dart';
@@ -16,6 +14,8 @@ import 'package:sheet_manager/pack_analytics/debug/widgets/debug_pane.dart';
 import 'package:sheet_manager/pack_core/pack_core.dart';
 import 'package:sheet_manager/pack_settings/pack_settings.dart';
 import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';
+import 'package:sheet_manager/pack_sheets/services/services.dart';
+import 'package:sheet_manager/pack_sheets/widgets/widgets.dart';
 
 part 'models/diff.dart';
 part 'models/sheet_model.dart';

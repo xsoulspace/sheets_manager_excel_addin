@@ -51,7 +51,7 @@ class NavigationScreen extends HookWidget {
                         final width = math.min(screenWidth - 58, 328 + 58.0);
                         return ConstrainedBox(
                           constraints: BoxConstraints(maxWidth: width),
-                          child: const SheetSearchField(),
+                          child: const SheetsTopBar(),
                         );
                       },
                     ),

@@ -1,4 +1,4 @@
-part of pack_sheets;
+part of '../pack_sheets.dart';
 
 class SheetsNotifier extends ChangeNotifier implements ContextlessLoadable {
   SheetsNotifier({
@@ -44,6 +44,7 @@ class SheetsNotifier extends ChangeNotifier implements ContextlessLoadable {
     sheets: _sheets,
     settingsNotifier: settingsNotifier,
   );
+  final sorter = SheetsSorter();
   late final sheetNameController = SheetNameController(
     updateSheets: updateSheets,
     getSheets: getSheets,
@@ -53,6 +54,13 @@ class SheetsNotifier extends ChangeNotifier implements ContextlessLoadable {
     notifyListeners: notifyListeners,
     excelApi: excelApi,
   );
+
+  Future<void> sortSheets({
+    required final SheetsSortDirection direction,
+  }) async {
+    updateSheets(sorter.sort(sheets: _sheets, direction: direction));
+  }
+
   @override
   Future<void> onLoad() async {
     await sheetNameController.onLoad();
@@ -66,6 +74,7 @@ class SheetsNotifier extends ChangeNotifier implements ContextlessLoadable {
     sheetNameController.dispose();
     selectedSheetController.dispose();
     filter.dispose();
+    sorter.dispose();
     super.dispose();
   }
 

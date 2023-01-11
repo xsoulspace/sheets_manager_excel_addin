@@ -13,6 +13,9 @@ abstract class ExcelApiI implements ContextlessLoadable {
     required final SheetModel sheet,
     required final int position,
   });
+  Future<void> reorderSheets({
+    required final List<SheetModel> sheets,
+  });
   Future<void> setActiveSheet(final SheetModel sheet);
   Future<SheetModel> getActiveSheet();
   Future<SheetModel> getSheetById(final String id);
