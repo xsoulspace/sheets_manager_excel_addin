@@ -1,4 +1,4 @@
-part of pack_sheets;
+part of '../pack_sheets.dart';
 
 class SheetTile extends HookWidget {
   const SheetTile({
@@ -8,7 +8,7 @@ class SheetTile extends HookWidget {
     required this.index,
     required this.onSelected,
     required this.selected,
-    final super.key,
+    super.key,
   });
   final SheetModel sheet;
   final int index;

@@ -21,22 +21,47 @@ The primary purpose of this addin is to manage Worksheets in Excel Workbook in t
 
 [Learn more about Excel Addins on Microsoft](https://learn.microsoft.com/en-us/office/dev/add-ins/excel/excel-add-ins-overview)
 
+![Preview](/assets/promo/usage.gif)
+
 ## How to install
 
 ### macOS
 
+Video instruction: https://www.youtube.com/watch?v=lvBIJXGeWu4
+
 - Finder way
 
 1. Open Finder and then enter Command+Shift+G to open the Go to folder dialog
-2. Enter the following path, the wef folder doesn't exist on your computer, create it.
+2. Enter the following path:
 
 `/Users/<username>/Library/Containers/com.microsoft.Excel/Data/Documents/wef`
 
 Where <username> is the name of your system user.
 
-Copy the following add-in's manifest file to this wef folder.
+If the `wef` folder doesn't exist on your computer, create it:
+
+- Open Finder and then enter Command+Shift+G to open the Go to folder dialog
+- Enter the following path:
+  `/Users/<username>/Library/Containers/com.microsoft.Excel/Data/Documents/`
+
+Create `wef` folder.
+
+3. Copy the following add-in's manifest file to this `wef` folder.
 
 https://raw.githubusercontent.com/xsoulspace/sheets_manager_excel_addin/develop/manifests/office_manifest.xml
+
+4. Open Excel, and then open any document or restart Excel if it's already running.
+
+5. In Excel, choose Insert > Add-ins > My Add-ins (drop-down menu), and then choose "Sheet Manager".
+
+! Important
+The addin will not show up in the My Add-ins dialog box. They are only visible within the drop-down menu (small down-arrow to the right of My Add-ins on the Insert tab).
+
+### Additional information:
+
+https://learn.microsoft.com/en-us/office/dev/add-ins/testing/sideload-an-office-add-in-on-mac
+
+### Windows
 
 _work in progress_
 

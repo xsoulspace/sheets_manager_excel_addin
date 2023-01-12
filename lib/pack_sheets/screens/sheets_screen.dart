@@ -1,4 +1,4 @@
-part of pack_sheets;
+part of '../pack_sheets.dart';
 
 class SheetsScreen extends HookWidget {
   const SheetsScreen({final Key? key}) : super(key: key);
@@ -45,6 +45,7 @@ class SheetsScreen extends HookWidget {
               itemCount: sheetsNotifier.sheets.length,
             ),
           ),
+          const AdsBanner(),
         ],
       ),
     );

@@ -6,7 +6,7 @@ import 'package:sheet_manager/pack_sheets/api/excel_api_mock.dart'
 import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
 
 class ExcelApiMockImpl extends excel_api_mock.ExcelApiImpl {
-  ExcelApiMockImpl({required final super.analyticsNotifier});
+  ExcelApiMockImpl({required super.analyticsNotifier});
 }
 
 class ExcelApiImpl implements ExcelApiI {
@@ -59,6 +59,16 @@ class ExcelApiImpl implements ExcelApiI {
   }) async {
     final excelSheet = checkSheetType(sheet);
     excelSheet.worksheet.position = position;
+    await sync();
+  }
+
+  @override
+  Future<void> reorderSheets({required final List<SheetModel> sheets}) async {
+    for (int i = 0; i < sheets.length; i++) {
+      final sheet = sheets[i];
+      final excelSheet = checkSheetType(sheet);
+      excelSheet.worksheet.position = i;
+    }
     await sync();
   }
 

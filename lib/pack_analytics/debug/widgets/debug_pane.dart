@@ -13,7 +13,6 @@ class DebugPane extends HookWidget {
   Widget build(final BuildContext context) {
     final scrollController = useScrollController();
     final analytics = context.watch<AnalyticsNotifier>();
-    final settings = context.watch<SettingsNotifier>();
     final sheetsNotifier = context.watch<SheetsNotifier>();
     final settingsNotifier = context.watch<SettingsNotifier>();
 
@@ -30,9 +29,9 @@ class DebugPane extends HookWidget {
                 ListTile(
                   title: const Text('Use mock data'),
                   trailing: material.Switch.adaptive(
-                    value: settings.useMockData.value,
+                    value: settingsNotifier.useMockData.value,
                     onChanged: (final newValue) {
-                      settings.useMockData.value = newValue;
+                      settingsNotifier.useMockData.value = newValue;
                     },
                   ),
                 ),
