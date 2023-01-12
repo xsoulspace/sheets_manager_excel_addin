@@ -21,7 +21,11 @@ The primary purpose of this addin is to manage Worksheets in Excel Workbook in t
 
 [Learn more about Excel Addins on Microsoft](https://learn.microsoft.com/en-us/office/dev/add-ins/excel/excel-add-ins-overview)
 
+Usage example:
 ![Preview](/assets/promo/usage.gif)
+
+Sort functionality:
+![Sort function](/assets/promo/sorting.gif)
 
 ## How to install
 
