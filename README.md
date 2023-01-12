@@ -78,3 +78,8 @@ All [comments](https://github.com/xsoulspace/sheets_manager_excel_addin/issues) 
 ## Getting Help
 
 If you need help getting started with Sheet Manager or have any questions, check out our [Discord Community](https://discord.gg/y54DpJwmAn).
+
+## Build
+
+web:
+flutter clean && flutter pub get && flutter build web --csp
