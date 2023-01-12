@@ -58,7 +58,9 @@ class SheetsNotifier extends ChangeNotifier implements ContextlessLoadable {
   Future<void> sortSheets({
     required final SheetsSortDirection direction,
   }) async {
-    updateSheets(sorter.sort(sheets: _sheets, direction: direction));
+    final sortedSheets = sorter.sort(sheets: _sheets, direction: direction);
+    updateSheets(sortedSheets);
+    await excelApi.reorderSheets(sheets: sortedSheets);
   }
 
   @override
