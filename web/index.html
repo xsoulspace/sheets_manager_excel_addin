@@ -41,6 +41,11 @@
     <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js"></script>
     <!-- This script adds the flutter initialization JS code -->
     <script src="flutter.js" defer></script>
+    <!-- Yandex.RTB -->
+    <script>
+      window.yaContextCb = window.yaContextCb || [];
+    </script>
+    <script src="https://yandex.ru/ads/system/context.js" async></script>
   </head>
   <body style="position: relative">
     <div id="loading">
@@ -133,6 +138,14 @@
             document.getElementsByTagName("head")[0].appendChild(scriptTag);
           });
       });
+      function initAd(renderTo, blockId) {
+        window.yaContextCb.push(() => {
+          Ya.Context.AdvManager.render({
+            renderTo,
+            blockId,
+          });
+        });
+      }
     </script>
   </body>
 </html>
