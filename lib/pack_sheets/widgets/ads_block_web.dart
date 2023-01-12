@@ -1,8 +1,8 @@
 // copied from https://github.com/nathanael540/admanager_web/blob/main/lib/src/adblock.dart
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
+
 // ignore: avoid_web_libraries_in_flutter
-import 'dart:js' as js;
 
 import 'package:flutter/material.dart';
 import 'package:pointer_interceptor/src/shim/dart_ui.dart' as ui;
@@ -22,16 +22,30 @@ class AdsBlock extends StatelessWidget {
   }) {
     /// We create a DivElement to hold our ad ;)
     ui.platformViewRegistry.registerViewFactory(renderTo, (final viewId) {
+      final rootDiv = html.DivElement();
+      final scriptDiv = html.ScriptElement();
       final div = html.DivElement()..id = renderTo;
-
       // TODO: Allow more sizes, like responsive ads ["fluid"]
 
       div.style.width = '${size.width}px';
       div.style.height = '${size.height}px';
+      scriptDiv.innerHtml = '''
+        window.yaContextCb.push(() => {
+          Ya.Context.AdvManager.render({
+            renderTo: "$renderTo",
+            blockId: "$blockId",
+            onError: (data) => {
+              console.error(data); 
+            },
+          });
+        });
+      ''';
+      rootDiv.children.add(div);
+      rootDiv.children.add(scriptDiv);
 
       // TODO: Add a eventListener to check if the ad was loaded
 
-      return div;
+      return rootDiv;
     });
   }
 
@@ -52,13 +66,6 @@ class AdsBlock extends StatelessWidget {
       width: size.width,
       child: HtmlElementView(
         viewType: renderTo,
-        onPlatformViewCreated: (final id) {
-          /// Its call our function to load the ad from AdManager using GPT.js
-          js.context.callMethod('initAd', [
-            renderTo,
-            blockId,
-          ]);
-        },
       ),
     );
   }
