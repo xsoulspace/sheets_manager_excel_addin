@@ -18,10 +18,10 @@ class SettingsScreen extends HookWidget {
         SettingsTile(
           icon: FluentIcons.locale_language,
           title: S.of(context).language,
-          trailing: Combobox<Locale>(
+          trailing: ComboBox<Locale>(
             items: namedLocalesMap.values
                 .map(
-                  (final locale) => ComboboxItem<Locale>(
+                  (final locale) => ComboBoxItem<Locale>(
                     value: locale.locale,
                     child: SizedBox(
                       width: 100,
@@ -38,9 +38,9 @@ class SettingsScreen extends HookWidget {
         SettingsTile(
           title: S.of(context).appearance,
           icon: FluentIcons.brightness,
-          trailing: Combobox<ThemeMode>(
+          trailing: ComboBox<ThemeMode>(
             items: [
-              ComboboxItem(
+              ComboBoxItem(
                 key: const ValueKey(ThemeMode.system),
                 value: ThemeMode.system,
                 child: SizedBox(
@@ -48,12 +48,12 @@ class SettingsScreen extends HookWidget {
                   child: Text(S.current.appearanceSystem),
                 ),
               ),
-              ComboboxItem(
+              ComboBoxItem(
                 key: const ValueKey(ThemeMode.light),
                 value: ThemeMode.light,
                 child: Text(S.current.appearanceLight),
               ),
-              ComboboxItem(
+              ComboBoxItem(
                 key: const ValueKey(ThemeMode.dark),
                 value: ThemeMode.dark,
                 child: Text(S.current.appearanceDark),
@@ -83,8 +83,10 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Card(
-      padding: EdgeInsets.zero,
-      child: ListTile(
+      padding: const EdgeInsets.symmetric(vertical: 4).copyWith(
+        right: 4,
+      ),
+      child: DefaultListTile(
         leading: Icon(icon),
         title: Text(title),
         subtitle: subtitle != null ? Text(subtitle!) : null,

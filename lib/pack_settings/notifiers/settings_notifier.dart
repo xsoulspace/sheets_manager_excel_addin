@@ -2,7 +2,7 @@ part of pack_settings;
 
 class SettingsNotifier extends ChangeNotifier implements ContextlessLoadable {
   SettingsNotifier({
-    required final this.settingsService,
+    required this.settingsService,
   });
 
   // Make SettingsService a private variable so it is not used directly.

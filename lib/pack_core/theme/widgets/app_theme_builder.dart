@@ -3,7 +3,7 @@ part of pack_core;
 class AppThemeBuilder extends StatelessWidget {
   const AppThemeBuilder({
     required this.child,
-    final super.key,
+    super.key,
   });
   final Widget child;
   @override
@@ -22,8 +22,8 @@ class AppThemeBuilder extends StatelessWidget {
 class AppTheme extends InheritedWidget {
   const AppTheme({
     required this.data,
-    required final super.child,
-    final super.key,
+    required super.child,
+    super.key,
   }) : super();
 
   final AppThemeData data;

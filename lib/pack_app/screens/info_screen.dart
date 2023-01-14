@@ -139,9 +139,7 @@ class InfoScreen extends HookWidget {
                 url: termsOfUseLink,
               ),
               const _TextDivider(),
-              const UrlButton(
-                text: 'Made with Flutter & ❤',
-              ),
+              const Text('Made with Flutter & ❤'),
             ],
           ),
         ),

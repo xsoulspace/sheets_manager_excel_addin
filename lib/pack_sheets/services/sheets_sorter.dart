@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:sheet_manager/pack_core/pack_core.dart';
-import 'package:sheet_manager/pack_sheets/pack_sheets.dart';
+import 'package:life_hooks/life_hooks.dart';
+import 'package:office_addin_helper/office_addin_helper.dart';
 
 enum SheetsSortDirection {
   ascending,

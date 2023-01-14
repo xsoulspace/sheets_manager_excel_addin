@@ -23,11 +23,12 @@ class SheetTile extends HookWidget {
     final appThemeData = AppTheme.of(context);
 
     return HoverButton(
-      cursor: state.editing ? null : SystemMouseCursors.click,
       onPressed: () => onSelected(sheet),
+      cursor: state.editing ? null : SystemMouseCursors.click,
       builder: (final context, final states) {
         Widget titleWidget;
         if (state.editing) {
+          // if (true) {
           titleWidget = Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: Focus(
@@ -47,7 +48,7 @@ class SheetTile extends HookWidget {
                 ),
                 cursorColor: theme.accentColor,
                 padding: const EdgeInsets.only(
-                  top: 6,
+                  top: 6.5,
                 ),
                 autofocus: true,
                 style: theme.typography.body?.copyWith(
@@ -109,6 +110,10 @@ class SheetTile extends HookWidget {
         return Stack(
           children: [
             Container(
+              constraints: const BoxConstraints(
+                minHeight: kOneLineTileHeight,
+                minWidth: 88.0,
+              ),
               margin: const EdgeInsets.only(
                 top: 2,
                 bottom: 2,
@@ -130,14 +135,10 @@ class SheetTile extends HookWidget {
                 }(),
                 borderRadius: appThemeData.borderRadius.small,
               ),
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                ),
-                title: titleWidget,
+              child: DefaultListTile(
                 leading: AnimatedSwitcher(
                   duration: theme.fastAnimationDuration,
-                  child: dragEnabled
+                  child: dragEnabled && states.isHovering
                       ? ReorderableDragStartListener(
                           index: index,
                           enabled: dragEnabled,
@@ -150,6 +151,7 @@ class SheetTile extends HookWidget {
                           color: theme.disabledColor,
                         ),
                 ),
+                title: titleWidget,
               ),
             ),
             Positioned(

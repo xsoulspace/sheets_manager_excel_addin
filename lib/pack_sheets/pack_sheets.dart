@@ -2,23 +2,22 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:life_hooks/life_hooks.dart';
+import 'package:office_addin_helper/office_addin_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sheet_manager/pack_analytics/analytics/notifiers/analytics_notifier.dart';
 import 'package:sheet_manager/pack_analytics/debug/widgets/debug_pane.dart';
 import 'package:sheet_manager/pack_core/pack_core.dart';
 import 'package:sheet_manager/pack_settings/pack_settings.dart';
-import 'package:sheet_manager/pack_sheets/api/excel_api_i.dart';
 import 'package:sheet_manager/pack_sheets/services/services.dart';
 import 'package:sheet_manager/pack_sheets/widgets/widgets.dart';
+import 'package:sheet_manager/widgets/widgets.dart';
 
 part 'models/diff.dart';
-part 'models/sheet_model.dart';
 part 'notifiers/selected_sheet_controller.dart';
 part 'notifiers/sheet_name_controller.dart';
 part 'notifiers/sheets_filter.dart';

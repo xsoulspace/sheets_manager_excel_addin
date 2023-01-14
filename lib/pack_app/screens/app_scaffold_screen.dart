@@ -11,17 +11,9 @@ class AppScaffoldScreen extends StatelessWidget {
       builder: (final context, final child) {
         return FluentApp(
           debugShowCheckedModeBanner: false,
-          darkTheme: ThemeData(
-            // accentColor: appTheme.color,
-            brightness: Brightness.dark,
-            visualDensity: VisualDensity.standard,
-            focusTheme: FocusThemeData(
-              glowFactor: is10footScreen() ? 2.0 : 0.0,
-            ),
-          ),
           localizationsDelegates: const [
             S.delegate,
-            DefaultFluentLocalizations.delegate,
+            FluentLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
@@ -36,8 +28,16 @@ class AppScaffoldScreen extends StatelessWidget {
           // },
           supportedLocales: Locales.values,
           locale: settings.locale,
-          theme: ThemeData(
-            // accentColor: appTheme.color,
+          theme: ThemeData.light().copyWith(
+            visualDensity: VisualDensity.standard,
+            focusTheme: FocusThemeData(
+              glowFactor: is10footScreen() ? 2.0 : 0.0,
+            ),
+          ),
+          darkTheme: ThemeData.dark().copyWith(
+            resources: const ResourceDictionary.dark(
+              cardStrokeColorDefault: Color(0x15ffffff),
+            ),
             visualDensity: VisualDensity.standard,
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen() ? 2.0 : 0.0,

@@ -19,16 +19,12 @@ class AppStateProvider extends StatelessWidget {
             if (useMockData)
               Provider<ExcelApiI>(
                 key: const ValueKey('ExcelApiMock'),
-                create: (final context) => ExcelApiMockImpl(
-                  analyticsNotifier: analyticsNotifier,
-                ),
+                create: (final context) => ExcelApiMockImpl(),
               )
             else
               Provider<ExcelApiI>(
                 key: const ValueKey('ExcelApi'),
-                create: (final context) => ExcelApiImpl(
-                  analyticsNotifier: analyticsNotifier,
-                ),
+                create: (final context) => ExcelApiImpl(),
               ),
             if (useMockData)
               ChangeNotifierProvider<ExcelSubscriptionsI>(

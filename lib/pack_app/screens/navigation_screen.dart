@@ -28,14 +28,6 @@ class NavigationScreen extends HookWidget {
                       automaticallyImplyLeading: false,
                     )
                   : null,
-              content: NavigationBody(
-                index: currentScreen.index,
-                children: const [
-                  SheetsScreen(),
-                  SettingsScreen(),
-                  InfoScreen(),
-                ],
-              ),
             ),
             if (isSheetsScreen)
               Positioned(
@@ -88,6 +80,7 @@ class AppNavigationPane extends NavigationPane {
             PaneItem(
               icon: const Icon(FluentIcons.home),
               title: const Text('Home'),
+              body: const SheetsScreen(),
             ),
           ],
           position: PanePosition.right,
@@ -96,10 +89,12 @@ class AppNavigationPane extends NavigationPane {
             PaneItem(
               icon: const Icon(FluentIcons.settings),
               title: const Text('Settings'),
+              body: const SettingsScreen(),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.info),
               title: const Text('Info'),
+              body: const InfoScreen(),
             ),
           ],
         );
