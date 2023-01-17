@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:sheet_manager/pack_sheets/widgets/ads_block.dart';
+import 'package:yandex_ads_sdk/yandex_ads_sdk.dart';
 
 class AdsBanner extends HookWidget {
   const AdsBanner({super.key});
@@ -9,10 +9,10 @@ class AdsBanner extends HookWidget {
   Widget build(final BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
-    return AdsBlock(
-      blockId: 'R-A-2140277-2',
-      renderTo: 'yandex_rtb_R-A-2140277-2',
-      size: Size(screenSize.width, 80),
+    return YandexFlexibleBanner(
+      adUnitId: 'R-A-2140277-2',
+      height: 80,
+      width: screenSize.width,
     );
   }
 }

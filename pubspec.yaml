@@ -53,7 +53,11 @@ dependencies:
   rxdart: ^0.27.3
   shared_preferences: ^2.0.15
   url_launcher: ^6.1.7
-  webviewx: ^0.2.1
+  yandex_ads_sdk:
+    git:
+      url: git@github.com:xsoulspace/word_by_word_game.git
+      path: packages/yandex_ads_sdk
+      ref: develop
 
 dev_dependencies:
   build_runner: ^2.1.11

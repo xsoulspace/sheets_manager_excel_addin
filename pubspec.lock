@@ -368,13 +368,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0"
-  http:
-    dependency: transitive
-    description:
-      name: http
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.13.5"
   http_multi_server:
     dependency: transitive
     description:
@@ -835,13 +828,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
-  uuid:
-    dependency: transitive
-    description:
-      name: uuid
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.7"
   vector_math:
     dependency: transitive
     description:
@@ -863,41 +849,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.0"
-  webview_flutter:
-    dependency: transitive
-    description:
-      name: webview_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.8.0"
-  webview_flutter_android:
-    dependency: transitive
-    description:
-      name: webview_flutter_android
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.10.4"
-  webview_flutter_platform_interface:
-    dependency: transitive
-    description:
-      name: webview_flutter_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.9.5"
-  webview_flutter_wkwebview:
-    dependency: transitive
-    description:
-      name: webview_flutter_wkwebview
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.9.5"
-  webviewx:
-    dependency: "direct main"
-    description:
-      name: webviewx
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.1"
   win32:
     dependency: transitive
     description:
@@ -933,6 +884,22 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.1"
+  yandex_ads_sdk:
+    dependency: "direct main"
+    description:
+      path: "packages/yandex_ads_sdk"
+      ref: develop
+      resolved-ref: "932cdd5770e4ddfb9c3ad7f9b92b6dcdcd67358e"
+      url: "git@github.com:xsoulspace/word_by_word_game.git"
+    source: git
+    version: "0.0.1"
+  yandex_mobileads:
+    dependency: transitive
+    description:
+      name: yandex_mobileads
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
 sdks:
-  dart: ">=2.18.0 <3.0.0"
+  dart: ">=2.18.2 <3.0.0"
   flutter: ">=3.3.0"
