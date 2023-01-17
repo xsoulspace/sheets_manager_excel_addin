@@ -5,20 +5,20 @@
   "version": "0.3.0",
   "configurations": [
     {
-      "name": "front_dart",
+      "name": "app",
       "request": "launch",
       "type": "dart",
       "args": ["--web-port=3000"]
     },
     {
-      "name": "front_dart (profile mode)",
+      "name": "app (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile",
       "args": ["--web-port=3000"]
     },
     {
-      "name": "front_dart (release mode)",
+      "name": "app (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release",
